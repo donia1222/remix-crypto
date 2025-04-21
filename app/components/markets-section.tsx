@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, ArrowUpRight, RefreshCw } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, RefreshCw } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 // Tracked cryptocurrency pairs
@@ -50,6 +50,9 @@ export function MarketsSection() {
       setIsConnected(true)
     }
 
+    // Buffer for latest data
+    const latestData = new Map()
+
     // Handle received messages
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
@@ -58,26 +61,33 @@ export function MarketsSection() {
         const symbol = message.data.s
         const newPrice = Number.parseFloat(message.data.p)
 
-        // Update price map
-        const currentData = priceMapRef.current[symbol]
-        if (currentData) {
-          priceMapRef.current[symbol] = {
-            lastPrice: currentData.price,
-            price: newPrice,
-          }
-        }
+        // Store latest data in buffer
+        latestData.set(symbol, { symbol, price: newPrice })
+      }
+    }
 
-        // Update cryptocurrency data
+    // Set up timer to update UI every 3 seconds
+    const updateTimer = setInterval(() => {
+      if (latestData.size > 0) {
+        // Update cryptocurrency data with latest buffered data
         setCryptoData((prevData) => {
           return prevData.map((crypto) => {
-            if (crypto.symbol === symbol) {
+            const latestInfo = latestData.get(crypto.symbol)
+
+            if (latestInfo) {
+              const newPrice = latestInfo.price
               const lastPrice = crypto.price || newPrice
-              const priceChange = ((newPrice - lastPrice) / lastPrice) * 100
               const dailyChange = crypto.change
                 ? Math.random() > 0.5
                   ? crypto.change + Math.random() * 0.1
                   : crypto.change - Math.random() * 0.1
                 : Math.random() * 5 * (Math.random() > 0.5 ? 1 : -1)
+
+              // Update price map
+              priceMapRef.current[crypto.symbol] = {
+                lastPrice: lastPrice,
+                price: newPrice,
+              }
 
               return {
                 ...crypto,
@@ -93,8 +103,11 @@ export function MarketsSection() {
 
         // Update last updated timestamp
         setLastUpdated(new Date())
+
+        // Clear the buffer after updating
+        latestData.clear()
       }
-    }
+    }, 2000) // Update every 3 seconds
 
     // Handle errors
     socket.onerror = (error) => {
@@ -113,6 +126,7 @@ export function MarketsSection() {
 
     // Clean up on unmount
     return () => {
+      clearInterval(updateTimer)
       if (socket.readyState === WebSocket.OPEN) {
         socket.close()
       }
@@ -147,6 +161,9 @@ export function MarketsSection() {
 
         socketRef.current = socket
 
+        // Buffer for latest data
+        const latestData = new Map()
+
         socket.onopen = () => {
           console.log("WebSocket reconnected")
           setIsConnected(true)
@@ -159,26 +176,33 @@ export function MarketsSection() {
             const symbol = message.data.s
             const newPrice = Number.parseFloat(message.data.p)
 
-            // Update price map
-            const currentData = priceMapRef.current[symbol]
-            if (currentData) {
-              priceMapRef.current[symbol] = {
-                lastPrice: currentData.price,
-                price: newPrice,
-              }
-            }
+            // Store latest data in buffer
+            latestData.set(symbol, { symbol, price: newPrice })
+          }
+        }
 
-            // Update cryptocurrency data
+        // Set up timer to update UI every 3 seconds
+        const updateTimer = setInterval(() => {
+          if (latestData.size > 0) {
+            // Update cryptocurrency data with latest buffered data
             setCryptoData((prevData) => {
               return prevData.map((crypto) => {
-                if (crypto.symbol === symbol) {
+                const latestInfo = latestData.get(crypto.symbol)
+
+                if (latestInfo) {
+                  const newPrice = latestInfo.price
                   const lastPrice = crypto.price || newPrice
-                  const priceChange = ((newPrice - lastPrice) / lastPrice) * 100
                   const dailyChange = crypto.change
                     ? Math.random() > 0.5
                       ? crypto.change + Math.random() * 0.1
                       : crypto.change - Math.random() * 0.1
                     : Math.random() * 5 * (Math.random() > 0.5 ? 1 : -1)
+
+                  // Update price map
+                  priceMapRef.current[crypto.symbol] = {
+                    lastPrice: lastPrice,
+                    price: newPrice,
+                  }
 
                   return {
                     ...crypto,
@@ -194,7 +218,15 @@ export function MarketsSection() {
 
             // Update last updated timestamp
             setLastUpdated(new Date())
+
+            // Clear the buffer after updating
+            latestData.clear()
           }
+        }, 3000) // Update every 3 seconds
+
+        // Clean up previous timer on component unmount or reconnection
+        return () => {
+          clearInterval(updateTimer)
         }
       }
     }
