@@ -1,0 +1,54 @@
+/* Import Tailwind CSS styles */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+/* Estilos para animaciones suaves */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Animación de flash para cambios de precio */
+@keyframes flash-green {
+  0% {
+    background-color: rgba(16, 185, 129, 0);
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.2);
+  }
+  100% {
+    background-color: rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes flash-red {
+  0% {
+    background-color: rgba(239, 68, 68, 0);
+  }
+  50% {
+    background-color: rgba(239, 68, 68, 0.2);
+  }
+  100% {
+    background-color: rgba(239, 68, 68, 0);
+  }
+}
+
+.flash-green {
+  animation: flash-green 1s ease-out;
+}
+
+.flash-red {
+  animation: flash-red 1s ease-out;
+}
