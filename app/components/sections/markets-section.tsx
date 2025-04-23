@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, ArrowUpRight, RefreshCw, ChevronDown } from "lucide-react"
+import { ArrowRight, RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 // Tracked cryptocurrency pairs - Extended list
@@ -87,6 +87,11 @@ export default function MarketsSection() {
   // Function to show more items
   const showMoreItems = () => {
     setVisibleItems((prev) => Math.min(prev + 5, trackedPairs.length))
+  }
+
+  // Function to show fewer items
+  const showFewerItems = () => {
+    setVisibleItems(5)
   }
 
   // Connect to Binance WebSocket
@@ -330,11 +335,105 @@ export default function MarketsSection() {
                 </Button>
               )}
             </div>
-            <p className="text-sm text-gray-400">Echtzeit-Daten von der Binance API </p>
+            <p className="text-sm text-gray-400">Echtzeit-Daten von der Binance API</p>
           </motion.div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Versión móvil optimizada - Solo visible en móviles */}
+        <div className="md:hidden">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="space-y-3"
+          >
+            {cryptoData.slice(0, visibleItems).map((crypto, index) => (
+              <motion.div
+                key={crypto.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className={`rounded-lg border border-gray-800 p-3 ${
+                  crypto.priceDirection === "up"
+                    ? "bg-green-900/10"
+                    : crypto.priceDirection === "down"
+                      ? "bg-red-900/10"
+                      : "bg-gray-800/30"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+                      <span className="text-xs font-bold text-white">{crypto.shortSymbol.substring(0, 1)}</span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-white text-sm">{crypto.name}</div>
+                      <div className="text-xs text-gray-400">{crypto.shortSymbol}</div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div
+                      className={`font-medium text-sm ${
+                        crypto.priceDirection === "up"
+                          ? "text-green-400"
+                          : crypto.priceDirection === "down"
+                            ? "text-red-400"
+                            : "text-white"
+                      }`}
+                    >
+                      {formatPrice(crypto.price)} CHF
+                      {crypto.priceDirection === "up" && (
+                        <motion.span
+                          animate={{ y: [-2, 0] }}
+                          transition={{ duration: 0.2 }}
+                          className="text-green-500 ml-1"
+                        >
+                          ▲
+                        </motion.span>
+                      )}
+                      {crypto.priceDirection === "down" && (
+                        <motion.span
+                          animate={{ y: [0, 2] }}
+                          transition={{ duration: 0.2 }}
+                          className="text-red-500 ml-1"
+                        >
+                          ▼
+                        </motion.span>
+                      )}
+                    </div>
+                    <div
+                      className={`text-xs ${
+                        typeof crypto.change === "string"
+                          ? Number.parseFloat(crypto.change) >= 0
+                            ? "text-green-500"
+                            : "text-red-500"
+                          : crypto.change >= 0
+                            ? "text-green-500"
+                            : "text-red-500"
+                      }`}
+                    >
+                      {typeof crypto.change === "string"
+                        ? Number.parseFloat(crypto.change) >= 0
+                          ? "+"
+                          : ""
+                        : crypto.change >= 0
+                          ? "+"
+                          : ""}
+                      {crypto.change}%
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-2 text-xs text-gray-400">
+                  <div>Vol: {crypto.volume}</div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Versión de escritorio - Oculta en móviles */}
+        <div className="hidden md:block overflow-x-auto">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -354,7 +453,6 @@ export default function MarketsSection() {
                   <th className="py-3 px-2 md:px-4 text-right text-sm font-medium text-gray-400 hidden md:table-cell">
                     Marktkapitalisierung
                   </th>
-                  <th className="py-3 px-2 md:px-4 text-right text-sm font-medium text-gray-400"></th>
                 </tr>
               </thead>
               <tbody>
@@ -439,45 +537,51 @@ export default function MarketsSection() {
                     <td className="py-3 md:py-4 px-2 md:px-4 text-right text-gray-300 text-xs md:text-base hidden md:table-cell">
                       {crypto.marketCap} CHF
                     </td>
-                    <td className="py-3 md:py-4 px-2 md:px-4 text-right">
-                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 md:h-8 text-xs md:text-sm text-cyan-400 hover:text-cyan-300 hover:bg-gray-800"
-                        >
-                          Handeln <ArrowUpRight className="ml-1 h-3 w-3" />
-                        </Button>
-                      </motion.div>
-                    </td>
                   </motion.tr>
                 ))}
               </tbody>
             </table>
-
-            {/* Show More Button */}
-            {visibleItems < trackedPairs.length && (
-              <motion.div
-                className="mt-6 text-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Button
-                  variant="outline"
-                  onClick={showMoreItems}
-                  className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
-                >
-                  Mehr anzeigen <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </motion.div>
-            )}
           </motion.div>
         </div>
 
+        {/* Show More/Less Button */}
+        {visibleItems < trackedPairs.length ? (
+          <motion.div
+            className="mt-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Button
+              variant="outline"
+              onClick={showMoreItems}
+              className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+            >
+              Mehr anzeigen <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </motion.div>
+        ) : (
+          visibleItems > 5 && (
+            <motion.div
+              className="mt-6 text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Button
+                variant="outline"
+                onClick={showFewerItems}
+                className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+              >
+                Weniger anzeigen <ChevronUp className="ml-2 h-4 w-4" />
+              </Button>
+            </motion.div>
+          )
+        )}
+
         <div className="mt-8 text-center">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-
+  
           </motion.div>
         </div>
       </div>

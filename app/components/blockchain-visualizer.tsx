@@ -285,22 +285,7 @@ export default function BlockchainVisualizer() {
         </AnimatePresence>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="mt-16 text-center"
-        >
-          <Button
-            className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700"
-            onClick={() => setAutoAnimate(!autoAnimate)}
-          >
-            {autoAnimate ? "Animation pausieren" : "Animation fortsetzen"}
-          </Button>
-          <Button variant="outline" className="ml-4 border-gray-700 text-white hover:bg-gray-800">
-            Mehr erfahren <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </motion.div>
+
       </motion.div>
 
       {/* Partículas flotantes */}
