@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronUp, ChevronDown } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 // Data for the FAQ section
@@ -34,8 +34,8 @@ const faqItems = [
   },
 ]
 
-export function FaqSection() {
-  // State for the FAQ
+export default function FaqSection() {
+  // State for FAQ
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
@@ -67,17 +67,20 @@ export function FaqSection() {
               viewport={{ once: true }}
               className="mb-4 border border-gray-800 rounded-lg overflow-hidden"
             >
-              <button
+              <motion.button
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
                 className="flex justify-between items-center w-full p-4 text-left bg-gray-800 hover:bg-gray-700 transition-colors"
+                whileHover={{ backgroundColor: "rgba(55, 65, 81, 1)" }}
               >
                 <h3 className="text-white font-medium">{faq.question}</h3>
-                {openFaq === index ? (
-                  <ChevronUp className="h-5 w-5 text-gray-400" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-400" />
-                )}
-              </button>
+                <motion.div animate={{ rotate: openFaq === index ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                  {openFaq === index ? (
+                    <ChevronUp className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  )}
+                </motion.div>
+              </motion.button>
               <AnimatePresence>
                 {openFaq === index && (
                   <motion.div
@@ -97,12 +100,25 @@ export function FaqSection() {
 
         <div className="mt-10 text-center">
           <p className="text-gray-300 mb-4">Finden Sie nicht die Antwort, die Sie suchen?</p>
-          <Button
-            className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700"
-            onClick={() => document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            Kontaktieren Sie uns
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700"
+              onClick={() => {
+                const element = document.getElementById("kontakt")
+                if (element) {
+                  const headerHeight = 64
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                  const offsetPosition = elementPosition - headerHeight
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth",
+                  })
+                }
+              }}
+            >
+              Kontaktieren Sie uns
+            </Button>
+          </motion.div>
         </div>
       </div>
     </section>
