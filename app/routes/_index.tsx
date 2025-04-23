@@ -2,7 +2,22 @@
 import { useState } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { ArrowRight, Menu, X, Search, Bell, User, ChevronUp } from "lucide-react"
+import {
+  ArrowRight,
+  Menu,
+  X,
+  Search,
+  Bell,
+  User,
+  ChevronUp,
+  BarChart2,
+  Zap,
+  Tag,
+  Newspaper,
+  HelpCircle,
+  Mail,
+  Database,
+} from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 
@@ -14,6 +29,8 @@ import PricingSection from "../components/sections/pricing-section"
 import NewsSection from "../components/sections/news-section"
 import FaqSection from "../components/sections/faq-section"
 import ContactSection from "../components/sections/contact-section"
+import AnimatedTextReveal from "../components/animated-text-reveal"
+import BlockchainVisualizer from "../components/blockchain-visualizer"
 
 export const meta: MetaFunction = () => {
   return [
@@ -25,6 +42,9 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   // State for mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Estado para rastrear el hover en los elementos del menú
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   // Scroll effects
   const { scrollY } = useScroll()
@@ -54,6 +74,17 @@ export default function Index() {
     }, 100)
   }
 
+  // Definir los elementos del menú con sus iconos
+  const menuItems = [
+    { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
+    { id: "funktionen", text: "Funktionen", icon: <Zap className="h-4 w-4" /> },
+    { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
+    { id: "preise", text: "Preise", icon: <Tag className="h-4 w-4" /> },
+    { id: "nachrichten", text: "Nachrichten", icon: <Newspaper className="h-4 w-4" /> },
+    { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
+    { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
+  ]
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 overflow-x-hidden">
       {/* Header with scroll effect */}
@@ -79,55 +110,58 @@ export default function Index() {
 
         {/* Desktop Menu */}
         <nav className="ml-auto hidden md:flex gap-4 sm:gap-6">
-          <button
-            onClick={() => scrollToSection("maerkte")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            Märkte
-          </button>
-          <button
-            onClick={() => scrollToSection("funktionen")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            Funktionen
-          </button>
-          <button
-            onClick={() => scrollToSection("preise")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            Preise
-          </button>
-          <button
-            onClick={() => scrollToSection("nachrichten")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            Nachrichten
-          </button>
-          <button
-            onClick={() => scrollToSection("faq")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            FAQ
-          </button>
-          <button
-            onClick={() => scrollToSection("kontakt")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-          >
-            Kontakt
-          </button>
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              onMouseEnter={() => setHoveredItem(item.id)}
+              onMouseLeave={() => setHoveredItem(null)}
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors flex items-center group"
+            >
+              <motion.div
+                className="mr-2 text-cyan-400 group-hover:text-cyan-300"
+                animate={{
+                  rotate: hoveredItem === item.id ? [0, -10, 10, -10, 0] : 0,
+                  scale: hoveredItem === item.id ? 1.2 : 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  times: [0, 0.2, 0.5, 0.8, 1],
+                }}
+              >
+                {item.icon}
+              </motion.div>
+              {item.text}
+            </button>
+          ))}
         </nav>
 
         {/* Header Actions */}
         <div className="ml-4 flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-            <Search className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-            <Bell className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-            <User className="h-5 w-5" />
-          </Button>
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 10 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
+              <Search className="h-5 w-5" />
+            </Button>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: -10 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
+              <Bell className="h-5 w-5" />
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
+              <User className="h-5 w-5" />
+            </Button>
+          </motion.div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
@@ -157,60 +191,26 @@ export default function Index() {
         className="bg-black/70 backdrop-blur-md border-b border-gray-800/50 md:hidden overflow-hidden fixed top-16 left-0 right-0 z-40"
       >
         <nav className="flex flex-col p-4 space-y-3">
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.1 }}
-            onClick={() => scrollToSection("maerkte")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            Märkte
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.15 }}
-            onClick={() => scrollToSection("funktionen")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            Funktionen
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => scrollToSection("preise")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            Preise
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.25 }}
-            onClick={() => scrollToSection("nachrichten")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            Nachrichten
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.3 }}
-            onClick={() => scrollToSection("faq")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            FAQ
-          </motion.button>
-          <motion.button
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-            transition={{ delay: 0.35 }}
-            onClick={() => scrollToSection("kontakt")}
-            className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2"
-          >
-            Kontakt
-          </motion.button>
+          {menuItems.map((item, index) => (
+            <motion.button
+              key={item.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
+              transition={{ delay: 0.1 + index * 0.05 }}
+              onClick={() => scrollToSection(item.id)}
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
+              whileHover={{ x: 5 }}
+            >
+              <motion.div
+                className="mr-2 text-cyan-400"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {item.icon}
+              </motion.div>
+              {item.text}
+            </motion.button>
+          ))}
         </nav>
       </motion.div>
 
@@ -233,6 +233,12 @@ export default function Index() {
 
           {/* Features Section */}
           <FeaturesSection />
+
+          {/* Blockchain Visualizer */}
+          <BlockchainVisualizer />
+
+          {/* Animated Text Reveal Section */}
+          <AnimatedTextReveal />
 
           {/* Pricing Section */}
           <PricingSection />
