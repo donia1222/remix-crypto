@@ -292,6 +292,14 @@ export default function Index() {
                   </motion.div>
                 </motion.div>
               </div>
+              Demo page
+              <footer className="mt-4 text-sm text-gray-500">
+            Einige Bilder stammen von {" "}
+        <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
+          Freepik
+        </a>
+      </footer>
+
             </div>
           </section>
         </div>
@@ -329,6 +337,7 @@ export default function Index() {
       >
         <ChevronUp className="h-6 w-6" />
       </motion.button>
+      
     </div>
   )
 }
