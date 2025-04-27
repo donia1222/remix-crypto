@@ -28,9 +28,7 @@ export default function HeroSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 transition-all duration-300">
-                  Jetzt starten <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button

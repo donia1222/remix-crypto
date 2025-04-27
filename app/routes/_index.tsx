@@ -1,23 +1,8 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import {
-  ArrowRight,
-  Menu,
-  X,
-  Search,
-  Bell,
-  User,
-  ChevronUp,
-  BarChart2,
-  Zap,
-  Tag,
-  Newspaper,
-  HelpCircle,
-  Mail,
-  Database,
-} from "lucide-react"
+import { X, ChevronUp, BarChart2, Zap, Tag, Newspaper, HelpCircle, Mail, Database } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 
@@ -31,7 +16,7 @@ import FaqSection from "../components/sections/faq-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/blockchain-visualizer"
-
+import CryptoPriceVisualizer from "../components/sections/crypto-card"
 export const meta: MetaFunction = () => {
   return [
     { title: "Krypto - Schweizer Kryptowährungsplattform" },
@@ -45,6 +30,9 @@ export default function Index() {
 
   // Estado para rastrear el hover en los elementos del menú
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  // State to track scroll position for back-to-top button
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   // Scroll effects
   const { scrollY } = useScroll()
@@ -84,6 +72,23 @@ export default function Index() {
     { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
+
+  // Effect to handle scroll-to-top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button after scrolling down 300px
+      setShowScrollTop(window.scrollY > 300)
+    }
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll)
+
+    // Initial check
+    handleScroll()
+
+    // Clean up
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 overflow-x-hidden">
@@ -137,47 +142,24 @@ export default function Index() {
           ))}
         </nav>
 
-        {/* Header Actions */}
-        <div className="ml-4 flex items-center gap-2">
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: 10 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-              <Search className="h-5 w-5" />
-            </Button>
-          </motion.div>
-
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: -10 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          >
-            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-              <Bell className="h-5 w-5" />
-            </Button>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
-            <Button variant="ghost" size="icon" className="text-white hidden md:flex">
-              <User className="h-5 w-5" />
-            </Button>
-          </motion.div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-white"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
+        {/* Mobile Menu Button - Positioned at far right */}
+        <div className="md:hidden ml-auto">
+          <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <div className="grid grid-cols-2 gap-1">
+                <div className="w-2 h-2 bg-white rounded-sm"></div>
+                <div className="w-2 h-2 bg-white rounded-sm"></div>
+                <div className="w-2 h-2 bg-white rounded-sm"></div>
+                <div className="w-2 h-2 bg-white rounded-sm"></div>
+              </div>
+            )}
+          </Button>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Centered */}
       <motion.div
         initial={{ opacity: 0, height: 0 }}
         animate={{
@@ -190,7 +172,7 @@ export default function Index() {
         }}
         className="bg-black/70 backdrop-blur-md border-b border-gray-800/50 md:hidden overflow-hidden fixed top-16 left-0 right-0 z-40"
       >
-        <nav className="flex flex-col p-4 space-y-3">
+        <nav className="flex flex-col p-4 space-y-3 items-center text-center max-w-xs mx-auto">
           {menuItems.map((item, index) => (
             <motion.button
               key={item.id}
@@ -231,14 +213,20 @@ export default function Index() {
           {/* Markets Section */}
           <MarketsSection />
 
+          {/* Animated Text Reveal Section */}
+          <AnimatedTextReveal />
+
           {/* Features Section */}
           <FeaturesSection />
 
+
+          <div className="max-w-5xl mx-auto mt-40">
+        <CryptoPriceVisualizer />
+      </div>
+      
+
           {/* Blockchain Visualizer */}
           <BlockchainVisualizer />
-
-          {/* Animated Text Reveal Section */}
-          <AnimatedTextReveal />
 
           {/* Pricing Section */}
           <PricingSection />
@@ -266,7 +254,7 @@ export default function Index() {
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
                     Schließen Sie sich der Krypto-Revolution an
                   </h2>
-                  <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                     Mehr als 1 Million Benutzer vertrauen Krypto für ihre täglichen Geschäfte.
                   </p>
                 </motion.div>
@@ -277,29 +265,27 @@ export default function Index() {
                   viewport={{ once: true }}
                   className="flex flex-col gap-2 min-[400px]:flex-row"
                 >
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 transition-all duration-300">
-                      Konto erstellen <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button
-                      variant="outline"
-                      className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
-                    >
-                      Demo ansehen
-                    </Button>
-                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
                 </motion.div>
-              </div>
-              Demo page
-              <footer className="mt-4 text-sm text-gray-500">
-            Einige Bilder stammen von {" "}
-        <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
-          Freepik
-        </a>
-      </footer>
 
+                <footer className="mt-10 text-sm text-blue-300">
+                  Demo page von{" "}
+                  <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="underline">
+                 LWEB
+                  </a>
+                  
+                </footer>
+
+                <footer className="mt-10 text-sm text-blue-300">
+                Einige Bilder stammen von{" "}
+                  <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
+                    Freepik
+                  </a>
+                  
+                </footer>
+                
+              </div>
             </div>
           </section>
         </div>
@@ -321,23 +307,25 @@ export default function Index() {
         </nav>
       </footer>
 
-      {/* Back-to-top button with improved animation */}
-      <motion.button
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20,
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 flex items-center justify-center text-white shadow-lg z-50"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      >
-        <ChevronUp className="h-6 w-6" />
-      </motion.button>
-      
+      {/* Back-to-top button - only visible after scrolling */}
+      {showScrollTop && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20,
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 flex items-center justify-center text-white shadow-lg z-50"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <ChevronUp className="h-6 w-6" />
+        </motion.button>
+      )}
     </div>
   )
 }

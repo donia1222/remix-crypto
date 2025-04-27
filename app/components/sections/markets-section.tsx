@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { ArrowRight, RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
+import { RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 // Tracked cryptocurrency pairs - Extended list
@@ -382,25 +382,28 @@ export default function MarketsSection() {
                             : "text-white"
                       }`}
                     >
-                      {formatPrice(crypto.price)} CHF
-                      {crypto.priceDirection === "up" && (
-                        <motion.span
-                          animate={{ y: [-2, 0] }}
-                          transition={{ duration: 0.2 }}
-                          className="text-green-500 ml-1"
-                        >
-                          ▲
-                        </motion.span>
-                      )}
-                      {crypto.priceDirection === "down" && (
-                        <motion.span
-                          animate={{ y: [0, 2] }}
-                          transition={{ duration: 0.2 }}
-                          className="text-red-500 ml-1"
-                        >
-                          ▼
-                        </motion.span>
-                      )}
+                      <span className="inline-flex items-center">
+                        {formatPrice(crypto.price)}
+                        {crypto.priceDirection === "up" && (
+                          <motion.span
+                            animate={{ y: [-2, 0] }}
+                            transition={{ duration: 0.2 }}
+                            className="text-green-500 mx-1"
+                          >
+                            ▲
+                          </motion.span>
+                        )}
+                        {crypto.priceDirection === "down" && (
+                          <motion.span
+                            animate={{ y: [0, 2] }}
+                            transition={{ duration: 0.2 }}
+                            className="text-red-500 mx-1"
+                          >
+                            ▼
+                          </motion.span>
+                        )}
+                        CHF
+                      </span>
                     </div>
                     <div
                       className={`text-xs ${
@@ -491,22 +494,29 @@ export default function MarketsSection() {
                             : "text-white"
                       }`}
                     >
-                      <div className="flex items-center justify-end gap-1">
-                        <div className="w-[80px] md:w-[100px] text-right">{formatPrice(crypto.price)} CHF</div>
-                        {crypto.priceDirection === "up" && (
-                          <motion.span
-                            animate={{ y: [-2, 0] }}
-                            transition={{ duration: 0.2 }}
-                            className="text-green-500"
-                          >
-                            ▲
-                          </motion.span>
-                        )}
-                        {crypto.priceDirection === "down" && (
-                          <motion.span animate={{ y: [0, 2] }} transition={{ duration: 0.2 }} className="text-red-500">
-                            ▼
-                          </motion.span>
-                        )}
+                      <div className="flex items-center justify-end">
+                        <div className="text-right whitespace-nowrap">
+                          {formatPrice(crypto.price)}
+                          {crypto.priceDirection === "up" && (
+                            <motion.span
+                              animate={{ y: [-2, 0] }}
+                              transition={{ duration: 0.2 }}
+                              className="text-green-500 mx-1"
+                            >
+                              ▲
+                            </motion.span>
+                          )}
+                          {crypto.priceDirection === "down" && (
+                            <motion.span
+                              animate={{ y: [0, 2] }}
+                              transition={{ duration: 0.2 }}
+                              className="text-red-500 mx-1"
+                            >
+                              ▼
+                            </motion.span>
+                          )}
+                          CHF
+                        </div>
                       </div>
                     </td>
                     <td
@@ -580,9 +590,7 @@ export default function MarketsSection() {
         )}
 
         <div className="mt-8 text-center">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-  
-          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
         </div>
       </div>
     </section>
