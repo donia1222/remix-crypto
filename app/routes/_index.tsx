@@ -220,7 +220,7 @@ export default function Index() {
           <FeaturesSection />
 
 
-          <div className="max-w-5xl mx-auto mt-40">
+          <div className="max-w-5xl mx-auto mt-26">
         <CryptoPriceVisualizer />
       </div>
       
