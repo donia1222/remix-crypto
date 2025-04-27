@@ -817,7 +817,7 @@ export default function CryptoCard() {
                 <div className="bg-white/5 rounded-xl p-4">
                   <div className="flex items-center gap-2 text-gray-300 text-sm mb-1">
                     <Wallet className="w-4 h-4" />
-                    <span>Marktkapitalisierung</span>
+                    <span>Kapital</span>
                   </div>
                   <div className="text-lg font-bold text-white">
                     {selectedCrypto.marketCap >= 1e12
