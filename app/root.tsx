@@ -26,7 +26,6 @@ export const meta: MetaFunction = () => {
   return [
     { title: "Krypto - Schweizer Kryptowährungsplattform" },
     { name: "description", content: "Moderne Plattform für Kryptowährungshandel aus der Schweiz" },
-    { name: "theme-color", content: "#000000" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
