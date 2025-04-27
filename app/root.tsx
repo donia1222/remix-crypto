@@ -5,7 +5,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import styles from "./tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -22,6 +22,18 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Krypto - Schweizer Kryptowährungsplattform" },
+    { name: "description", content: "Moderne Plattform für Kryptowährungshandel aus der Schweiz" },
+    { name: "theme-color", content: "#000000" },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
+    { name: "format-detection", content: "telephone=no" },
+    { name: "msapplication-tap-highlight", content: "no" },
+    { name: "theme-color", content: "#000000" },
+  ];
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="font-inter bg-gray-900 text-white">
@@ -33,6 +45,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        
         <ScrollRestoration />
         <Scripts />
       </body>
