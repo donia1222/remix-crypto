@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight, Star, Quote } from "lucide-react"
 
@@ -248,8 +248,6 @@ const testimonials = generateTestimonials(56)
 export default function TestimonialsSection() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [visibleTestimonials, setVisibleTestimonials] = useState<Testimonial[]>([])
-  const [autoplay, setAutoplay] = useState(true)
-  const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null)
   const testimonialsPerPage = 3
   const totalPages = Math.ceil(testimonials.length / testimonialsPerPage)
 
@@ -265,21 +263,6 @@ export default function TestimonialsSection() {
     updateVisibleTestimonials(activeIndex)
   }, [activeIndex])
 
-  // Configurar autoplay
-  useEffect(() => {
-    if (autoplay) {
-      autoplayTimerRef.current = setInterval(() => {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % totalPages)
-      }, 8000)
-    }
-
-    return () => {
-      if (autoplayTimerRef.current) {
-        clearInterval(autoplayTimerRef.current)
-      }
-    }
-  }, [autoplay, totalPages])
-
   // Navegar a la página anterior
   const goToPrevious = () => {
     setActiveIndex((prevIndex) => (prevIndex - 1 + totalPages) % totalPages)
@@ -288,20 +271,6 @@ export default function TestimonialsSection() {
   // Navegar a la página siguiente
   const goToNext = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % totalPages)
-  }
-
-  // Pausar autoplay al interactuar
-  const handleInteraction = () => {
-    setAutoplay(false)
-
-    // Reanudar autoplay después de 30 segundos de inactividad
-    if (autoplayTimerRef.current) {
-      clearInterval(autoplayTimerRef.current)
-    }
-
-    setTimeout(() => {
-      setAutoplay(true)
-    }, 30000)
   }
 
   return (
@@ -345,7 +314,7 @@ export default function TestimonialsSection() {
                   className="flex flex-col h-full p-6 bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl shadow-xl"
                 >
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-lg font-bold">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-lg font-bold">
                       {testimonial.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -381,10 +350,7 @@ export default function TestimonialsSection() {
           {/* Controles de navegación */}
           <div className="flex justify-center items-center mt-10 gap-4">
             <button
-              onClick={() => {
-                goToPrevious()
-                handleInteraction()
-              }}
+              onClick={goToPrevious}
               className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               aria-label="Vorherige Testimonials"
             >
@@ -395,10 +361,7 @@ export default function TestimonialsSection() {
               {Array.from({ length: totalPages }).map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => {
-                    setActiveIndex(i)
-                    handleInteraction()
-                  }}
+                  onClick={() => setActiveIndex(i)}
                   className={`w-2.5 h-2.5 rounded-full transition-all ${
                     i === activeIndex ? "bg-purple-500 w-6" : "bg-gray-700 hover:bg-gray-600"
                   }`}
@@ -408,10 +371,7 @@ export default function TestimonialsSection() {
             </div>
 
             <button
-              onClick={() => {
-                goToNext()
-                handleInteraction()
-              }}
+              onClick={goToNext}
               className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               aria-label="Nächste Testimonials"
             >
@@ -474,10 +434,7 @@ export default function TestimonialsSection() {
           {/* Controles de navegación móvil */}
           <div className="flex justify-center items-center mt-6 gap-4">
             <button
-              onClick={() => {
-                goToPrevious()
-                handleInteraction()
-              }}
+              onClick={goToPrevious}
               className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               aria-label="Vorheriges Testimonial"
             >
@@ -497,7 +454,6 @@ export default function TestimonialsSection() {
                     onClick={() => {
                       if (!showDots) {
                         setActiveIndex(i)
-                        handleInteraction()
                       }
                     }}
                     className={`${
@@ -516,10 +472,7 @@ export default function TestimonialsSection() {
             </div>
 
             <button
-              onClick={() => {
-                goToNext()
-                handleInteraction()
-              }}
+              onClick={goToNext}
               className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-white transition-colors"
               aria-label="Nächstes Testimonial"
             >
@@ -555,7 +508,27 @@ export default function TestimonialsSection() {
         </motion.div>
 
         {/* CTA */}
-
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          viewport={{ once: true }}
+          className="mt-16 text-center"
+        >
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
+            Schließen Sie sich Tausenden zufriedener Kunden an
+          </h3>
+          <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+            Erleben Sie selbst, warum so viele Anleger uns vertrauen und starten Sie noch heute mit Ihrer Krypto-Reise.
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium"
+          >
+            Jetzt registrieren
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   )
