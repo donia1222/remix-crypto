@@ -409,31 +409,7 @@ export default function FeaturesSection() {
         </motion.div>
 
         {/* Indicadores de características seleccionadas */}
-        <div className="flex justify-center mt-12 space-x-2">
-          {features.map((_, index) => (
-            <motion.button
-              key={index}
-              className="w-2 h-2 rounded-full bg-gray-700 focus:outline-none"
-              animate={{
-                scale: selectedFeature === index ? 1.5 : 1,
-                backgroundColor:
-                  selectedFeature === index
-                    ? features[index].color.includes("green")
-                      ? "#10b981"
-                      : features[index].color.includes("cyan")
-                        ? "#06b6d4"
-                        : features[index].color.includes("blue")
-                          ? "#2563eb"
-                          : "#7c3aed"
-                    : "#374151",
-              }}
-              onClick={() => setSelectedFeature(index)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-            />
-          ))}
-        </div>
+       
       </div>
     </section>
   )
