@@ -17,6 +17,8 @@ import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
+import TestimonialsSection from "../components/sections/testimonials-section"
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Krypto - Schweizer Kryptowährungsplattform" },
@@ -220,7 +222,7 @@ export default function Index() {
           <FeaturesSection />
 
 
-          <div className="max-w-5xl mx-auto mt-26">
+          <div className="max-w-5xl mx-auto mt-28">
         <CryptoPriceVisualizer />
       </div>
       
@@ -228,8 +230,16 @@ export default function Index() {
           {/* Blockchain Visualizer */}
           <BlockchainVisualizer />
 
+
           {/* Pricing Section */}
           <PricingSection />
+
+
+        {/* Testimonials Section */}
+
+          <TestimonialsSection />
+
+
 
           {/* News Section */}
           <NewsSection />
