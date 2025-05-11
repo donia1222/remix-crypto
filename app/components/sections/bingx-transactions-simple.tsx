@@ -178,22 +178,10 @@ export default function BingXTransactions() {
         </motion.div>
 
         <div className="flex justify-between items-center mb-6">
-          <div>
-            {debugInfo && (
-              <details className="text-left bg-gray-800 p-4 rounded-md mb-4 max-w-2xl overflow-auto">
-                <summary className="text-cyan-400 cursor-pointer">Debug Information</summary>
-                <pre className="text-xs text-gray-300 mt-2 whitespace-pre-wrap">{debugInfo}</pre>
-              </details>
-            )}
-          </div>
+
           
           <div className="flex gap-2">
-            <button
-              onClick={testPhpConnection}
-              className="px-4 py-2 rounded-md border border-gray-700 text-white hover:bg-gray-800"
-            >
-              Test PHP
-            </button>
+
             
             <button
               onClick={fetchTransactions}
