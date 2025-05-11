@@ -2,24 +2,23 @@
 import { useState, useEffect } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Zap, Tag, Newspaper, HelpCircle, Mail, Database } from "lucide-react"
+import { X, ChevronUp, BarChart2, Zap, Newspaper, HelpCircle, Mail, Database } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
+import LoadingAnimation from "../components/loading-animation"
 
 // Import section components
 import HeroSection from "../components/sections/hero-section"
 import MarketsSection from "../components/sections/markets-section"
 import FeaturesSection from "../components/sections/features-section"
-import PricingSection from "../components/sections/pricing-section"
 import NewsSection from "../components/sections/news-section"
 import FaqSection from "../components/sections/faq-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
-import TestimonialsSection from "../components/sections/testimonials-section"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
-import BingXBalance from "../components/bingx-balance";
+import BingXBalance from "../components/bingx-balance"
 
 export const meta: MetaFunction = () => {
   return [
@@ -95,6 +94,9 @@ export default function Index() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 overflow-x-hidden">
+      {/* Loading Animation */}
+      <LoadingAnimation />
+
       {/* Header with scroll effect */}
       <motion.header
         style={{
@@ -162,6 +164,7 @@ export default function Index() {
         </div>
       </motion.header>
 
+      {/* Rest of the component remains unchanged */}
       {/* Mobile Menu - Centered */}
       <motion.div
         initial={{ opacity: 0, height: 0 }}
@@ -219,16 +222,15 @@ export default function Index() {
           {/* Animated Text Reveal Section */}
           <AnimatedTextReveal />
 
-             {/* BingX Transactions Section */}
-             <BingXTransactionsSimple />
+          {/* BingX Transactions Section */}
+          <BingXTransactionsSimple />
 
-             {/* Mostrar el saldo primero */}
-      <BingXBalance />
-
+          {/* Mostrar el saldo primero */}
+          <BingXBalance />
 
           {/* News Section */}
           <NewsSection />
-          
+
           {/* Features Section */}
           <FeaturesSection />
 
