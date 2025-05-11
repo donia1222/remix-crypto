@@ -647,35 +647,11 @@ export default function CryptoCard() {
         <div className="relative z-10 p-8 md:p-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Krypto-Dashboard</h2>
-              <div className="flex items-center text-gray-300 text-sm">
-                <Clock className="w-4 h-4 mr-1" />
-                <span>
-                  {formattedTime} · {formattedDate}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 text-xs mt-1">
-                <span>Letzte Aktualisierung: {formatLastUpdated(lastUpdated)}</span>
-                <div className={`h-2 w-2 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}></div>
-                <span>{isConnected ? "Verbunden" : "Getrennt"}</span>
-                {!isConnected && (
-                  <button onClick={reconnectWebSocket} className="text-gray-400 hover:text-white">
-                    <RefreshCw className="h-3 w-3" />
-                  </button>
-                )}
-              </div>
+            
+        
             </div>
 
-            {/* Selector de criptomoneda */}
-            <div className="mt-4 md:mt-0 relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-colors"
-              >
-                <span className="font-medium">{selectedCrypto.name}</span>
-                {isDropdownOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </button>
-            </div>
+   
           </div>
 
           {/* Tarjeta de precio principal */}
@@ -690,12 +666,18 @@ export default function CryptoCard() {
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl font-bold">
-                    {selectedCrypto.symbol.substring(0, 1)}
-                  </div>
+         
                   <div>
-                    <h3 className="text-2xl font-bold text-white">{selectedCrypto.name}</h3>
-                    <p className="text-gray-300">{selectedCrypto.symbol}</p>
+         {/* Selector de criptomoneda */}
+         <div className="mt-4 md:mt-0 relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-xl px-4 py-2 text-white hover:bg-white/20 transition-colors"
+              >
+                <span className="font-medium">{selectedCrypto.name}</span>
+                {isDropdownOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+            </div>
                   </div>
                 </div>
 
@@ -831,16 +813,7 @@ export default function CryptoCard() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Botón de acción (solo Comprar) */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl text-white font-medium"
-            >
-              {selectedCrypto.symbol} kaufen
-            </motion.button>
-          </div>
+
         </div>
       </div>
 

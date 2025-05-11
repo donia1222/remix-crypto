@@ -94,13 +94,7 @@ export default function NewsSection() {
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" className="border-gray-700 text-white hover:bg-gray-800">
-              Alle Nachrichten anzeigen
-            </Button>
-          </motion.div>
-        </div>
+
       </div>
     </section>
   )

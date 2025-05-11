@@ -19,7 +19,7 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="space-y-6"
           >
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
               Die Zukunft der Kryptowährungen ist hier
             </h1>
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">

@@ -209,7 +209,7 @@ export default function FeaturesSection() {
               </div>
             </motion.div>
 
-            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-white">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-white p-4">
               Alles, was Sie für den Handel benötigen
             </h2>
 

@@ -28,17 +28,98 @@ export default function AnimatedTextReveal() {
   const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [10, 0, -10])
   const y = useTransform(scrollYProgress, [0, 0.5, 1], [100, 0, -100])
 
-  // Palabras que flotarán en el fondo
+  // Palabras que flotarán en el fondo con propiedades de animación
   const floatingWords = [
-    { text: "BITCOIN", x: -25, y: -20, size: "text-6xl", color: "text-purple-500/10" },
-    { text: "ETHEREUM", x: 25, y: 20, size: "text-5xl", color: "text-cyan-500/10" },
-    { text: "BLOCKCHAIN", x: -15, y: 15, size: "text-7xl", color: "text-blue-500/10" },
-    { text: "NFT", x: 20, y: -25, size: "text-8xl", color: "text-pink-500/10" },
-    { text: "DEFI", x: -30, y: 0, size: "text-7xl", color: "text-green-500/10" },
-    { text: "CRYPTO", x: 0, y: -30, size: "text-9xl", color: "text-yellow-500/10" },
-    { text: "MINING", x: 15, y: 30, size: "text-6xl", color: "text-red-500/10" },
-    { text: "WALLET", x: -20, y: -10, size: "text-5xl", color: "text-indigo-500/10" },
-    { text: "TOKEN", x: 30, y: 10, size: "text-7xl", color: "text-orange-500/10" },
+    {
+      text: "BITCOIN",
+      x: -25,
+      y: -20,
+      size: "text-6xl",
+      color: "text-purple-500/10",
+      floatDuration: 8,
+      floatDelay: 0,
+      floatDistance: 15,
+    },
+    {
+      text: "ETHEREUM",
+      x: 25,
+      y: 20,
+      size: "text-5xl",
+      color: "text-cyan-500/10",
+      floatDuration: 10,
+      floatDelay: 1,
+      floatDistance: 20,
+    },
+    {
+      text: "BLOCKCHAIN",
+      x: -15,
+      y: 15,
+      size: "text-7xl",
+      color: "text-blue-500/10",
+      floatDuration: 12,
+      floatDelay: 2,
+      floatDistance: 18,
+    },
+    {
+      text: "NFT",
+      x: 20,
+      y: -25,
+      size: "text-8xl",
+      color: "text-pink-500/10",
+      floatDuration: 9,
+      floatDelay: 3,
+      floatDistance: 25,
+    },
+    {
+      text: "DEFI",
+      x: -30,
+      y: 0,
+      size: "text-7xl",
+      color: "text-green-500/10",
+      floatDuration: 11,
+      floatDelay: 4,
+      floatDistance: 22,
+    },
+    {
+      text: "CRYPTO",
+      x: 0,
+      y: -30,
+      size: "text-9xl",
+      color: "text-yellow-500/10",
+      floatDuration: 14,
+      floatDelay: 0.5,
+      floatDistance: 30,
+    },
+    {
+      text: "MINING",
+      x: 15,
+      y: 30,
+      size: "text-6xl",
+      color: "text-red-500/10",
+      floatDuration: 9.5,
+      floatDelay: 2.5,
+      floatDistance: 17,
+    },
+    {
+      text: "WALLET",
+      x: -20,
+      y: -10,
+      size: "text-5xl",
+      color: "text-indigo-500/10",
+      floatDuration: 11,
+      floatDelay: 1.5,
+      floatDistance: 20,
+    },
+    {
+      text: "TOKEN",
+      x: 30,
+      y: 10,
+      size: "text-7xl",
+      color: "text-orange-500/10",
+      floatDuration: 10,
+      floatDelay: 3.5,
+      floatDistance: 24,
+    },
   ]
 
   // Efecto para rastrear la posición del ratón
@@ -84,8 +165,40 @@ export default function AnimatedTextReveal() {
               z: useTransform(scrollYProgress, [0, 1], [0, word.x * 10]),
             }}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.7 }}
-            transition={{ duration: 1, delay: index * 0.1 }}
+            animate={{
+              opacity: 0.7,
+              y: [`-${word.floatDistance}px`, `${word.floatDistance}px`, `-${word.floatDistance}px`],
+              x: [`-${word.floatDistance * 0.5}px`, `${word.floatDistance * 0.7}px`, `-${word.floatDistance * 0.5}px`],
+              rotate: [-2, 2, -2],
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              opacity: { duration: 1, delay: index * 0.1 },
+              y: {
+                duration: word.floatDuration,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: word.floatDelay,
+              },
+              x: {
+                duration: word.floatDuration * 1.3,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: word.floatDelay,
+              },
+              rotate: {
+                duration: word.floatDuration * 1.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: word.floatDelay + 0.5,
+              },
+              scale: {
+                duration: word.floatDuration * 1.2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: word.floatDelay + 1,
+              },
+            }}
           >
             {word.text}
           </motion.div>

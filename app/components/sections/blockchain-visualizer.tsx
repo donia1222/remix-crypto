@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button"
 export default function BlockchainVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeBlock, setActiveBlock] = useState<number | null>(null)
-  const [autoAnimate, setAutoAnimate] = useState(true)
+  const [autoAnimate, setAutoAnimate] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
 
   // Scroll animations
@@ -154,7 +154,7 @@ export default function BlockchainVisualizer() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 mb-4"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 mb-4 p-4"
           >
             Blockchain Technologie
           </motion.h2>

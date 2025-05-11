@@ -15,9 +15,11 @@ import NewsSection from "../components/sections/news-section"
 import FaqSection from "../components/sections/faq-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated-text-reveal"
-import BlockchainVisualizer from "../components/blockchain-visualizer"
+import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
 import TestimonialsSection from "../components/sections/testimonials-section"
+import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
+import BingXBalance from "../components/bingx-balance";
 
 export const meta: MetaFunction = () => {
   return [
@@ -69,7 +71,6 @@ export default function Index() {
     { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "funktionen", text: "Funktionen", icon: <Zap className="h-4 w-4" /> },
     { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
-    { id: "preise", text: "Preise", icon: <Tag className="h-4 w-4" /> },
     { id: "nachrichten", text: "Nachrichten", icon: <Newspaper className="h-4 w-4" /> },
     { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
@@ -104,14 +105,14 @@ export default function Index() {
       >
         <div className="flex items-center gap-4">
           <Link className="flex items-center justify-center" to="/">
-            <motion.span
+            <motion.img
+              src="/A5.png"
+              alt="Krypto Logo"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-xl font-bold text-white"
-            >
-              Krypto
-            </motion.span>
+              className="h-8"
+            />
           </Link>
         </div>
 
@@ -218,31 +219,25 @@ export default function Index() {
           {/* Animated Text Reveal Section */}
           <AnimatedTextReveal />
 
-          {/* Features Section */}
-          <FeaturesSection />
+             {/* BingX Transactions Section */}
+             <BingXTransactionsSimple />
 
-
-          <div className="max-w-5xl mx-auto mt-28">
-        <CryptoPriceVisualizer />
-      </div>
-      
-
-          {/* Blockchain Visualizer */}
-          <BlockchainVisualizer />
-
-
-          {/* Pricing Section */}
-          <PricingSection />
-
-
-        {/* Testimonials Section */}
-
-          <TestimonialsSection />
-
+             {/* Mostrar el saldo primero */}
+      <BingXBalance />
 
 
           {/* News Section */}
           <NewsSection />
+          
+          {/* Features Section */}
+          <FeaturesSection />
+
+          <div className="max-w-5xl mx-auto mt-28">
+            <CryptoPriceVisualizer />
+          </div>
+
+          {/* Blockchain Visualizer */}
+          <BlockchainVisualizer />
 
           {/* FAQ Section */}
           <FaqSection />
@@ -261,7 +256,15 @@ export default function Index() {
                   viewport={{ once: true }}
                   className="space-y-2"
                 >
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+                  <motion.img
+                    src="/A5.png"
+                    alt="Krypto Logo"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="h-14 mb-6 mx-auto"
+                  />
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-300">
                     Schließen Sie sich der Krypto-Revolution an
                   </h2>
                   <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -282,19 +285,16 @@ export default function Index() {
                 <footer className="mt-10 text-sm text-blue-300">
                   Demo page von{" "}
                   <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="underline">
-                 LWEB
+                    LWEB
                   </a>
-                  
                 </footer>
 
                 <footer className="mt-10 text-sm text-blue-300">
-                Einige Bilder stammen von{" "}
+                  Einige Bilder stammen von{" "}
                   <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
                     Freepik
                   </a>
-                  
                 </footer>
-                
               </div>
             </div>
           </section>
