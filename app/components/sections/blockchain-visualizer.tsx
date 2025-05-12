@@ -103,7 +103,7 @@ export default function BlockchainVisualizer() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="mt-20 bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
+        className=" bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
       >
         <div className="flex items-center gap-4 mb-4">
           <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${block.color} flex items-center justify-center`}>
@@ -142,7 +142,7 @@ export default function BlockchainVisualizer() {
     <section
       ref={containerRef}
       id="blockchain"
-      className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden bg-gray-950"
+      className=" overflow-hidden bg-gray-950"
     >
       {/* Fondo con efecto de cuadrícula */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>

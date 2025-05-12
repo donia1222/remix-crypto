@@ -252,10 +252,6 @@ export default function Index() {
               {/* BingX Transactions Section */}
               <BingXTransactionsSimple />
 
-              {/* BingX Balance */}
-              <div className="mt-16">
-                <BingXBalance />
-              </div>
             </div>
           </section>
 

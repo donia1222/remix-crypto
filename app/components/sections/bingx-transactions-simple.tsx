@@ -1,193 +1,240 @@
 "use client"
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowDownUp, Clock, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { Clock, RefreshCw, DollarSign, Bitcoin, ChevronDown, ChevronUp } from "lucide-react"
 
-// Definir tipos para la respuesta de la API
-interface BingXTransaction {
-  orderId: string;
-  symbol: string;
-  side: string;
-  price: string;
-  vol: string;
-  timestamp: number;
+// Define types for the API response
+interface FundingFee {
+  symbol: string
+  incomeType: string
+  income: string
+  asset: string
+  info: string
+  time: number
+  tranId: string
+  tradeId: string
 }
 
 interface BingXApiResponse {
-  code: number;
-  msg: string;
-  data: {
-    fill_orders: BingXTransaction[];
-  };
+  code: number
+  msg: string
+  data: FundingFee[]
 }
 
-export default function BingXTransactions() {
-  // URL del PHP que maneja toda la lógica de la API
-  const PHP_API_URL = "https://web.lweb.ch/crypto/api.php";
+export default function BingXFundingFees() {
+  // URL of the PHP API
+  const PHP_API_URL = "https://web.lweb.ch/crypto/api.php"
 
-  const [transactions, setTransactions] = useState<BingXTransaction[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string | null>(null);
+  const [fundingFees, setFundingFees] = useState<FundingFee[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  // Función para formatear fechas
+  // State for pagination
+  const [visibleItems, setVisibleItems] = useState(10)
+  const itemsPerPage = 10
+
+  // Function to format dates
   const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp);
+    const date = new Date(timestamp)
     return new Intl.DateTimeFormat("de-CH", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    }).format(date);
-  };
+    }).format(date)
+  }
 
-  // Función para formatear números con separador de miles
+  // Function to format numbers with thousands separator
   const formatNumber = (numStr: string, decimals = 6) => {
-    const num = Number.parseFloat(numStr);
-    if (isNaN(num)) return "0.00";
+    const num = Number.parseFloat(numStr)
+    if (isNaN(num)) return "0.00"
 
     return num.toLocaleString("de-CH", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-    });
-  };
+    })
+  }
 
-  // Función para probar la conexión con el servidor PHP
-  const testPhpConnection = async () => {
-    try {
-      setDebugInfo("Probando conexión con el servidor PHP...");
-      
-      // Usar fetch con modo no-cors para evitar problemas de CORS
-      const response = await fetch(PHP_API_URL, {
-        method: "GET",
-        mode: "cors", // Intentar con cors primero
-        headers: {
-          "Accept": "application/json"
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const text = await response.text();
-      setDebugInfo(`Respuesta del servidor PHP: ${text.substring(0, 200)}...`);
-      
-      try {
-        // Intentar parsear la respuesta como JSON
-        const data = JSON.parse(text);
-        setDebugInfo(`Respuesta parseada: ${JSON.stringify(data, null, 2)}`);
-      } catch (e) {
-        setDebugInfo(`Error al parsear JSON: ${e instanceof Error ? e.message : String(e)}`);
-      }
-    } catch (err) {
-      setDebugInfo(`Error al conectar con el servidor PHP: ${err instanceof Error ? err.message : String(err)}`);
+  // Calculate total funding fees
+  const calculateTotalFundingFees = () => {
+    return fundingFees
+      .filter((fee) => fee.incomeType === "FUNDING_FEE")
+      .reduce((total, fee) => total + Number.parseFloat(fee.income), 0)
+  }
+
+  // Function to handle showing more or less items
+  const handleShowMoreLess = () => {
+    if (visibleItems < fundingFees.length) {
+      // Show more
+      setVisibleItems(Math.min(visibleItems + itemsPerPage, fundingFees.length))
+    } else {
+      // Show less
+      setVisibleItems(itemsPerPage)
     }
-  };
+  }
 
-  // Función para obtener las transacciones
-  const fetchTransactions = async () => {
-    setIsLoading(true);
-    setError(null);
-    setDebugInfo(null);
+  // Function to fetch funding fees
+  const fetchFundingFees = async () => {
+    setIsLoading(true)
+    setError(null)
 
     try {
-      setDebugInfo("Iniciando solicitud a la API...");
-      
-      // Intentar con diferentes opciones de fetch para resolver problemas de CORS
       const response = await fetch(PHP_API_URL, {
         method: "GET",
         headers: {
-          "Accept": "application/json"
-        }
-      });
-
-      setDebugInfo(`Respuesta recibida. Estado: ${response.status} ${response.statusText}`);
+          Accept: "application/json",
+        },
+      })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP-Fehler! Status: ${response.status}`)
       }
 
-      // Obtener el texto de la respuesta para depuración
-      const responseText = await response.text();
-      setDebugInfo(prev => `${prev}\nRespuesta: ${responseText.substring(0, 500)}${responseText.length > 500 ? '...' : ''}`);
-      
-      // Intentar parsear la respuesta como JSON
-      let data: BingXApiResponse;
+      // Get response text
+      const responseText = await response.text()
+
+      // Try to parse the response as JSON
+      let data: BingXApiResponse
       try {
-        data = JSON.parse(responseText);
+        data = JSON.parse(responseText)
       } catch (e) {
-        throw new Error(`Error al parsear la respuesta JSON: ${e instanceof Error ? e.message : String(e)}`);
+        throw new Error(`Fehler beim Parsen der JSON-Antwort: ${e instanceof Error ? e.message : String(e)}`)
       }
 
-      setDebugInfo(prev => `${prev}\nDatos parseados: ${JSON.stringify(data, null, 2)}`);
-
-      // Verificar si hay un error en la respuesta
+      // Check if there's an error in the response
       if (data.code !== 0) {
-        throw new Error(`Error de la API: ${data.msg || 'Error desconocido'}`);
+        throw new Error(`API-Fehler: ${data.msg || "Unbekannter Fehler"}`)
       }
 
-      // Extraer las transacciones de la estructura de datos
-      const orders = data.data?.fill_orders || [];
-      
-      setDebugInfo(prev => `${prev}\nTransacciones encontradas: ${orders.length}`);
-      
-      // Establecer las transacciones
-      setTransactions(orders);
-      setLastUpdated(new Date());
-    } catch (err) {
-      console.error("Error fetching transactions:", err);
-      setError(err instanceof Error ? err.message : "Unbekannter Fehler");
-      setDebugInfo(prev => `${prev}\nError: ${err instanceof Error ? err.message : String(err)}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      // Extract the funding fees from the data structure
+      const fees = data.data || []
 
-  // Cargar transacciones al montar el componente
+      // Set the funding fees
+      setFundingFees(fees)
+      setLastUpdated(new Date())
+
+      // Reset visible items to initial value when new data is loaded
+      setVisibleItems(itemsPerPage)
+    } catch (err) {
+      console.error("Fehler beim Abrufen der Finanzierungsgebühren:", err)
+      setError(err instanceof Error ? err.message : "Unbekannter Fehler")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Load funding fees when the component mounts
   useEffect(() => {
-    // Primero probar la conexión
-    testPhpConnection();
-    
-    // Luego intentar obtener las transacciones
-    setTimeout(() => {
-      fetchTransactions();
-    }, 2000);
-  }, []);
+    fetchFundingFees()
+  }, [])
+
+  // Function to get the appropriate color class based on income type
+  const getIncomeTypeColorClass = (incomeType: string) => {
+    switch (incomeType) {
+      case "FUNDING_FEE":
+        return "bg-green-500/20 text-green-400"
+      case "TRADING_FEE":
+        return "bg-red-500/20 text-red-400"
+      case "REALIZED_PNL":
+        return "bg-blue-500/20 text-blue-400"
+      default:
+        return "bg-gray-500/20 text-gray-400"
+    }
+  }
+
+  // Function to translate income type
+  const translateIncomeType = (incomeType: string) => {
+    switch (incomeType) {
+      case "FUNDING_FEE":
+        return "FINANZIERUNGSGEBÜHR"
+      case "TRADING_FEE":
+        return "HANDELSGEBÜHR"
+      case "REALIZED_PNL":
+        return "REALISIERTER G/V"
+      default:
+        return incomeType
+    }
+  }
+
+  // Function to translate info
+  const translateInfo = (info: string) => {
+    switch (info) {
+      case "Funding Fee":
+        return "Finanzierungsgebühr"
+      case "Position opening fee":
+        return "Positionseröffnungsgebühr"
+      case "Position closing fee":
+        return "Positionsschließungsgebühr"
+      case "Buy to Close":
+        return "Kauf zum Schließen"
+      default:
+        return info
+    }
+  }
 
   return (
-    <section id="bingx-transaktionen" className="w-full py-12 md:py-24 bg-gray-950">
-      <div className="container px-4 md:px-6 mx-auto">
+    <section id="bingx-funding-fees" className="w-full py-8 md:py-16 bg-gray-950">
+      <div className="container px-3 md:px-6 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center mb-10"
+          className="text-center mb-6 md:mb-10"
         >
-          <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400 mb-4">BingX</div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white mb-4">
-            BingX-Transaktionen
+          <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400 mb-3">BingX</div>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter sm:text-4xl  text-white mb-3">
+            BingX Finanzierungsgebühren
           </h2>
-          <p className="max-w-[700px] mx-auto text-gray-400">
-            Hier zeige ich meine abgeschlossenen Transaktionen, die ich für meine Handelsstrategie nutze.
+          <p className="max-w-[700px] mx-auto text-sm md:text-base text-gray-400">
+            Hier zeige ich meine Finanzierungsgebühren von BingX für meine Handelsstrategie.
           </p>
         </motion.div>
 
-        <div className="flex justify-between items-center mb-6">
+        {fundingFees.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-10"
+          >
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 md:p-6">
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="bg-green-500/20 p-2 md:p-3 rounded-full">
+                  <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-base md:text-lg font-medium text-white">Gesamte Finanzierungsgebühren</h3>
+                  <p className="text-xl md:text-2xl font-bold text-green-400">
+                    {formatNumber(calculateTotalFundingFees().toString(), 8)} USDT
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 md:p-6">
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="bg-blue-500/20 p-2 md:p-3 rounded-full">
+                  <Bitcoin className="h-5 w-5 md:h-6 md:w-6 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-base md:text-lg font-medium text-white">Hauptpaar</h3>
+                  <p className="text-xl md:text-2xl font-bold text-blue-400">BTC-USDT</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-          
+        <div className="flex justify-between items-center mb-4 md:mb-6">
           <div className="flex gap-2">
-
-            
             <button
-              onClick={fetchTransactions}
-              className="px-4 py-2 rounded-md border border-gray-700 text-white hover:bg-gray-800 flex items-center"
+              onClick={fetchFundingFees}
+              className="px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800 flex items-center"
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
+              <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
               Aktualisieren
             </button>
           </div>
@@ -200,15 +247,15 @@ export default function BingXTransactions() {
           className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
         >
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="animate-spin h-10 w-10 border-4 border-cyan-400 rounded-full border-t-transparent mb-4"></div>
-              <p className="text-gray-400">Meine Transaktionen werden geladen...</p>
+            <div className="flex flex-col items-center justify-center py-12 md:py-20">
+              <div className="animate-spin h-8 w-8 md:h-10 md:w-10 border-4 border-cyan-400 rounded-full border-t-transparent mb-3 md:mb-4"></div>
+              <p className="text-sm md:text-base text-gray-400">Finanzierungsgebühren werden geladen...</p>
             </div>
           ) : error ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+            <div className="flex flex-col items-center justify-center py-12 md:py-20">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <svg
-                  className="h-8 w-8 text-red-500"
+                  className="h-6 w-6 md:h-8 md:w-8 text-red-500"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -224,81 +271,151 @@ export default function BingXTransactions() {
                   <path d="M12 17h.01" />
                 </svg>
               </div>
-              <p className="text-red-400 mb-2">{error}</p>
+              <p className="text-sm md:text-base text-red-400 mb-2">{error}</p>
               <button
-                onClick={fetchTransactions}
-                className="px-4 py-2 rounded-md border border-gray-700 text-white hover:bg-gray-800"
+                onClick={fetchFundingFees}
+                className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800"
               >
                 Erneut versuchen
               </button>
             </div>
-          ) : transactions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                <ArrowDownUp className="h-8 w-8 text-gray-400" />
+          ) : fundingFees.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 md:py-20">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-800 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-gray-400" />
               </div>
-              <p className="text-gray-400 mb-2">Keine Transaktionen gefunden</p>
-              <p className="text-gray-500 max-w-md text-center">
-                Es wurden keine Transaktionen in meinem BingX-Konto gefunden. Sobald ich Transaktionen durchführe,
-                werden sie hier angezeigt.
+              <p className="text-sm md:text-base text-gray-400 mb-2">Keine Finanzierungsgebühren gefunden</p>
+              <p className="text-xs md:text-sm text-gray-500 max-w-md text-center px-4">
+                Es wurden keine Finanzierungsgebühren in Ihrem BingX-Konto gefunden. Sobald Sie Transaktionen
+                durchführen, werden sie hier angezeigt.
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-800 hover:bg-gray-800/50">
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">ID</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Paar</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Typ</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Preis</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Menge</th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Datum</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((tx) => (
-                    <tr key={tx.orderId} className="border-b border-gray-800 hover:bg-gray-800/50">
-                      <td className="p-4 align-middle font-medium text-white">{tx.orderId}</td>
-                      <td className="p-4 align-middle font-medium text-white">{tx.symbol}</td>
-                      <td className="p-4 align-middle">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            tx.side === "BUY" ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+            <>
+              {/* Desktop view - Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-800 hover:bg-gray-800/50">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Paar</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Typ</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Einkommen</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Vermögenswert</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Info</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Datum</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fundingFees.slice(0, visibleItems).map((fee) => (
+                      <tr key={fee.tranId} className="border-b border-gray-800 hover:bg-gray-800/50">
+                        <td className="p-4 align-middle font-medium text-white">{fee.symbol}</td>
+                        <td className="p-4 align-middle">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getIncomeTypeColorClass(
+                              fee.incomeType,
+                            )}`}
+                          >
+                            {translateIncomeType(fee.incomeType)}
+                          </span>
+                        </td>
+                        <td
+                          className={`p-4 align-middle ${
+                            Number.parseFloat(fee.income) >= 0 ? "text-green-400" : "text-red-400"
                           }`}
                         >
-                          {tx.side === "BUY" ? (
-                            <TrendingUp className="mr-1 h-3 w-3" />
-                          ) : (
-                            <TrendingDown className="mr-1 h-3 w-3" />
-                          )}
-                          {tx.side === "BUY" ? "KAUF" : "VERKAUF"}
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle text-gray-300">{formatNumber(tx.price, 2)}</td>
-                      <td className="p-4 align-middle text-gray-300">{formatNumber(tx.vol)}</td>
-                      <td className="p-4 align-middle text-gray-400">
-                        <div className="flex items-center">
-                          <Clock className="mr-1.5 h-3 w-3" />
-                          {formatDate(tx.timestamp)}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                          {formatNumber(fee.income, 8)}
+                        </td>
+                        <td className="p-4 align-middle text-gray-300">{fee.asset}</td>
+                        <td className="p-4 align-middle text-gray-300">{translateInfo(fee.info)}</td>
+                        <td className="p-4 align-middle text-gray-400">
+                          <div className="flex items-center">
+                            <Clock className="mr-1.5 h-3 w-3" />
+                            {formatDate(fee.time)}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile view - Card layout */}
+              <div className="md:hidden">
+                {fundingFees.slice(0, visibleItems).map((fee) => (
+                  <div key={fee.tranId} className="p-3 border-b border-gray-800 hover:bg-gray-800/50">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-medium text-white">{fee.symbol}</span>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getIncomeTypeColorClass(
+                          fee.incomeType,
+                        )}`}
+                      >
+                        {translateIncomeType(fee.incomeType)}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <p className="text-gray-500 text-xs">Einkommen</p>
+                        <p className={Number.parseFloat(fee.income) >= 0 ? "text-green-400" : "text-red-400"}>
+                          {formatNumber(fee.income, 8)}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-gray-500 text-xs">Vermögenswert</p>
+                        <p className="text-gray-300">{fee.asset}</p>
+                      </div>
+
+                      <div>
+                        <p className="text-gray-500 text-xs">Info</p>
+                        <p className="text-gray-300">{translateInfo(fee.info)}</p>
+                      </div>
+
+                      <div>
+                        <p className="text-gray-500 text-xs">Datum</p>
+                        <p className="text-gray-400 flex items-center">
+                          <Clock className="mr-1 h-3 w-3" />
+                          {formatDate(fee.time)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {fundingFees.length > itemsPerPage && (
+                <div className="flex justify-center py-3 md:py-4">
+                  <button
+                    onClick={handleShowMoreLess}
+                    className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800 flex items-center"
+                  >
+                    {visibleItems < fundingFees.length ? (
+                      <>
+                        <ChevronDown className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                        Mehr anzeigen ({Math.min(itemsPerPage, fundingFees.length - visibleItems)})
+                      </>
+                    ) : (
+                      <>
+                        <ChevronUp className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                        Weniger anzeigen
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </motion.div>
 
         {lastUpdated && (
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              Meine Daten zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
+          <div className="mt-4 md:mt-6 text-center">
+            <p className="text-xs md:text-sm text-gray-500">
+              Zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
             </p>
           </div>
         )}
       </div>
     </section>
-  );
+  )
 }
