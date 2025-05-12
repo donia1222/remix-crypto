@@ -19,7 +19,17 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="space-y-6"
           >
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
+                       <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/20 backdrop-blur-sm"
+            >
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
+                Krypto Trading & IT Lösungen
+              </span>
+            </motion.div>
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
               Die Zukunft der Kryptowährungen ist hier
             </h1>
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">

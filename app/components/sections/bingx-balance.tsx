@@ -122,8 +122,8 @@ export default function BingXBalance() {
       <div className="container px-4 mx-auto">
         <div className="text-center mb-10">
           <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400 mb-4">BingX</div>
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Mein BingX-Kontostand
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white mb-4">
+            BingX-Kontostand
           </h2>
           <p className="max-w-[700px] mx-auto text-gray-400">
             Hier zeige ich meinen aktuellen Kontostand und verfügbare Mittel auf BingX.

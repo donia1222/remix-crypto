@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Zap, Newspaper, HelpCircle, Mail, Database } from "lucide-react"
+import { X, ChevronUp, BarChart2, Zap, Newspaper, HelpCircle, Mail, Database, TrendingUp } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
-import LoadingAnimation from "../components/loading-animation"
+import LoadingAnimation from "../components/ui/loading-animation"
+import CookieConsent from "../components/cookie-consent"
+import ParticleAnimation from "../components/particle-animation"
 
 // Import section components
 import HeroSection from "../components/sections/hero-section"
@@ -18,7 +20,7 @@ import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
-import BingXBalance from "../components/bingx-balance"
+import BingXBalance from "../components/sections/bingx-balance"
 
 export const meta: MetaFunction = () => {
   return [
@@ -68,9 +70,10 @@ export default function Index() {
   // Definir los elementos del menú con sus iconos
   const menuItems = [
     { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
+    { id: "nachrichten", text: "News", icon: <Newspaper className="h-4 w-4" /> },
     { id: "funktionen", text: "Funktionen", icon: <Zap className="h-4 w-4" /> },
+    { id: "bingx", text: "BingX", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
-    { id: "nachrichten", text: "Nachrichten", icon: <Newspaper className="h-4 w-4" /> },
     { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
@@ -96,6 +99,9 @@ export default function Index() {
     <div className="flex flex-col min-h-screen bg-gray-950 overflow-x-hidden">
       {/* Loading Animation */}
       <LoadingAnimation />
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent />
 
       {/* Header with scroll effect */}
       <motion.header
@@ -217,95 +223,65 @@ export default function Index() {
         {/* Content with solid background */}
         <div className="bg-gray-950 relative z-20">
           {/* Markets Section */}
-          <MarketsSection />
-
-          {/* Animated Text Reveal Section */}
-          <AnimatedTextReveal />
-
-          {/* BingX Transactions Section */}
-          <BingXTransactionsSimple />
-
-          {/* Mostrar el saldo primero */}
-          <BingXBalance />
-
-          {/* News Section */}
-          <NewsSection />
-
-          {/* Features Section */}
-          <FeaturesSection />
+          <section id="maerkte">
+            <MarketsSection />
+          </section>
 
           <div className="max-w-5xl mx-auto mt-28">
             <CryptoPriceVisualizer />
           </div>
 
-          {/* Blockchain Visualizer */}
-          <BlockchainVisualizer />
+          {/* News Section */}
+          <section id="nachrichten">
+            <NewsSection />
+          </section>
 
-          {/* FAQ Section */}
-          <FaqSection />
+          {/* Animated Text Reveal Section */}
+          <AnimatedTextReveal />
 
-          {/* Contact Section */}
-          <ContactSection />
+          {/* Features Section */}
+          <section id="funktionen">
+            <FeaturesSection />
+          </section>
 
-          {/* Final CTA Section with solid background */}
-          <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-900 to-black relative z-20">
-            <div className="container px-4 md:px-6 mx-auto">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                  className="space-y-2"
-                >
-                  <motion.img
-                    src="/A5.png"
-                    alt="Krypto Logo"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="h-14 mb-6 mx-auto"
-                  />
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-300">
-                    Schließen Sie sich der Krypto-Revolution an
-                  </h2>
-                  <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Mehr als 1 Million Benutzer vertrauen Krypto für ihre täglichen Geschäfte.
-                  </p>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="flex flex-col gap-2 min-[400px]:flex-row"
-                >
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
-                </motion.div>
+          {/* BingX Section */}
+          <section id="bingx">
+            <div className="container px-4 md:px-6 mx-auto py-12 md:py-24">
+          
 
-                <footer className="mt-10 text-sm text-blue-300">
-                  Demo page von{" "}
-                  <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="underline">
-                    LWEB
-                  </a>
-                </footer>
+              {/* BingX Transactions Section */}
+              <BingXTransactionsSimple />
 
-                <footer className="mt-10 text-sm text-blue-300">
-                  Einige Bilder stammen von{" "}
-                  <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
-                    Freepik
-                  </a>
-                </footer>
+              {/* BingX Balance */}
+              <div className="mt-16">
+                <BingXBalance />
               </div>
             </div>
           </section>
+
+
+          {/* Blockchain Visualizer */}
+          <section id="blockchain">
+            <BlockchainVisualizer />
+          </section>
+
+          {/* FAQ Section */}
+          <section id="faq">
+            <FaqSection />
+          </section>
+
+          {/* Contact Section */}
+          <section id="kontakt">
+            <ContactSection />
+          </section>
+
         </div>
       </main>
 
       {/* Footer with solid background */}
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-gray-800 bg-black relative z-30">
-        <p className="text-xs text-gray-400">© 2025 LWEB. Alle Rechte vorbehalten.</p>
+        <p className="text-xs text-gray-400">© 2025 nextrade. Alle Rechte vorbehalten.</p>
+
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4 text-gray-400" to="/terms">
             Nutzungsbedingungen
@@ -317,6 +293,7 @@ export default function Index() {
             Cookie-Richtlinie
           </Link>
         </nav>
+  
       </footer>
 
       {/* Back-to-top button - only visible after scrolling */}
@@ -332,10 +309,10 @@ export default function Index() {
           }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 flex items-center justify-center text-white shadow-lg z-50"
+          className="fixed bottom-4 right-4 w-8 h-8 rounded-full bg-gray-800/80 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-gray-300 shadow-md z-50 hover:bg-gray-700 hover:text-white"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <ChevronUp className="h-6 w-6" />
+          <ChevronUp className="h-4 w-4" />
         </motion.button>
       )}
     </div>
