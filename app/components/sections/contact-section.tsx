@@ -1,10 +1,10 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Mail, Phone, Send, MessageSquare } from "lucide-react"
+import { Mail, Send, MessageSquare } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 export default function ContactSection() {
@@ -16,9 +16,24 @@ export default function ContactSection() {
   })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  // Estado para el captcha
+  const [captchaValue, setCaptchaValue] = useState("")
+  const [userCaptchaInput, setUserCaptchaInput] = useState("")
+  const [captchaError, setCaptchaError] = useState(false)
+  const [captchaCanvas, setCaptchaCanvas] = useState<HTMLCanvasElement | null>(null)
+
   // Handle contact form submission
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Verificar el captcha
+    if (userCaptchaInput.toUpperCase() !== captchaValue) {
+      setCaptchaError(true)
+      generateCaptcha()
+      setUserCaptchaInput("")
+      return
+    }
+
     console.log("Form submitted:", contactForm)
     setFormSubmitted(true)
 
@@ -30,6 +45,9 @@ export default function ContactSection() {
         email: "",
         message: "",
       })
+      setUserCaptchaInput("")
+      setCaptchaError(false)
+      generateCaptcha()
     }, 3000)
   }
 
@@ -41,6 +59,61 @@ export default function ContactSection() {
       [name]: value,
     }))
   }
+
+  // Generar un nuevo captcha
+  const generateCaptcha = () => {
+    const canvas = document.createElement("canvas")
+    canvas.width = 150
+    canvas.height = 50
+    const ctx = canvas.getContext("2d")
+
+    if (ctx) {
+      // Generar un valor aleatorio de 5 caracteres
+      const captchaText = Math.random().toString(36).substring(2, 7).toUpperCase()
+      setCaptchaValue(captchaText)
+
+      // Fondo
+      ctx.fillStyle = "#1f2937"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Dibujar líneas aleatorias
+      for (let i = 0; i < 5; i++) {
+        ctx.strokeStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`
+        ctx.beginPath()
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height)
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height)
+        ctx.stroke()
+      }
+
+      // Dibujar puntos aleatorios
+      for (let i = 0; i < 50; i++) {
+        ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`
+        ctx.beginPath()
+        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Dibujar el texto
+      ctx.font = "bold 24px Arial"
+      ctx.fillStyle = "#ffffff"
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(captchaText, canvas.width / 2, canvas.height / 2)
+
+      setCaptchaCanvas(canvas)
+    }
+  }
+
+  // Manejar cambios en el input del captcha
+  const handleCaptchaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserCaptchaInput(e.target.value)
+    setCaptchaError(false)
+  }
+
+  // Generar captcha al cargar el componente
+  React.useEffect(() => {
+    generateCaptcha()
+  }, [])
 
   return (
     <section id="kontakt" className="w-full py-12 md:py-24 bg-black">
@@ -78,8 +151,6 @@ export default function ContactSection() {
                   <p className="text-white hover:text-cyan-400 transition-colors">support@krypto.ch</p>
                 </div>
               </motion.a>
-
-
 
               <motion.a
                 href="https://wa.me/41786999950"
@@ -192,6 +263,67 @@ export default function ContactSection() {
                   ></motion.textarea>
                 </div>
 
+                <div className="space-y-2">
+                  <label htmlFor="captcha" className="block text-sm font-medium text-gray-300 mb-1">
+                    Captcha - Geben Sie die unten angezeigten Zeichen ein
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {captchaCanvas && (
+                      <div className="relative">
+                        <img
+                          src={captchaCanvas.toDataURL() || "/placeholder.svg"}
+                          alt="CAPTCHA"
+                          className="h-12 border border-gray-700 rounded-md"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={generateCaptcha}
+                          className="absolute top-0 right-0 h-8 w-8 text-gray-400 hover:text-white"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                            <path d="M21 3v5h-5" />
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                            <path d="M3 21v-5h5" />
+                          </svg>
+                          <span className="sr-only">Captcha neu generieren</span>
+                        </Button>
+                      </div>
+                    )}
+                    <motion.input
+                      whileFocus={{ scale: 1.01 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      type="text"
+                      id="captcha"
+                      name="captcha"
+                      value={userCaptchaInput}
+                      onChange={handleCaptchaChange}
+                      required
+                      className={`flex-1 px-3 py-2 bg-gray-800 border ${
+                        captchaError ? "border-red-500" : "border-gray-700"
+                      } rounded-md text-white focus:outline-none focus:ring-2 focus:ring-cyan-600`}
+                      placeholder="Code eingeben"
+                    />
+                  </div>
+                  {captchaError && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Der CAPTCHA-Code ist falsch. Bitte versuchen Sie es erneut.
+                    </p>
+                  )}
+                </div>
+
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     type="submit"
@@ -200,19 +332,16 @@ export default function ContactSection() {
                     Nachricht senden <Send className="ml-2 h-4 w-4" />
                   </Button>
                 </motion.div>
-                
               </form>
-              
             )}
           </motion.div>
           <div className="mt-2 md:mt-0">
-          Einige Bilder stammen von{" "}
-          <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
-            Freepik
-          </a>
+            Einige Bilder stammen von{" "}
+            <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
+              Freepik
+            </a>
+          </div>
         </div>
-        </div>
-  
       </div>
     </section>
   )
