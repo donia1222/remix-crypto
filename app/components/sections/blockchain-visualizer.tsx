@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
-import { Shield, Lock, Database, LinkIcon, Check, ArrowRight } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { Shield, Lock, Database, LinkIcon, Check } from "lucide-react"
 
 export default function BlockchainVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -103,7 +102,7 @@ export default function BlockchainVisualizer() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className=" bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
+        className="bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
       >
         <div className="flex items-center gap-4 mb-4">
           <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${block.color} flex items-center justify-center`}>
@@ -139,13 +138,9 @@ export default function BlockchainVisualizer() {
   }
 
   return (
-    <section
-      ref={containerRef}
-      id="blockchain"
-      className=" overflow-hidden bg-gray-950"
-    >
+    <section ref={containerRef} id="blockchain" className="relative overflow-hidden bg-gray-950">
       {/* Fondo con efecto de cuadrícula */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
       {/* Contenido principal */}
       <motion.div className="container px-4 md:px-6 mx-auto relative z-10" style={{ opacity, y }}>
@@ -175,7 +170,7 @@ export default function BlockchainVisualizer() {
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 1.5, delay: 0.5 }}
-            className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 to-cyan-600 transform -translate-y-1/2 origin-left"
+            className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 to-cyan-600 transform -translate-y-1/2 origin-left pointer-events-none"
           />
 
           {/* Bloques */}
@@ -283,39 +278,26 @@ export default function BlockchainVisualizer() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* CTA */}
-
       </motion.div>
 
-      {/* Partículas flotantes */}
+      {/* Partículas flotantes - MODIFICADO para evitar problemas con los botones */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-cyan-500/30"
+            className="absolute w-2 h-2 rounded-full bg-cyan-500/30 pointer-events-none"
             initial={{
               x: Math.random() * 100 + "%",
               y: Math.random() * 100 + "%",
               scale: Math.random() * 0.5 + 0.5,
             }}
             animate={{
-              y: [
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-              ],
-              x: [
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-              ],
-              opacity: [0.2, 0.5, 0.2, 0.5],
+              y: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              x: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{
-              duration: 20 + i * 5,
+              duration: 15 + i * 3,
               repeat: Number.POSITIVE_INFINITY,
               ease: "linear",
             }}
@@ -323,13 +305,7 @@ export default function BlockchainVisualizer() {
         ))}
       </div>
 
-      {/* CSS para el patrón de cuadrícula */}
-      <style>{`
-        .bg-grid-pattern {
-          background-image: radial-gradient(circle, rgba(124, 58, 237, 0.1) 1px, transparent 1px);
-          background-size: 30px 30px;
-        }
-      `}</style>
+
     </section>
   )
 }
