@@ -15,6 +15,7 @@ interface BlogPost {
   content: string
 }
 
+
 export default function NewsSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [latestPost, setLatestPost] = useState<BlogPost | null>(null)
