@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Clock, RefreshCw, DollarSign, Bitcoin, ChevronDown, ChevronUp } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Clock, RefreshCw, DollarSign, Bitcoin, X, ExternalLink } from "lucide-react"
 
 // Define types for the API response
 interface FundingFee {
@@ -31,10 +31,10 @@ export default function BingXFundingFees() {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [buttonClicked, setButtonClicked] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
 
-  // State for pagination
-  const [visibleItems, setVisibleItems] = useState(6)
-  const itemsPerPage = 6
+  // State for pagination - Changed from 6 to 4
+  const initialVisibleItems = 4
 
   // Function to format dates
   const formatDate = (timestamp: number) => {
@@ -66,22 +66,21 @@ export default function BingXFundingFees() {
       .reduce((total, fee) => total + Number.parseFloat(fee.income), 0)
   }
 
-  // Function to handle showing more or less items
-  const handleShowMoreLess = () => {
-    console.log("Show More/Less button clicked")
-    setButtonClicked("showMore")
+  // Function to handle showing the modal
+  const handleShowAllModal = () => {
+    console.log("Show All button clicked")
+    setButtonClicked("showAll")
 
     setTimeout(() => {
       setButtonClicked(null)
     }, 300)
 
-    if (visibleItems < fundingFees.length) {
-      // Show more
-      setVisibleItems(Math.min(visibleItems + itemsPerPage, fundingFees.length))
-    } else {
-      // Show less
-      setVisibleItems(itemsPerPage)
-    }
+    setShowModal(true)
+  }
+
+  // Function to close the modal
+  const closeModal = () => {
+    setShowModal(false)
   }
 
   // Function to fetch funding fees
@@ -128,9 +127,6 @@ export default function BingXFundingFees() {
         // Set the funding fees
         setFundingFees(fees)
         setLastUpdated(new Date())
-
-        // Reset visible items to initial value when new data is loaded
-        setVisibleItems(itemsPerPage)
       })
       .catch((err) => {
         console.error("Fehler beim Abrufen der Finanzierungsgebühren:", err)
@@ -190,6 +186,49 @@ export default function BingXFundingFees() {
     }
   }
 
+  // Function to render a transaction item (used in both main view and modal)
+  const renderTransactionItem = (fee: FundingFee) => (
+    <div key={fee.tranId} className="p-3 border-b border-gray-800 hover:bg-gray-800/50">
+      <div className="flex justify-between items-start mb-2">
+        <span className="font-medium text-white">{fee.symbol}</span>
+        <span
+          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getIncomeTypeColorClass(
+            fee.incomeType,
+          )}`}
+        >
+          {translateIncomeType(fee.incomeType)}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        <div>
+          <p className="text-gray-500 text-xs">Einkommen</p>
+          <p className={Number.parseFloat(fee.income) >= 0 ? "text-green-400" : "text-red-400"}>
+            {formatNumber(fee.income, 8)}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-xs">Vermögenswert</p>
+          <p className="text-gray-300">{fee.asset}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-xs">Info</p>
+          <p className="text-gray-300">{translateInfo(fee.info)}</p>
+        </div>
+
+        <div>
+          <p className="text-gray-500 text-xs">Datum</p>
+          <p className="text-gray-400 flex items-center">
+            <Clock className="mr-1 h-3 w-3" />
+            {formatDate(fee.time)}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
     <section id="bingx-funding-fees" className="w-full py-8 md:py-16 bg-gray-950">
       <div className="container px-3 md:px-6 mx-auto">
@@ -243,7 +282,7 @@ export default function BingXFundingFees() {
           </motion.div>
         )}
 
-        {/* Refresh button - Completely redesigned for mobile */}
+        {/* Refresh button */}
         <div className="mb-4 md:mb-6">
           <div
             className={`
@@ -323,7 +362,7 @@ export default function BingXFundingFees() {
             </div>
           ) : (
             <>
-              {/* Desktop view - Table */}
+              {/* Desktop view - Table (showing only 4 items) */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -337,7 +376,7 @@ export default function BingXFundingFees() {
                     </tr>
                   </thead>
                   <tbody>
-                    {fundingFees.slice(0, visibleItems).map((fee) => (
+                    {fundingFees.slice(0, initialVisibleItems).map((fee) => (
                       <tr key={fee.tranId} className="border-b border-gray-800 hover:bg-gray-800/50">
                         <td className="p-4 align-middle font-medium text-white">{fee.symbol}</td>
                         <td className="p-4 align-middle">
@@ -370,53 +409,11 @@ export default function BingXFundingFees() {
                 </table>
               </div>
 
-              {/* Mobile view - Card layout */}
-              <div className="md:hidden">
-                {fundingFees.slice(0, visibleItems).map((fee) => (
-                  <div key={fee.tranId} className="p-3 border-b border-gray-800 hover:bg-gray-800/50">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="font-medium text-white">{fee.symbol}</span>
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getIncomeTypeColorClass(
-                          fee.incomeType,
-                        )}`}
-                      >
-                        {translateIncomeType(fee.incomeType)}
-                      </span>
-                    </div>
+              {/* Mobile view - Card layout (showing only 4 items) */}
+              <div className="md:hidden">{fundingFees.slice(0, initialVisibleItems).map(renderTransactionItem)}</div>
 
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div>
-                        <p className="text-gray-500 text-xs">Einkommen</p>
-                        <p className={Number.parseFloat(fee.income) >= 0 ? "text-green-400" : "text-red-400"}>
-                          {formatNumber(fee.income, 8)}
-                        </p>
-                      </div>
-
-                      <div>
-                        <p className="text-gray-500 text-xs">Vermögenswert</p>
-                        <p className="text-gray-300">{fee.asset}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-gray-500 text-xs">Info</p>
-                        <p className="text-gray-300">{translateInfo(fee.info)}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-gray-500 text-xs">Datum</p>
-                        <p className="text-gray-400 flex items-center">
-                          <Clock className="mr-1 h-3 w-3" />
-                          {formatDate(fee.time)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Show More/Less button - Completely redesigned for mobile */}
-              {fundingFees.length > itemsPerPage && (
+              {/* Show All button */}
+              {fundingFees.length > initialVisibleItems && (
                 <div className="p-4">
                   <div
                     className={`
@@ -425,23 +422,14 @@ export default function BingXFundingFees() {
                       bg-gray-800 text-white shadow-sm 
                       hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 
                       active:bg-gray-600 cursor-pointer z-10
-                      ${buttonClicked === "showMore" ? "bg-gray-600 scale-95" : ""}
+                      ${buttonClicked === "showAll" ? "bg-gray-600 scale-95" : ""}
                     `}
-                    onClick={handleShowMoreLess}
+                    onClick={handleShowAllModal}
                     role="button"
                     tabIndex={0}
                   >
-                    {visibleItems < fundingFees.length ? (
-                      <>
-                        <ChevronDown className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
-                        <span>Mehr anzeigen ({Math.min(itemsPerPage, fundingFees.length - visibleItems)})</span>
-                      </>
-                    ) : (
-                      <>
-                        <ChevronUp className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
-                        <span>Weniger anzeigen</span>
-                      </>
-                    )}
+                    <ExternalLink className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
+                    <span>Alle anzeigen ({fundingFees.length})</span>
                   </div>
                 </div>
               )}
@@ -456,6 +444,92 @@ export default function BingXFundingFees() {
             </p>
           </div>
         )}
+
+        {/* Modal for showing all transactions */}
+        <AnimatePresence>
+          {showModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                className="w-full max-w-4xl max-h-[90vh] bg-gray-900 rounded-xl overflow-hidden shadow-2xl"
+              >
+                <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                  <h3 className="text-xl font-bold text-white">Alle Finanzierungsgebühren</h3>
+                  <button
+                    onClick={closeModal}
+                    className="p-2 rounded-full hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    <X className="h-6 w-6 text-gray-400" />
+                  </button>
+                </div>
+
+                <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+                  {/* Desktop view in modal */}
+                  <div className="hidden md:block">
+                    <table className="w-full">
+                      <thead className="sticky top-0 bg-gray-900 z-10">
+                        <tr className="border-b border-gray-800">
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Paar</th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Typ</th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Einkommen</th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Vermögenswert</th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Info</th>
+                          <th className="h-12 px-4 text-left align-middle font-medium text-gray-300">Datum</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {fundingFees.map((fee) => (
+                          <tr key={fee.tranId} className="border-b border-gray-800 hover:bg-gray-800/50">
+                            <td className="p-4 align-middle font-medium text-white">{fee.symbol}</td>
+                            <td className="p-4 align-middle">
+                              <span
+                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getIncomeTypeColorClass(
+                                  fee.incomeType,
+                                )}`}
+                              >
+                                {translateIncomeType(fee.incomeType)}
+                              </span>
+                            </td>
+                            <td
+                              className={`p-4 align-middle ${
+                                Number.parseFloat(fee.income) >= 0 ? "text-green-400" : "text-red-400"
+                              }`}
+                            >
+                              {formatNumber(fee.income, 8)}
+                            </td>
+                            <td className="p-4 align-middle text-gray-300">{fee.asset}</td>
+                            <td className="p-4 align-middle text-gray-300">{translateInfo(fee.info)}</td>
+                            <td className="p-4 align-middle text-gray-400">
+                              <div className="flex items-center">
+                                <Clock className="mr-1.5 h-3 w-3" />
+                                {formatDate(fee.time)}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile view in modal */}
+                  <div className="md:hidden">{fundingFees.map(renderTransactionItem)}</div>
+                </div>
+
+                <div className="p-4 border-t border-gray-800 flex justify-end">
+                  <button
+                    onClick={closeModal}
+                    className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  >
+                    Schließen
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   )

@@ -221,7 +221,7 @@ export default function Index() {
         <HeroSection />
 
         {/* Content with solid background */}
-        <div className="bg-gray-950 relative z-20">
+        <div className="bg-gray-950 ">
           {/* Markets Section */}
           <section id="maerkte">
             <MarketsSection />
