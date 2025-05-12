@@ -262,7 +262,7 @@ export default function Index() {
           </section>
 
           {/* FAQ Section */}
-          <section id="faq">
+          <section id="faq " className="mt-20">
             <FaqSection />
           </section>
           {/* Final CTA Section with solid background */}
