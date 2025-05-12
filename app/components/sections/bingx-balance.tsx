@@ -27,7 +27,7 @@ interface BingXApiResponse {
 
 export default function BingXBalance() {
   // URL del PHP que maneja la lógica de la API
-  const PHP_API_URL = "https://web.lweb.ch/balance.php";
+  const PHP_API_URL = "https://web.lweb.ch/crypto/balance.php";
 
   const [balanceData, setBalanceData] = useState<BingXBalance | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -118,7 +118,7 @@ export default function BingXBalance() {
   }, []);
 
   return (
-    <section className="w-full py-12 bg-gray-950">
+    <section className=" bg-gray-950">
       <div className="container px-4 mx-auto">
         <div className="text-center mb-10">
           <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400 mb-4">BingX</div>
@@ -247,34 +247,6 @@ export default function BingXBalance() {
               </div>
             </div>
 
-            {/* Detalles del saldo */}
-            <div className="mt-8 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-              <div className="p-6 border-b border-gray-800">
-                <h3 className="text-xl font-medium text-white">Kontodetails</h3>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Asset</h4>
-                    <p className="text-lg font-medium text-white">{balanceData.asset}</p>
-                  </div>
-           
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Realisierter Gewinn</h4>
-                    <p className="text-lg font-medium text-white">${formatNumber(balanceData.realisedProfit)}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Verwendete Margin</h4>
-                    <p className="text-lg font-medium text-white">${formatNumber(balanceData.usedMargin)}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-400 mb-2">Eingefrorene Margin</h4>
-                    <p className="text-lg font-medium text-white">${formatNumber(balanceData.freezedMargin)}</p>
-                  </div>
-
-                </div>
-              </div>
-            </div>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 bg-gray-900 border border-gray-800 rounded-xl">

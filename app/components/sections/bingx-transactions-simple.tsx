@@ -24,7 +24,7 @@ interface BingXApiResponse {
 
 export default function BingXTransactions() {
   // URL del PHP que maneja toda la lógica de la API
-  const PHP_API_URL = "https://web.lweb.ch/api.php";
+  const PHP_API_URL = "https://web.lweb.ch/crypto/api.php";
 
   const [transactions, setTransactions] = useState<BingXTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
