@@ -79,23 +79,7 @@ export default function ContactSection() {
                 </div>
               </motion.a>
 
-              <motion.a
-                href="tel:+41441234567"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                viewport={{ once: true }}
-                whileHover={{ x: 5, scale: 1.02 }}
-                className="flex items-center gap-3 cursor-pointer"
-              >
-                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
-                  <Phone className="h-5 w-5 text-cyan-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Telefon</p>
-                  <p className="text-white hover:text-cyan-400 transition-colors">+41 44 123 45 67</p>
-                </div>
-              </motion.a>
+
 
               <motion.a
                 href="https://wa.me/41786999950"
