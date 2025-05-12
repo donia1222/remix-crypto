@@ -24,16 +24,17 @@ interface BingXApiResponse {
 
 export default function BingXFundingFees() {
   // URL of the PHP API
-  const PHP_API_URL = "https://web.lweb.ch/crypto/api.php"
+  const PHP_API_URL = "https://web.lweb.ch/api.php"
 
   const [fundingFees, setFundingFees] = useState<FundingFee[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [buttonClicked, setButtonClicked] = useState<string | null>(null)
 
   // State for pagination
-  const [visibleItems, setVisibleItems] = useState(10)
-  const itemsPerPage = 10
+  const [visibleItems, setVisibleItems] = useState(6)
+  const itemsPerPage = 6
 
   // Function to format dates
   const formatDate = (timestamp: number) => {
@@ -67,6 +68,13 @@ export default function BingXFundingFees() {
 
   // Function to handle showing more or less items
   const handleShowMoreLess = () => {
+    console.log("Show More/Less button clicked")
+    setButtonClicked("showMore")
+
+    setTimeout(() => {
+      setButtonClicked(null)
+    }, 300)
+
     if (visibleItems < fundingFees.length) {
       // Show more
       setVisibleItems(Math.min(visibleItems + itemsPerPage, fundingFees.length))
@@ -77,53 +85,60 @@ export default function BingXFundingFees() {
   }
 
   // Function to fetch funding fees
-  const fetchFundingFees = async () => {
+  const fetchFundingFees = () => {
+    console.log("Refresh button clicked")
+    setButtonClicked("refresh")
+
+    setTimeout(() => {
+      setButtonClicked(null)
+    }, 300)
+
     setIsLoading(true)
     setError(null)
 
-    try {
-      const response = await fetch(PHP_API_URL, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
+    fetch(PHP_API_URL, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP-Fehler! Status: ${response.status}`)
+        }
+        return response.text()
       })
+      .then((responseText) => {
+        // Try to parse the response as JSON
+        let data: BingXApiResponse
+        try {
+          data = JSON.parse(responseText)
+        } catch (e) {
+          throw new Error(`Fehler beim Parsen der JSON-Antwort: ${e instanceof Error ? e.message : String(e)}`)
+        }
 
-      if (!response.ok) {
-        throw new Error(`HTTP-Fehler! Status: ${response.status}`)
-      }
+        // Check if there's an error in the response
+        if (data.code !== 0) {
+          throw new Error(`API-Fehler: ${data.msg || "Unbekannter Fehler"}`)
+        }
 
-      // Get response text
-      const responseText = await response.text()
+        // Extract the funding fees from the data structure
+        const fees = data.data || []
 
-      // Try to parse the response as JSON
-      let data: BingXApiResponse
-      try {
-        data = JSON.parse(responseText)
-      } catch (e) {
-        throw new Error(`Fehler beim Parsen der JSON-Antwort: ${e instanceof Error ? e.message : String(e)}`)
-      }
+        // Set the funding fees
+        setFundingFees(fees)
+        setLastUpdated(new Date())
 
-      // Check if there's an error in the response
-      if (data.code !== 0) {
-        throw new Error(`API-Fehler: ${data.msg || "Unbekannter Fehler"}`)
-      }
-
-      // Extract the funding fees from the data structure
-      const fees = data.data || []
-
-      // Set the funding fees
-      setFundingFees(fees)
-      setLastUpdated(new Date())
-
-      // Reset visible items to initial value when new data is loaded
-      setVisibleItems(itemsPerPage)
-    } catch (err) {
-      console.error("Fehler beim Abrufen der Finanzierungsgebühren:", err)
-      setError(err instanceof Error ? err.message : "Unbekannter Fehler")
-    } finally {
-      setIsLoading(false)
-    }
+        // Reset visible items to initial value when new data is loaded
+        setVisibleItems(itemsPerPage)
+      })
+      .catch((err) => {
+        console.error("Fehler beim Abrufen der Finanzierungsgebühren:", err)
+        setError(err instanceof Error ? err.message : "Unbekannter Fehler")
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   // Load funding fees when the component mounts
@@ -186,7 +201,7 @@ export default function BingXFundingFees() {
           className="text-center mb-6 md:mb-10"
         >
           <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400 mb-3">BingX</div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter sm:text-4xl  text-white mb-3">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tighter sm:text-4xl text-white mb-3">
             BingX Finanzierungsgebühren
           </h2>
           <p className="max-w-[700px] mx-auto text-sm md:text-base text-gray-400">
@@ -228,15 +243,23 @@ export default function BingXFundingFees() {
           </motion.div>
         )}
 
-        <div className="flex justify-between items-center mb-4 md:mb-6">
-          <div className="flex gap-2">
-            <button
-              onClick={fetchFundingFees}
-              className="px-3 py-2 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800 flex items-center"
-            >
-              <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              Aktualisieren
-            </button>
+        {/* Refresh button - Completely redesigned for mobile */}
+        <div className="mb-4 md:mb-6">
+          <div
+            className={`
+              relative w-full md:w-auto inline-flex items-center justify-center 
+              px-4 py-4 md:py-3 text-base font-medium rounded-lg 
+              bg-gray-800 text-white shadow-sm 
+              hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 
+              active:bg-gray-600 cursor-pointer z-10
+              ${buttonClicked === "refresh" ? "bg-gray-600 scale-95" : ""}
+            `}
+            onClick={fetchFundingFees}
+            role="button"
+            tabIndex={0}
+          >
+            <RefreshCw className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
+            <span>Aktualisieren</span>
           </div>
         </div>
 
@@ -272,12 +295,20 @@ export default function BingXFundingFees() {
                 </svg>
               </div>
               <p className="text-sm md:text-base text-red-400 mb-2">{error}</p>
-              <button
+              <div
+                className="
+                  inline-flex items-center justify-center 
+                  px-4 py-3 text-base font-medium rounded-lg 
+                  bg-gray-800 text-white shadow-sm 
+                  hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 
+                  active:bg-gray-600 cursor-pointer
+                "
                 onClick={fetchFundingFees}
-                className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800"
+                role="button"
+                tabIndex={0}
               >
                 Erneut versuchen
-              </button>
+              </div>
             </div>
           ) : fundingFees.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 md:py-20">
@@ -384,24 +415,34 @@ export default function BingXFundingFees() {
                 ))}
               </div>
 
+              {/* Show More/Less button - Completely redesigned for mobile */}
               {fundingFees.length > itemsPerPage && (
-                <div className="flex justify-center py-3 md:py-4">
-                  <button
+                <div className="p-4">
+                  <div
+                    className={`
+                      relative w-full inline-flex items-center justify-center 
+                      px-4 py-4 md:py-3 text-base font-medium rounded-lg 
+                      bg-gray-800 text-white shadow-sm 
+                      hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 
+                      active:bg-gray-600 cursor-pointer z-10
+                      ${buttonClicked === "showMore" ? "bg-gray-600 scale-95" : ""}
+                    `}
                     onClick={handleShowMoreLess}
-                    className="px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-md border border-gray-700 text-white hover:bg-gray-800 flex items-center"
+                    role="button"
+                    tabIndex={0}
                   >
                     {visibleItems < fundingFees.length ? (
                       <>
-                        <ChevronDown className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                        Mehr anzeigen ({Math.min(itemsPerPage, fundingFees.length - visibleItems)})
+                        <ChevronDown className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
+                        <span>Mehr anzeigen ({Math.min(itemsPerPage, fundingFees.length - visibleItems)})</span>
                       </>
                     ) : (
                       <>
-                        <ChevronUp className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                        Weniger anzeigen
+                        <ChevronUp className="h-5 w-5 md:h-4 md:w-4 mr-3 md:mr-2" />
+                        <span>Weniger anzeigen</span>
                       </>
                     )}
-                  </button>
+                  </div>
                 </div>
               )}
             </>
