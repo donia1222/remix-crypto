@@ -269,7 +269,16 @@ export default function Index() {
           <section id="faq">
             <FaqSection />
           </section>
-
+          {/* Final CTA Section with solid background */}
+          <section
+            className="w-full py-12 md:py-24 lg:py-32 relative z-20 bg-cover bg-center min-h-[400px] flex items-end overflow-hidden"
+            style={{ backgroundImage: 'url("/background-3d.png")' }}
+          >
+            <ParticleAnimation />
+            <div className="container px-4 md:px-6 mx-auto relative z-10">
+              <div className="flex flex-col items-center justify-end space-y-2 text-center"></div>
+            </div>
+          </section>
           {/* Contact Section */}
           <section id="kontakt">
             <ContactSection />
