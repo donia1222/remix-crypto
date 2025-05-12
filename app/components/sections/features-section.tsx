@@ -126,7 +126,7 @@ export default function FeaturesSection() {
     <section
       id="funktionen"
       ref={sectionRef}
-      className="w-full py-16 md:py-28 lg:py-36 bg-gradient-to-b from-gray-950 to-gray-900 relative overflow-hidden"
+      className="w-full py-16 md:py-28 lg:py-36 bg-gradient-to-b from-gray-950 to-gray-950 relative overflow-hidden"
     >
       {/* Efecto de luz que sigue al cursor */}
       <motion.div

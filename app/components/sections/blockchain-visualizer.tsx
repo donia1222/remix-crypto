@@ -138,7 +138,7 @@ export default function BlockchainVisualizer() {
   }
 
   return (
-    <section ref={containerRef} id="blockchain" className="relative overflow-hidden bg-gray-950">
+    <section ref={containerRef} id="blockchain" className="">
       {/* Fondo con efecto de cuadrícula */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
