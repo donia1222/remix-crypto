@@ -135,7 +135,7 @@ export default function ContactSection() {
 
             <div className="space-y-4 mt-6">
               <motion.a
-                href="mailto:support@krypto.ch"
+                href="mailto:info@nextrade.ch"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
@@ -148,7 +148,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-400">E-Mail</p>
-                  <p className="text-white hover:text-cyan-400 transition-colors">support@krypto.ch</p>
+                  <p className="text-white hover:text-cyan-400 transition-colors">info@nextrade.ch</p>
                 </div>
               </motion.a>
 

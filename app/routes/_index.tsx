@@ -20,7 +20,7 @@ import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
-import BingXBalance from "../components/sections/bingx-balance"
+
 
 export const meta: MetaFunction = () => {
   return [
@@ -69,10 +69,11 @@ export default function Index() {
 
   // Definir los elementos del menú con sus iconos
   const menuItems = [
+
+    { id: "bingx", text: "BingX", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "nachrichten", text: "News", icon: <Newspaper className="h-4 w-4" /> },
     { id: "funktionen", text: "Funktionen", icon: <Zap className="h-4 w-4" /> },
-    { id: "bingx", text: "BingX", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
     { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
@@ -220,6 +221,22 @@ export default function Index() {
         {/* Hero Section */}
         <HeroSection />
 
+
+          {/* Animated Text Reveal Section */}
+          <AnimatedTextReveal />
+
+
+         {/* BingX Section */}
+         <section id="bingx">
+            <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
+          
+
+              {/* BingX Transactions Section */}
+              <BingXTransactionsSimple />
+
+            </div>
+          </section>
+
         {/* Content with solid background */}
         <div className="bg-gray-950 ">
           {/* Markets Section */}
@@ -236,24 +253,13 @@ export default function Index() {
             <NewsSection />
           </section>
 
-          {/* Animated Text Reveal Section */}
-          <AnimatedTextReveal />
 
           {/* Features Section */}
           <section id="funktionen">
             <FeaturesSection />
           </section>
 
-          {/* BingX Section */}
-          <section id="bingx">
-            <div className="container px-4 md:px-6 mx-auto py-12 md:py-24">
-          
-
-              {/* BingX Transactions Section */}
-              <BingXTransactionsSimple />
-
-            </div>
-          </section>
+ 
 
 
           {/* Blockchain Visualizer */}
