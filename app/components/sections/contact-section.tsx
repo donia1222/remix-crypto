@@ -5,7 +5,7 @@ import React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Mail, Send, MessageSquare } from "lucide-react"
-import { Button } from "~/components/button"
+import { Button } from "~/components/ui/button"
 
 export default function ContactSection() {
   // State for contact form

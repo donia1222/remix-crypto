@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { X, Calendar, Tag, Loader2 } from "lucide-react"
-import { Button } from "~/components/button"
+import { Button } from "~/components/ui/button"
 
 // Interfaz para el tipo de post
 interface BlogPost {

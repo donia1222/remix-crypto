@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronUp, ChevronDown } from "lucide-react"
-import { Button } from "~/components/button"
+import { Button } from "~/components/ui/button"
 
 // Data for the FAQ section
 const faqItems = [
