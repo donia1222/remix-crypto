@@ -102,7 +102,6 @@ export default function BingXOverview() {
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [showAllPnL, setShowAllPnL] = useState(false)
-  const [showAllFees, setShowAllFees] = useState(false)
   const [apiUnavailable, setApiUnavailable] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -246,28 +245,21 @@ export default function BingXOverview() {
     return entries.reduce((sum, item) => sum + Number.parseFloat(item.realisedProfit), 0)
   }
 
-  const generateChartData = (pnlData: FeeEntry[], feeData: FeeEntry[]) => {
+  const generateChartData = (pnlData: FeeEntry[]) => {
     const format = (timestamp: number) =>
       new Intl.DateTimeFormat("de-CH", { day: "2-digit", month: "2-digit" }).format(new Date(timestamp))
 
-    const grouped: Record<string, { pnl: number; fees: number }> = {}
+    const grouped: Record<string, { pnl: number }> = {}
 
     pnlData.forEach((item) => {
       const date = format(item.time)
-      grouped[date] = grouped[date] || { pnl: 0, fees: 0 }
+      grouped[date] = grouped[date] || { pnl: 0 }
       grouped[date].pnl += Number.parseFloat(item.income)
-    })
-
-    feeData.forEach((item) => {
-      const date = format(item.time)
-      grouped[date] = grouped[date] || { pnl: 0, fees: 0 }
-      grouped[date].fees += Number.parseFloat(item.income)
     })
 
     return Object.entries(grouped).map(([date, values]) => ({
       date,
       pnl: Number.parseFloat(values.pnl.toFixed(4)),
-      fees: Number.parseFloat(values.fees.toFixed(4)),
     }))
   }
 
@@ -330,7 +322,6 @@ export default function BingXOverview() {
 
   const filteredPnL = isAuthenticated ? realizedPnL : filterLastWeekData(realizedPnL)
   const visiblePnL = showAllPnL ? filteredPnL : filteredPnL.slice(0, ITEMS_TO_SHOW)
-  const visibleFees = showAllFees ? fees : fees.slice(0, ITEMS_TO_SHOW)
 
   return (
     <section className="w-full py-6 md:py-10 bg-gray-950 text-white">
@@ -796,100 +787,19 @@ export default function BingXOverview() {
               )}
             </div>
 
-            {/* Fees - Only shown when authenticated */}
-            {isAuthenticated && (
-              <div className="mb-8">
-                <h3 className="text-lg md:text-xl font-semibold mb-2 text-yellow-400">Gebühren (Funding & Trading)</h3>
-                <p className="text-sm text-red-400 mb-2">Gesamt: {formatNumber(getTotal(fees).toString())} USDT</p>
-
-                {/* Mobile view for Fees */}
-                <div className="md:hidden space-y-3">
-                  {visibleFees.map((item) => (
-                    <div key={item.tranId} className="bg-gray-900 border border-gray-800 rounded-lg p-3 shadow-sm">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="font-medium">{item.symbol}</span>
-                        <span
-                          className={`${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"} font-semibold`}
-                        >
-                          {formatNumber(item.income)}
-                        </span>
-                      </div>
-                      <div className="text-sm text-gray-400">
-                        {item.incomeType === "FUNDING_FEE" ? "Finanzierungsgebühr" : "Handelsgebühr"}
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
-                        <Clock className="w-3 h-3" />
-                        {formatDate(item.time)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Desktop view for Fees */}
-                <div className="hidden md:block overflow-x-auto">
-                  <table className="w-full text-sm border border-gray-800 rounded-lg overflow-hidden">
-                    <thead className="bg-gray-800">
-                      <tr>
-                        <th className="px-4 py-2 text-left">Paar</th>
-                        <th className="px-4 py-2 text-left">Typ</th>
-                        <th className="px-4 py-2 text-left">Betrag (USDT)</th>
-                        <th className="px-4 py-2 text-left">Datum</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {visibleFees.map((item) => (
-                        <tr key={item.tranId} className="border-t border-gray-800 hover:bg-gray-800/40">
-                          <td className="px-4 py-2">{item.symbol}</td>
-                          <td className="px-4 py-2">
-                            {item.incomeType === "FUNDING_FEE" ? "Finanzierungsgebühr" : "Handelsgebühr"}
-                          </td>
-                          <td
-                            className={`px-4 py-2 ${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"}`}
-                          >
-                            {formatNumber(item.income)}
-                          </td>
-                          <td className="px-4 py-2 text-gray-400 flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {formatDate(item.time)}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {fees.length > ITEMS_TO_SHOW && (
-                  <button
-                    onClick={() => setShowAllFees(!showAllFees)}
-                    className="mt-3 flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mx-auto"
-                  >
-                    {showAllFees ? (
-                      <>
-                        Weniger anzeigen <ChevronUp className="w-4 h-4" />
-                      </>
-                    ) : (
-                      <>
-                        Mehr anzeigen <ChevronDown className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                )}
-              </div>
-            )}
-
             {/* Chart */}
             {realizedPnL.length > 0 && (
               <div className="mt-8 md:mt-12">
                 <h3 className="text-lg md:text-xl font-semibold mb-4 text-cyan-400">
-                  {isAuthenticated ? "Grafik: PnL vs. Gebühren" : "Grafik: Realisiertes PnL (letzte Woche)"}
+                  {isAuthenticated ? "Grafik: Realisiertes PnL" : "Grafik: Realisiertes PnL (letzte Woche)"}
                 </h3>
                 <div className="bg-gray-900 p-2 md:p-4 rounded-lg border border-gray-800">
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart
                       data={
                         isAuthenticated
-                          ? generateChartData(realizedPnL, fees)
-                          : generateChartData(filterLastWeekData(realizedPnL), [])
+                          ? generateChartData(realizedPnL)
+                          : generateChartData(filterLastWeekData(realizedPnL))
                       }
                       margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
                     >
@@ -914,7 +824,6 @@ export default function BingXOverview() {
                       />
                       <Legend wrapperStyle={{ paddingTop: "10px" }} />
                       <Bar dataKey="pnl" fill="#22c55e" name="Realisiertes PnL" />
-                      {isAuthenticated && <Bar dataKey="fees" fill="#ef4444" name="Gebühren" />}
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
