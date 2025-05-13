@@ -53,6 +53,19 @@ interface PositionEntry {
   updateTime: number
 }
 
+interface BalanceData {
+  userId: string
+  asset: string
+  balance: string
+  equity: string
+  unrealizedProfit: string
+  realisedProfit: string
+  availableMargin: string
+  usedMargin: string
+  freezedMargin: string
+  shortUid: string
+}
+
 interface BingXApiResponse {
   code?: number
   msg?: string
@@ -63,6 +76,7 @@ interface CachedData {
   realizedPnL: FeeEntry[]
   fees: FeeEntry[]
   positions: PositionEntry[]
+  balance: BalanceData | null
   timestamp: number
 }
 
@@ -70,6 +84,7 @@ export default function BingXOverview() {
   const PNL_API = "https://web.lweb.ch/api.php"
   const FEES_API = "https://web.lweb.ch/api_fees.php"
   const POSITIONS_API = "https://web.lweb.ch/api-3.php"
+  const BALANCE_API = "https://web.lweb.ch/crypto/balance.php"
   const RETRY_INTERVAL = 5 * 60 * 1000 // 5 minutos en milisegundos
 
   // Fallback a un valor por defecto si la variable de entorno no está disponible
@@ -82,6 +97,7 @@ export default function BingXOverview() {
   const [realizedPnL, setRealizedPnL] = useState<FeeEntry[]>([])
   const [fees, setFees] = useState<FeeEntry[]>([])
   const [positions, setPositions] = useState<PositionEntry[]>([])
+  const [balanceData, setBalanceData] = useState<BalanceData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
@@ -97,11 +113,17 @@ export default function BingXOverview() {
   const ITEMS_TO_SHOW = 4
 
   // Función para guardar datos en localStorage
-  const saveDataToCache = (pnlData: FeeEntry[], feesData: FeeEntry[], positionsData: PositionEntry[]) => {
+  const saveDataToCache = (
+    pnlData: FeeEntry[],
+    feesData: FeeEntry[],
+    positionsData: PositionEntry[],
+    balanceData: BalanceData | null,
+  ) => {
     const cacheData: CachedData = {
       realizedPnL: pnlData,
       fees: feesData,
       positions: positionsData,
+      balance: balanceData,
       timestamp: Date.now(),
     }
     try {
@@ -130,28 +152,37 @@ export default function BingXOverview() {
     setError(null)
 
     try {
-      const [pnlRes, feeRes, positionsRes] = await Promise.all([
+      const [pnlRes, feeRes, positionsRes, balanceRes] = await Promise.all([
         fetch(PNL_API).then((r) => r.json()),
         fetch(FEES_API).then((r) => r.json()),
         fetch(POSITIONS_API).then((r) => r.json()),
+        fetch(BALANCE_API).then((r) => r.json()),
       ])
 
       if (pnlRes?.code !== 0) throw new Error(`Fehler in api.php: ${pnlRes.msg || "Unbekannter Fehler"}`)
       if (feeRes?.code !== 0) throw new Error(`Fehler in api_fees.php: ${feeRes.msg || "Unbekannter Fehler"}`)
       if (positionsRes?.code !== 0) throw new Error(`Fehler in api-3.php: ${positionsRes.msg || "Unbekannter Fehler"}`)
+      if (balanceRes?.code !== 0) throw new Error(`Fehler in balance.php: ${balanceRes.msg || "Unbekannter Fehler"}`)
 
       const pnlData = pnlRes.data || []
       const feesData = feeRes.data || []
       const positionsData = positionsRes.data || []
+      const balanceData = balanceRes.data?.balance || null
 
       setRealizedPnL(pnlData as FeeEntry[])
       setFees(feesData as FeeEntry[])
       setPositions(positionsData as PositionEntry[])
+      setBalanceData(balanceData as BalanceData)
       setLastUpdated(new Date())
       setApiUnavailable(false)
 
       // Guardar datos en caché
-      saveDataToCache(pnlData as FeeEntry[], feesData as FeeEntry[], positionsData as PositionEntry[])
+      saveDataToCache(
+        pnlData as FeeEntry[],
+        feesData as FeeEntry[],
+        positionsData as PositionEntry[],
+        balanceData as BalanceData,
+      )
 
       // Limpiar cualquier timeout de reintento existente
       if (retryTimeoutRef.current) {
@@ -167,6 +198,7 @@ export default function BingXOverview() {
         setRealizedPnL(cachedData.realizedPnL)
         setFees(cachedData.fees)
         setPositions(cachedData.positions || [])
+        setBalanceData(cachedData.balance)
         setLastUpdated(new Date(cachedData.timestamp))
         setApiUnavailable(true)
 
@@ -280,6 +312,7 @@ export default function BingXOverview() {
       setRealizedPnL(cachedData.realizedPnL)
       setFees(cachedData.fees)
       setPositions(cachedData.positions || [])
+      setBalanceData(cachedData.balance)
       setLastUpdated(new Date(cachedData.timestamp))
       // No desactivamos el estado de carga para que se vea que estamos actualizando
     }
@@ -603,6 +636,83 @@ export default function BingXOverview() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            )}
+
+            {/* Balance Data - Only shown when authenticated */}
+            {isAuthenticated && balanceData && (
+              <div className="mb-8">
+                <h3 className="text-lg md:text-xl font-semibold mb-4 text-emerald-400">Kontoübersicht</h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Gesamtguthaben</div>
+                    <div className="text-xl font-bold text-white">
+                      {formatNumber(balanceData.balance)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Verfügbar für Handel und Margin</div>
+                  </div>
+
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Eigenkapital</div>
+                    <div className="text-xl font-bold text-white">
+                      {formatNumber(balanceData.equity)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Guthaben + Unrealisierte PnL</div>
+                  </div>
+
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Realisierter Gewinn</div>
+                    <div
+                      className={`text-xl font-bold ${Number.parseFloat(balanceData.realisedProfit) >= 0 ? "text-green-400" : "text-red-400"}`}
+                    >
+                      {formatNumber(balanceData.realisedProfit)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Abgeschlossene Trades</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Verfügbare Margin</div>
+                    <div className="text-xl font-bold text-white">
+                      {formatNumber(balanceData.availableMargin)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Für neue Positionen verfügbar</div>
+                  </div>
+
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Verwendete Margin</div>
+                    <div className="text-xl font-bold text-amber-400">
+                      {formatNumber(balanceData.usedMargin)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Für offene Positionen verwendet</div>
+                  </div>
+
+                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                    <div className="text-sm text-gray-400 mb-1">Eingefrorene Margin</div>
+                    <div className="text-xl font-bold text-blue-400">
+                      {formatNumber(balanceData.freezedMargin)} {balanceData.asset}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Für ausstehende Orders reserviert</div>
+                  </div>
+                </div>
+
+                <div className="mt-4 bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-sm text-gray-400 mb-1">Unrealisierter Gewinn/Verlust</div>
+                      <div
+                        className={`text-xl font-bold ${Number.parseFloat(balanceData.unrealizedProfit) >= 0 ? "text-green-400" : "text-red-400"}`}
+                      >
+                        {formatNumber(balanceData.unrealizedProfit)} {balanceData.asset}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-500">Benutzer-ID: {balanceData.shortUid}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
