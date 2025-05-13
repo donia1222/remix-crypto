@@ -111,14 +111,7 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Haftungsausschluss</h3>
-                  <p className="text-gray-300 text-sm">
-                    Die Inhalte dieser Website wurden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit,
-                    Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als
-                    Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen
-                    verantwortlich. Wir sind jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
-                    Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
-                    hinweisen.
-                  </p>
+       
                 </div>
               </div>
             </div>
