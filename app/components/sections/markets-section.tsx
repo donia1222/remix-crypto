@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { Button } from "~/components/button"
 
 // Tracked cryptocurrency pairs - Extended list
 const trackedPairs = [

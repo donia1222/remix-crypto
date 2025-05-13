@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { X, Check, Settings, Shield } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { Button } from "~/components/button"
 
 export default function CookieConsent() {
   const [showConsent, setShowConsent] = useState(false)

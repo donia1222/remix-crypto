@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { Button } from "~/components/button"
 
 export default function HeroSection() {
   return (
