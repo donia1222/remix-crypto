@@ -109,10 +109,7 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
                   </p>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Haftungsausschluss</h3>
-       
-                </div>
+            
               </div>
             </div>
             <div className="p-4 md:p-6 border-t border-gray-800 bg-gray-900 sticky bottom-0">
