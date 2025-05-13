@@ -8,6 +8,8 @@ import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/ui/loading-animation"
 import CookieConsent from "../components/cookie-consent"
 import ParticleAnimation from "../components/particle-animation"
+import TermsModal from "../components/terms-modal"
+import ImpressumModal from "../components/impressum-modal"
 
 // Import section components
 import HeroSection from "../components/sections/hero-section"
@@ -20,7 +22,6 @@ import AnimatedTextReveal from "../components/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import CryptoPriceVisualizer from "../components/sections/crypto-card"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
-
 
 export const meta: MetaFunction = () => {
   return [
@@ -38,6 +39,11 @@ export default function Index() {
 
   // State to track scroll position for back-to-top button
   const [showScrollTop, setShowScrollTop] = useState(false)
+
+  // State for modals
+  const [termsModalOpen, setTermsModalOpen] = useState(false)
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+  const [impressumModalOpen, setImpressumModalOpen] = useState(false)
 
   // Scroll effects
   const { scrollY } = useScroll()
@@ -69,7 +75,6 @@ export default function Index() {
 
   // Definir los elementos del menú con sus iconos
   const menuItems = [
-
     { id: "bingx", text: "BingX", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "nachrichten", text: "News", icon: <Newspaper className="h-4 w-4" /> },
@@ -103,6 +108,11 @@ export default function Index() {
 
       {/* Cookie Consent Banner */}
       <CookieConsent />
+
+      {/* Terms, Privacy and Impressum Modals */}
+      <TermsModal isOpen={termsModalOpen} onClose={() => setTermsModalOpen(false)} type="terms" />
+      <TermsModal isOpen={privacyModalOpen} onClose={() => setPrivacyModalOpen(false)} type="privacy" />
+      <ImpressumModal isOpen={impressumModalOpen} onClose={() => setImpressumModalOpen(false)} />
 
       {/* Header with scroll effect */}
       <motion.header
@@ -221,21 +231,16 @@ export default function Index() {
         {/* Hero Section */}
         <HeroSection />
 
+        {/* Animated Text Reveal Section */}
+        <AnimatedTextReveal />
 
-          {/* Animated Text Reveal Section */}
-          <AnimatedTextReveal />
-
-
-         {/* BingX Section */}
-         <section id="bingx">
-            <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
-          
-
-              {/* BingX Transactions Section */}
-              <BingXTransactionsSimple />
-
-            </div>
-          </section>
+        {/* BingX Section */}
+        <section id="bingx">
+          <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
+            {/* BingX Transactions Section */}
+            <BingXTransactionsSimple />
+          </div>
+        </section>
 
         {/* Content with solid background */}
         <div className="bg-gray-950 ">
@@ -253,14 +258,10 @@ export default function Index() {
             <NewsSection />
           </section>
 
-
           {/* Features Section */}
           <section id="funktionen">
             <FeaturesSection />
           </section>
-
- 
-
 
           {/* Blockchain Visualizer */}
           <section id="blockchain">
@@ -285,7 +286,6 @@ export default function Index() {
           <section id="kontakt">
             <ContactSection />
           </section>
-
         </div>
       </main>
 
@@ -294,17 +294,25 @@ export default function Index() {
         <p className="text-xs text-gray-400">© 2025 nextrade. Alle Rechte vorbehalten.</p>
 
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4 text-gray-400" to="/terms">
+          <button
+            className="text-xs hover:underline underline-offset-4 text-gray-400"
+            onClick={() => setTermsModalOpen(true)}
+          >
             Nutzungsbedingungen
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4 text-gray-400" to="/privacy">
+          </button>
+          <button
+            className="text-xs hover:underline underline-offset-4 text-gray-400"
+            onClick={() => setPrivacyModalOpen(true)}
+          >
             Datenschutzrichtlinie
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4 text-gray-400" to="/cookies">
-            Cookie-Richtlinie
-          </Link>
+          </button>
+          <button
+            className="text-xs hover:underline underline-offset-4 text-gray-400"
+            onClick={() => setImpressumModalOpen(true)}
+          >
+            Impressum
+          </button>
         </nav>
-  
       </footer>
 
       {/* Back-to-top button - only visible after scrolling */}

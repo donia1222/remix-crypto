@@ -335,12 +335,7 @@ export default function ContactSection() {
               </form>
             )}
           </motion.div>
-          <div className="mt-2 md:mt-0">
-            Einige Bilder stammen von{" "}
-            <a href="https://www.freepik.com" target="_blank" rel="noopener noreferrer" className="underline">
-              Freepik
-            </a>
-          </div>
+
         </div>
       </div>
     </section>
