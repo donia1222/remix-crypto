@@ -24,24 +24,6 @@ export const links: LinksFunction = () => [
   { rel: "shortcut icon", href: "/favicon.ico", type: "image/x-icon" },
 ];
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "nextrade | Krypto Trading & IT Lösungen" },
-    { name: "description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz. nextrade bietet innovative Handelsplattformen und massgeschneiderte IT-Dienstleistungen für den Kryptowährungsmarkt." },
-    { name: "theme-color", content: "#000000" },
-    { name: "keywords", content: "nextrade, Krypto, Trading, IT Lösungen, Schweiz, Kryptowährung, Blockchain, Bitcoin, Ethereum" },
-    { property: "og:title", content: "nextrade | Krypto Trading & IT Lösungen" },
-    { property: "og:description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz." },
-    { property: "og:type", content: "website" },
-    { property: "og:site_name", content: "nextrade" },
-    { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "nextrade | Krypto Trading & IT Lösungen" },
-    { name: "twitter:description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz." },
-    { name: "author", content: "nextrade" },
-    { name: "language", content: "de" },
-  ];
-};
-
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de" className="font-inter bg-gray-900 text-white">
