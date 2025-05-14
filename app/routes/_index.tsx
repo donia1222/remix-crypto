@@ -25,8 +25,8 @@ import BingXTransactionsSimple from "../components/sections/bingx-transactions-s
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Krypto - Schweizer Kryptowährungsplattform" },
-    { name: "description", content: "Moderne Plattform für Kryptowährungshandel aus der Schweiz" },
+    { title: "nextrade | Krypto Trading & IT Lösungen" },
+    { name: "description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz." },
   ]
 }
 
