@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X } from 'lucide-react'
 
@@ -10,6 +10,8 @@ interface ImpressumModalProps {
 }
 
 export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -33,6 +35,13 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
     return () => window.removeEventListener("keydown", handleEscKey)
   }, [isOpen, onClose])
 
+  // Focus trap inside modal
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.focus()
+    }
+  }, [isOpen])
+
   // Close modal when clicking outside
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -50,19 +59,25 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
           transition={{ duration: 0.2 }}
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           onClick={handleBackdropClick}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="impressum-title"
         >
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, type: "spring", bounce: 0.1 }}
             className="bg-gray-900 border border-gray-800 rounded-xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col"
+            tabIndex={-1}
           >
             <div className="p-4 md:p-6 border-b border-gray-800 flex items-center justify-between sticky top-0 bg-gray-900 z-10">
-              <h2 className="text-xl md:text-2xl font-bold text-white">Impressum</h2>
+              <h2 id="impressum-title" className="text-xl md:text-2xl font-bold text-white">Impressum</h2>
               <button
                 onClick={onClose}
                 className="p-2 rounded-full hover:bg-gray-800 transition-colors text-gray-400 hover:text-white"
+                aria-label="Schließen"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -79,10 +94,16 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
                   <h3 className="text-lg font-semibold text-white mb-2">Kontakt</h3>
                   <div className="space-y-1">
                     <p className="text-gray-300">
-                      <span className="font-medium">E-Mail:</span> info@nextrade.ch
+                      <span className="font-medium">E-Mail:</span>{" "}
+                      <a href="mailto:info@nextrade.ch" className="text-blue-400 hover:text-blue-300">
+                        info@nextrade.ch
+                      </a>
                     </p>
                     <p className="text-gray-300">
-                      <span className="font-medium">WhatsApp:</span> +41 78 699 99 50
+                      <span className="font-medium">WhatsApp:</span>{" "}
+                      <a href="https://wa.me/41786999950" className="text-blue-400 hover:text-blue-300">
+                        +41 78 699 99 50
+                      </a>
                     </p>
                   </div>
                 </div>
@@ -90,7 +111,15 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Website</h3>
                   <p className="text-gray-300">
-                    <span className="font-medium">Website Design:</span> lweb
+                    <span className="font-medium">Website Design:</span>{" "}
+                    <a 
+                      href="https://lweb.ch" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:text-blue-300"
+                    >
+                      lweb
+                    </a>
                   </p>
                 </div>
 
@@ -108,8 +137,6 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
                     </a>
                   </p>
                 </div>
-
-            
               </div>
             </div>
             <div className="p-4 md:p-6 border-t border-gray-800 bg-gray-900 sticky bottom-0">
