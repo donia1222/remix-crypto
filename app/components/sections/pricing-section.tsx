@@ -4,6 +4,18 @@ import { motion } from "framer-motion"
 import { Button } from "~/components/ui/button"
 
 export default function PricingSection() {
+  // Function to handle button click and open email
+  const handlePlanClick = (planTitle: string) => {
+    const subject = encodeURIComponent(`Anfrage zum ${planTitle}-Plan`)
+    const body = encodeURIComponent(`Hallo NextTrade-Team,
+
+Ich interessiere mich für Ihren ${planTitle}-Plan und hätte gerne weitere Informationen.
+
+Mit freundlichen Grüßen`)
+
+    window.location.href = `mailto:info@nextrade.ch?subject=${subject}&body=${body}`
+  }
+
   return (
     <section id="preise" className="w-full py-12 md:py-24 lg:py-32 bg-gray-900">
       <div className="container px-4 md:px-6 mx-auto">
@@ -113,6 +125,7 @@ export default function PricingSection() {
                       ? "bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700"
                       : "bg-gray-700 hover:bg-gray-600"
                   } transition-all duration-300`}
+                  onClick={() => handlePlanClick(plan.title)}
                 >
                   {plan.buttonText}
                 </Button>

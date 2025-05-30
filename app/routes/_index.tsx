@@ -1,8 +1,12 @@
 "use client"
+
+import type { LoaderFunctionArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
+import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Zap, Newspaper, HelpCircle, Mail, Database, TrendingUp } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -14,13 +18,11 @@ import ImpressumModal from "../components/modal/impressum-modal"
 // Import section components
 import HeroSection from "../components/sections/hero-section"
 import MarketsSection from "../components/sections/markets-section"
-import FeaturesSection from "../components/sections/features-section"
 import NewsSection from "../components/sections/news-section"
-import FaqSection from "../components/sections/faq-section"
+import FaqSection from "../components/sections/pricing-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
-import CryptoPriceVisualizer from "../components/sections/crypto-card"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
 
 export const meta: MetaFunction = () => {
@@ -28,7 +30,10 @@ export const meta: MetaFunction = () => {
     { title: "nextrade | Krypto Trading & IT Lösungen" },
     { name: "description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz." },
     { name: "theme-color", content: "#000000" },
-    { name: "keywords", content: "nextrade, Krypto, Trading, IT Lösungen, Schweiz, Kryptowährung, Blockchain, Bitcoin, Ethereum" },
+    {
+      name: "keywords",
+      content: "nextrade, Krypto, Trading, IT Lösungen, Schweiz, Kryptowährung, Blockchain, Bitcoin, Ethereum",
+    },
     { property: "og:title", content: "nextrade | Krypto Trading & IT Lösungen" },
     { property: "og:description", content: "Professionelle Krypto Trading & IT Lösungen aus der Schweiz." },
     { property: "og:type", content: "website" },
@@ -41,7 +46,21 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  // Get password from environment variable
+  const password = process.env.BINGX_PASSWORD
+
+  // Log for debugging (remove in production)
+  console.log("Environment password loaded:", password ? "Password found" : "Password not found")
+
+  return json({
+    password: password || null,
+  })
+}
+
 export default function Index() {
+  const { password } = useLoaderData<typeof loader>()
+
   // State for mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -86,12 +105,10 @@ export default function Index() {
 
   // Definir los elementos del menú con sus iconos
   const menuItems = [
-    { id: "bingx", text: "BingX", icon: <TrendingUp className="h-4 w-4" /> },
-    { id: "maerkte", text: "Märkte", icon: <BarChart2 className="h-4 w-4" /> },
-    { id: "nachrichten", text: "News", icon: <Newspaper className="h-4 w-4" /> },
-    { id: "funktionen", text: "Funktionen", icon: <Zap className="h-4 w-4" /> },
-    { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
-    { id: "faq", text: "FAQ", icon: <HelpCircle className="h-4 w-4" /> },
+    { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
+    { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
+    { id: "nachrichten", text: "Neueste Updates", icon: <Newspaper className="h-4 w-4" /> },
+    { id: "blockchain", text: "Preise", icon: <Database className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
 
@@ -192,7 +209,6 @@ export default function Index() {
         </div>
       </motion.header>
 
-      {/* Rest of the component remains unchanged */}
       {/* Mobile Menu - Centered */}
       <motion.div
         initial={{ opacity: 0, height: 0 }}
@@ -245,33 +261,28 @@ export default function Index() {
         {/* Animated Text Reveal Section */}
         <AnimatedTextReveal />
 
-        {/* BingX Section */}
-        <section id="bingx">
-          <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
-            {/* BingX Transactions Section */}
-            <BingXTransactionsSimple />
-          </div>
-        </section>
+                                {/* BingX Section */}
+                                <section id="bingx">
+                                        <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
+                                                {/* BingX Transactions Section - Now with password prop */}
+                                                {password !== null ? (
+                                                        <BingXTransactionsSimple password={password} />
+                                                ) : (
+                                                        <BingXTransactionsSimple />
+                                                )}
+                                        </div>
+                                </section>
 
-        {/* Content with solid background */}
-        <div className="bg-gray-950 ">
+                                {/* Content with solid background */}
+                                <div className="bg-gray-950 ">
           {/* Markets Section */}
           <section id="maerkte">
             <MarketsSection />
           </section>
 
-          <div className="max-w-5xl mx-auto mb-8 ">
-            <CryptoPriceVisualizer />
-          </div>
-
           {/* News Section */}
           <section id="nachrichten">
             <NewsSection />
-          </section>
-
-          {/* Features Section */}
-          <section id="funktionen">
-            <FeaturesSection />
           </section>
 
           {/* Blockchain Visualizer */}
@@ -280,7 +291,7 @@ export default function Index() {
           </section>
 
           {/* FAQ Section */}
-          <section id="faq " className="mt-32">
+          <section id="faq" className="mt-32">
             <FaqSection />
           </section>
           {/* Final CTA Section with solid background */}

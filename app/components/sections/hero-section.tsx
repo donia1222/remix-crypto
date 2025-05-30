@@ -26,8 +26,8 @@ export default function HeroSection() {
               className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/20 backdrop-blur-sm"
             >
               <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
-                Krypto Trading & IT Lösungen
-              </span>
+           next level trading services 
+              </span> 🚀
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
               Die Zukunft der Kryptowährungen ist hier

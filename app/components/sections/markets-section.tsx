@@ -5,23 +5,15 @@ import { motion } from "framer-motion"
 import { RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
-// Tracked cryptocurrency pairs - Extended list
+// Tracked cryptocurrency pairs - Filtered list
 const trackedPairs = [
   { id: 1, name: "Bitcoin", symbol: "BTCUSDT", shortSymbol: "BTC", volume: "45.2B", marketCap: "1.2T" },
   { id: 2, name: "Ethereum", symbol: "ETHUSDT", shortSymbol: "ETH", volume: "23.1B", marketCap: "420.5B" },
-  { id: 3, name: "Binance Coin", symbol: "BNBUSDT", shortSymbol: "BNB", volume: "8.7B", marketCap: "61.2B" },
-  { id: 4, name: "Cardano", symbol: "ADAUSDT", shortSymbol: "ADA", volume: "2.1B", marketCap: "20.5B" },
-  { id: 5, name: "Dogecoin", symbol: "DOGEUSDT", shortSymbol: "DOGE", volume: "3.4B", marketCap: "28.7B" },
-  { id: 6, name: "Ripple", symbol: "XRPUSDT", shortSymbol: "XRP", volume: "4.3B", marketCap: "32.1B" },
-  { id: 7, name: "Solana", symbol: "SOLUSDT", shortSymbol: "SOL", volume: "5.7B", marketCap: "45.6B" },
-  { id: 8, name: "Polkadot", symbol: "DOTUSDT", shortSymbol: "DOT", volume: "1.9B", marketCap: "15.3B" },
-  { id: 9, name: "Avalanche", symbol: "AVAXUSDT", shortSymbol: "AVAX", volume: "2.8B", marketCap: "22.4B" },
-  { id: 10, name: "Polygon", symbol: "MATICUSDT", shortSymbol: "MATIC", volume: "1.5B", marketCap: "12.7B" },
-  { id: 11, name: "Litecoin", symbol: "LTCUSDT", shortSymbol: "LTC", volume: "1.2B", marketCap: "9.8B" },
-  { id: 12, name: "Chainlink", symbol: "LINKUSDT", shortSymbol: "LINK", volume: "1.1B", marketCap: "8.9B" },
-  { id: 13, name: "Uniswap", symbol: "UNIUSDT", shortSymbol: "UNI", volume: "0.9B", marketCap: "7.2B" },
-  { id: 14, name: "Stellar", symbol: "XLMUSDT", shortSymbol: "XLM", volume: "0.8B", marketCap: "6.5B" },
-  { id: 15, name: "VeChain", symbol: "VETUSDT", shortSymbol: "VET", volume: "0.7B", marketCap: "5.8B" },
+  { id: 3, name: "Ripple", symbol: "XRPUSDT", shortSymbol: "XRP", volume: "4.3B", marketCap: "32.1B" },
+  { id: 4, name: "Solana", symbol: "SOLUSDT", shortSymbol: "SOL", volume: "5.7B", marketCap: "45.6B" },
+  { id: 5, name: "Stellar", symbol: "XLMUSDT", shortSymbol: "XLM", volume: "0.8B", marketCap: "6.5B" },
+  { id: 6, name: "Dogecoin", symbol: "DOGEUSDT", shortSymbol: "DOGE", volume: "3.4B", marketCap: "28.7B" },
+  { id: 7, name: "Peanut the Squirrel", symbol: "PNUTUSDT", shortSymbol: "PNUT", volume: "0.5B", marketCap: "2.1B" },
 ]
 
 // Define a type for the price dictionary
@@ -33,19 +25,11 @@ type PriceDictionary = {
 const basePrices: PriceDictionary = {
   BTCUSDT: 65000,
   ETHUSDT: 3500,
-  BNBUSDT: 600,
-  ADAUSDT: 0.45,
-  DOGEUSDT: 0.15,
   XRPUSDT: 0.55,
   SOLUSDT: 150,
-  DOTUSDT: 7.5,
-  AVAXUSDT: 35,
-  MATICUSDT: 0.85,
-  LTCUSDT: 80,
-  LINKUSDT: 15,
-  UNIUSDT: 8,
   XLMUSDT: 0.12,
-  VETUSDT: 0.03,
+  DOGEUSDT: 0.15,
+  PNUTUSDT: 1.25,
 }
 
 // Define a type for crypto data

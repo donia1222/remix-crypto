@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts"
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Cell } from "recharts"
 import { motion } from "framer-motion"
 import {
   Clock,
@@ -80,19 +80,16 @@ interface CachedData {
   timestamp: number
 }
 
-export default function BingXOverview() {
+interface BingXOverviewProps {
+  password?: string
+}
+
+export default function BingXOverview({ password }: BingXOverviewProps = {}) {
   const PNL_API = "https://web.lweb.ch/api.php"
   const FEES_API = "https://web.lweb.ch/api_fees.php"
   const POSITIONS_API = "https://web.lweb.ch/api-3.php"
   const BALANCE_API = "https://web.lweb.ch/crypto/balance.php"
   const RETRY_INTERVAL = 5 * 60 * 1000 // 5 minutos en milisegundos
-
-  // Fallback a un valor por defecto si la variable de entorno no está disponible
-  // Esto evitará errores durante el desarrollo local si no tienes el .env configurado
-  const PASSWORD =
-    typeof process !== "undefined" && process.env.NEXT_PUBLIC_BINGX_PASSWORD
-      ? process.env.NEXT_PUBLIC_BINGX_PASSWORD
-      : "NEXTRADE2025" // Valor por defecto para desarrollo
 
   const [realizedPnL, setRealizedPnL] = useState<FeeEntry[]>([])
   const [fees, setFees] = useState<FeeEntry[]>([])
@@ -105,11 +102,14 @@ export default function BingXOverview() {
   const [apiUnavailable, setApiUnavailable] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
-  const [password, setPassword] = useState("")
   const [loginError, setLoginError] = useState(false)
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const [inputPassword, setInputPassword] = useState<string>("")
 
-  const ITEMS_TO_SHOW = 4
+  const ITEMS_TO_SHOW = 5
+
+  // Usa la contraseña que viene del loader de Remix
+  const PASSWORD = password
 
   // Función para guardar datos en localStorage
   const saveDataToCache = (
@@ -218,19 +218,18 @@ export default function BingXOverview() {
     return new Intl.DateTimeFormat("de-CH", {
       day: "2-digit",
       month: "2-digit",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     }).format(new Date(timestamp))
   }
 
-  const formatNumber = (numStr: string, decimals = 4) => {
+  const formatNumber = (numStr: string, decimals = 2) => {
     const num = Number.parseFloat(numStr)
-    return isNaN(num)
-      ? "0.0000"
-      : num.toLocaleString("de-CH", {
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        })
+    if (isNaN(num)) return "0.00"
+
+    // Force exactly 2 decimal places
+    return num.toFixed(decimals)
   }
 
   const getTotal = (entries: FeeEntry[]) => {
@@ -247,7 +246,9 @@ export default function BingXOverview() {
 
   const generateChartData = (pnlData: FeeEntry[]) => {
     const format = (timestamp: number) =>
-      new Intl.DateTimeFormat("de-CH", { day: "2-digit", month: "2-digit" }).format(new Date(timestamp))
+      new Intl.DateTimeFormat("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
+        new Date(timestamp),
+      )
 
     const grouped: Record<string, { pnl: number }> = {}
 
@@ -259,7 +260,7 @@ export default function BingXOverview() {
 
     return Object.entries(grouped).map(([date, values]) => ({
       date,
-      pnl: Number.parseFloat(values.pnl.toFixed(4)),
+      pnl: Number.parseFloat(values.pnl.toFixed(2)),
     }))
   }
 
@@ -272,12 +273,32 @@ export default function BingXOverview() {
   }
 
   const handleLogin = () => {
-    if (password === PASSWORD) {
+    // Debug: mostrar los valores para comparación
+    console.log("PASSWORD from prop:", PASSWORD)
+    console.log("inputPassword:", inputPassword)
+    console.log("PASSWORD length:", PASSWORD?.length)
+    console.log("inputPassword length:", inputPassword.length)
+    console.log("Are they equal?", inputPassword === PASSWORD)
+
+    if (!PASSWORD) {
+      setLoginError(true)
+      console.error("Password not provided from environment variables")
+      return
+    }
+
+    // Limpiar espacios en blanco y comparar
+    const cleanPassword = PASSWORD.trim()
+    const cleanInputPassword = inputPassword.trim()
+
+    console.log("Clean PASSWORD:", cleanPassword)
+    console.log("Clean inputPassword:", cleanInputPassword)
+    console.log("Clean comparison:", cleanInputPassword === cleanPassword)
+
+    if (cleanInputPassword === cleanPassword) {
       setIsAuthenticated(true)
       setShowLoginForm(false)
       setLoginError(false)
-      setPassword("")
-      // Guardar autenticación en localStorage
+      setInputPassword("")
       localStorage.setItem("bingx-auth", "true")
     } else {
       setLoginError(true)
@@ -320,8 +341,14 @@ export default function BingXOverview() {
     }
   }, [])
 
+  // Agregar este useEffect después del useEffect existente
+  useEffect(() => {
+    console.log("Component mounted with password:", password)
+    console.log("PASSWORD constant:", PASSWORD)
+  }, [password])
+
   const filteredPnL = isAuthenticated ? realizedPnL : filterLastWeekData(realizedPnL)
-  const visiblePnL = showAllPnL ? filteredPnL : filteredPnL.slice(0, ITEMS_TO_SHOW)
+  const visiblePnL = showAllPnL ? filteredPnL.slice(0, 10) : filteredPnL.slice(0, ITEMS_TO_SHOW)
 
   return (
     <section className="w-full py-6 md:py-10 bg-gray-950 text-white">
@@ -333,9 +360,9 @@ export default function BingXOverview() {
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">BingX Übersicht</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">Trading Übersicht</h2>
           <p className="text-sm md:text-base text-gray-400 text-center">
-            Realisiertes PnL, Finanzierungs- und Handelsgebühren.
+            Hier findest du eine Übersicht unserer vergangenen Trades.
           </p>
         </motion.div>
 
@@ -399,7 +426,6 @@ export default function BingXOverview() {
                     onClick={() => {
                       setShowLoginForm(false)
                       setLoginError(false)
-                      setPassword("")
                     }}
                     className="p-2 rounded-full hover:bg-gray-800/50 transition-colors"
                   >
@@ -427,8 +453,8 @@ export default function BingXOverview() {
                   <div className="relative">
                     <input
                       type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={inputPassword}
+                      onChange={(e) => setInputPassword(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") handleLogin()
                       }}
@@ -711,11 +737,8 @@ export default function BingXOverview() {
             {/* Realized PnL */}
             <div className="mb-8">
               <h3 className="text-lg md:text-xl font-semibold mb-2 text-blue-400">
-                {isAuthenticated ? "Realisiertes PnL" : "Realisiertes PnL (letzte Woche)"}
+                {isAuthenticated ? "Realisiertes PnL" : "Realisierte Gewinne und Verluste"}
               </h3>
-              <p className="text-sm text-green-400 mb-2">
-                Gesamt: {formatNumber(getTotal(filteredPnL).toString())} USDT
-              </p>
 
               {/* Mobile view for PnL */}
               <div className="md:hidden space-y-3">
@@ -723,15 +746,16 @@ export default function BingXOverview() {
                   <div key={item.tranId} className="bg-gray-900 border border-gray-800 rounded-lg p-3 shadow-sm">
                     <div className="flex justify-between items-start mb-2">
                       <span className="font-medium">{item.symbol}</span>
+
                       <span
-                        className={`${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"} font-semibold`}
+                        className={`font-semibold ${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"}`}
                       >
-                        {formatNumber(item.income)}
+                        {formatNumber(item.income, 2)}
                       </span>
                     </div>
                     <div className="text-sm text-gray-400">{item.info}</div>
                     <div className="flex items-center gap-1 text-xs text-gray-500 mt-2">
-                      <Clock className="w-3 h-3" />
+                      <Clock className="w-4 h-4" />
                       {formatDate(item.time)}
                     </div>
                   </div>
@@ -755,9 +779,9 @@ export default function BingXOverview() {
                         <td className="px-4 py-2">{item.symbol}</td>
                         <td className="px-4 py-2">{item.info}</td>
                         <td
-                          className={`px-4 py-2 ${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"}`}
+                          className={`px-4 py-2 font-semibold ${Number.parseFloat(item.income) >= 0 ? "text-green-400" : "text-red-400"}`}
                         >
-                          {formatNumber(item.income)}
+                          {formatNumber(item.income, 2)}
                         </td>
                         <td className="px-4 py-2 text-gray-400 flex items-center gap-1">
                           <Clock className="w-4 h-4" />
@@ -769,7 +793,7 @@ export default function BingXOverview() {
                 </table>
               </div>
 
-              {realizedPnL.length > ITEMS_TO_SHOW && (
+              {filteredPnL.length > ITEMS_TO_SHOW && (
                 <button
                   onClick={() => setShowAllPnL(!showAllPnL)}
                   className="mt-3 flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mx-auto"
@@ -790,8 +814,10 @@ export default function BingXOverview() {
             {/* Chart */}
             {realizedPnL.length > 0 && (
               <div className="mt-8 md:mt-12">
-                <h3 className="text-lg md:text-xl font-semibold mb-4 text-cyan-400">
-                  {isAuthenticated ? "Grafik: Realisiertes PnL" : "Grafik: Realisiertes PnL (letzte Woche)"}
+                <h3 className="text-lg md:text-xl font-semibold mb-4 text-green-400">
+                  {isAuthenticated
+                    ? "Realisierte Gewinne und Verluste in den letzten 7 Tagen"
+                    : "Realisierte Gewinne und Verluste in den letzten 7 Tagen"}
                 </h3>
                 <div className="bg-gray-900 p-2 md:p-4 rounded-lg border border-gray-800">
                   <ResponsiveContainer width="100%" height={300}>
@@ -815,15 +841,27 @@ export default function BingXOverview() {
                       <YAxis stroke="#ccc" tick={{ fontSize: 12 }} />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#1f2937",
-                          border: "1px solid #374151",
+                          backgroundColor: "#22c55e",
+                          border: "1px solid 22c55e",
                           borderRadius: "0.375rem",
                         }}
-                        labelStyle={{ color: "#e5e7eb", fontWeight: "bold", marginBottom: "0.25rem" }}
+                        labelStyle={{
+                          color: "gray",
+                          fontWeight: "bold",
+                          marginBottom: "0.25rem",
+                        }}
                         itemStyle={{ padding: "0.125rem 0" }}
+                        formatter={(value: any) => [`${formatNumber(value.toString(), 2)} USDT`, "Gewinn/Verlust"]}
                       />
-                      <Legend wrapperStyle={{ paddingTop: "10px" }} />
-                      <Bar dataKey="pnl" fill="#22c55e" name="Realisiertes PnL" />
+                      <Legend wrapperStyle={{ paddingTop: "10px", color: "#e5e7eb" }} />
+                      <Bar dataKey="pnl" name="Gewinn/Verlust">
+                        {(isAuthenticated
+                          ? generateChartData(realizedPnL)
+                          : generateChartData(filterLastWeekData(realizedPnL))
+                        ).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.pnl >= 0 ? "#22c55e" : "#ef4444"} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -831,6 +869,13 @@ export default function BingXOverview() {
             )}
           </>
         )}
+
+        {/* Membership Call-to-Action */}
+        <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
+          <p className="text-sm text-gray-300">
+            Möchtest du mehr Informationen zu unseren Trades sehen? Werde Mitglied bereits ab O CHF
+          </p>
+        </div>
 
         {lastUpdated && (
           <p className="text-xs text-gray-500 mt-4">
