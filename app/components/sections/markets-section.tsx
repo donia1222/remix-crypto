@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
-import { RefreshCw, ChevronDown, ChevronUp } from "lucide-react"
+import { RefreshCw, ChevronDown, ChevronUp, TrendingUp  } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 // Tracked cryptocurrency pairs - Filtered list
@@ -309,6 +309,7 @@ export default function MarketsSection() {
           >
             <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-cyan-400">Märkte</div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white">Echtzeit-Preise</h2>
+             
             <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
               <span>Letzte Aktualisierung: {formatLastUpdated(lastUpdated)}</span>
               <div className={`h-2 w-2 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"}`}></div>

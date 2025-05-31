@@ -28,8 +28,8 @@ Mit freundlichen Grüßen`)
             className="space-y-2"
           >
             
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">Transparente Preise</h2>
-            <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white mb-2">Transparente Preise</h2>
+            <p className="max-w-[700px] text-gray-300">
               Wählen Sie den Plan, der am besten zu Ihren Handelsbedürfnissen passt.
             </p>
           </motion.div>

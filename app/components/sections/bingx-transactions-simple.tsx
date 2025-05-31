@@ -352,7 +352,6 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
 
   return (
     <section className="w-full py-6 md:py-10 bg-gray-950 text-white">
-      
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -361,15 +360,13 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <div className="flex items-center justify-center gap-2">
-            
-            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">Trading Übersicht</h2>
-            
+          <div className="flex items-center justify-center gap-3">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white">Trading Übersicht</h2>
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3, type: "spring" }}
-              className="text-cyan-400"
+              className="text-green-400"
             >
               <TrendingUp className="w-6 h-6 md:w-7 md:h-7" />
             </motion.div>
