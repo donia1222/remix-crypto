@@ -194,7 +194,7 @@ export default function BlockchainVisualizer() {
             >
               {[
                 {
-                  title: "Unabhängig 🌐",
+                  title: "Unabhängig 😊",
                   description:
                     "Vollständige Kontrolle über deine Daten und Transaktionen. Keine Banken oder Zwischenhändler erforderlich.",
                   icon: <DecentralizedNetworkIcon className="h-10 w-10 text-purple-500" />,
