@@ -885,7 +885,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
               </p>
               <button
                 onClick={() => {
-                  const pricesSection = document.getElementById("blockchain")
+                  const pricesSection = document.getElementById("faq")
                   if (pricesSection) {
                     const headerHeight = 64 // Account for fixed header
                     const additionalOffset = 100 // Additional offset to scroll down more
