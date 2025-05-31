@@ -30,7 +30,7 @@ export default function HeroSection() {
               </span> 🚀
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
-              Die Zukunft der Kryptowährungen ist hier
+              Die Zukunft der Kryptowährungen beginnt hier
             </h1>
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">
               Kaufen, verkaufen und tauschen Sie Kryptowährungen mit Leichtigkeit. Sichere und moderne Plattform für

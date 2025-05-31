@@ -24,6 +24,7 @@ import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
+import AboutSection from "../components/sections/about-section"
 
 export const meta: MetaFunction = () => {
   return [
@@ -103,7 +104,7 @@ export default function Index() {
     }, 100)
   }
 
-  // Definir los elementos del menú con sus iconos
+  // Menú sin "Sobre mí" en la navegación
   const menuItems = [
     { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
@@ -261,20 +262,16 @@ export default function Index() {
         {/* Animated Text Reveal Section */}
         <AnimatedTextReveal />
 
-                                {/* BingX Section */}
-                                <section id="bingx">
-                                        <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
-                                                {/* BingX Transactions Section - Now with password prop */}
-                                                {password !== null ? (
-                                                        <BingXTransactionsSimple password={password} />
-                                                ) : (
-                                                        <BingXTransactionsSimple />
-                                                )}
-                                        </div>
-                                </section>
+        {/* BingX Section */}
+        <section id="bingx">
+          <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
+            {/* BingX Transactions Section - Now with password prop */}
+            {password !== null ? <BingXTransactionsSimple password={password} /> : <BingXTransactionsSimple />}
+          </div>
+        </section>
 
-                                {/* Content with solid background */}
-                                <div className="bg-gray-950 ">
+        {/* Content with solid background */}
+        <div className="bg-gray-950 ">
           {/* Markets Section */}
           <section id="maerkte">
             <MarketsSection />
@@ -294,6 +291,7 @@ export default function Index() {
           <section id="faq" className="mt-32">
             <FaqSection />
           </section>
+
           {/* Final CTA Section with solid background */}
           <section
             className="w-full py-12 md:py-24 lg:py-32 relative z-20 bg-cover bg-center min-h-[400px] flex items-end overflow-hidden"
@@ -304,6 +302,10 @@ export default function Index() {
               <div className="flex flex-col items-center justify-end space-y-2 text-center"></div>
             </div>
           </section>
+
+          {/* About Section - MOVIDA AQUÍ, justo antes del contacto */}
+          <AboutSection />
+
           {/* Contact Section */}
           <section id="kontakt">
             <ContactSection />

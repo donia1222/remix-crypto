@@ -252,8 +252,7 @@ export default function AnimatedTextReveal() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.7 }}
           >
-            Wir verbinden modernste Technologie mit benutzerfreundlichem Design, um Ihnen die beste Krypto-Erfahrung zu
-            bieten.
+       Wir verbinden modernste Technologie mit benutzerfreundlichem Design, um dir beste Krypto-Erfahrung zu bieten.
           </motion.p>
 
           {/* Círculos decorativos que siguen al ratón */}

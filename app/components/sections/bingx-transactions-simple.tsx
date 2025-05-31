@@ -352,6 +352,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
 
   return (
     <section className="w-full py-6 md:py-10 bg-gray-950 text-white">
+      
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -360,7 +361,19 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">Trading Übersicht</h2>
+          <div className="flex items-center justify-center gap-2">
+            
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center">Trading Übersicht</h2>
+            
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3, type: "spring" }}
+              className="text-cyan-400"
+            >
+              <TrendingUp className="w-6 h-6 md:w-7 md:h-7" />
+            </motion.div>
+          </div>
           <p className="text-sm md:text-base text-gray-400 text-center">
             Hier findest du eine Übersicht unserer vergangenen Trades.
           </p>
@@ -842,7 +855,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "#22c55e",
-                          border: "1px solid 22c55e",
+                          border: "1px solid #22c55e",
                           borderRadius: "0.375rem",
                         }}
                         labelStyle={{
@@ -867,21 +880,40 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
                 </div>
               </div>
             )}
+
+            {/* Membership Call-to-Action */}
+            <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
+              <p className="text-sm text-gray-300 mb-4">
+                Möchtest du mehr Informationen zu unseren Trades sehen? Werde Mitglied bereits ab O CHF.
+              </p>
+              <button
+                onClick={() => {
+                  const pricesSection = document.getElementById("blockchain")
+                  if (pricesSection) {
+                    const headerHeight = 64 // Account for fixed header
+                    const additionalOffset = 100 // Additional offset to scroll down more
+                    const elementPosition = pricesSection.getBoundingClientRect().top + window.pageYOffset
+                    const offsetPosition = elementPosition - headerHeight - additionalOffset
+
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: "smooth",
+                    })
+                  }
+                }}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Mitglied werden
+              </button>
+            </div>
+
+            {lastUpdated && (
+              <p className="text-xs text-gray-500 mt-4">
+                Zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
+                {apiUnavailable && " (aus Cache)"}
+              </p>
+            )}
           </>
-        )}
-
-        {/* Membership Call-to-Action */}
-        <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
-          <p className="text-sm text-gray-300">
-            Möchtest du mehr Informationen zu unseren Trades sehen? Werde Mitglied bereits ab O CHF
-          </p>
-        </div>
-
-        {lastUpdated && (
-          <p className="text-xs text-gray-500 mt-4">
-            Zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
-            {apiUnavailable && " (aus Cache)"}
-          </p>
         )}
       </div>
     </section>

@@ -4,6 +4,44 @@ import { useState, useEffect, useRef } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Shield, Lock, Database, LinkIcon, Check } from "lucide-react"
 
+// Icono personalizado para representar descentralización/red distribuida
+const DecentralizedNetworkIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Nodos centrales */}
+    <circle cx="12" cy="12" r="2" fill="currentColor" />
+    <circle cx="6" cy="6" r="1.5" fill="currentColor" />
+    <circle cx="18" cy="6" r="1.5" fill="currentColor" />
+    <circle cx="6" cy="18" r="1.5" fill="currentColor" />
+    <circle cx="18" cy="18" r="1.5" fill="currentColor" />
+    <circle cx="12" cy="4" r="1.5" fill="currentColor" />
+    <circle cx="12" cy="20" r="1.5" fill="currentColor" />
+    <circle cx="4" cy="12" r="1.5" fill="currentColor" />
+    <circle cx="20" cy="12" r="1.5" fill="currentColor" />
+
+    {/* Conexiones entre nodos */}
+    <path d="M12 10L6 6" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 10L18 6" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 14L6 18" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 14L18 18" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 10L12 4" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M12 14L12 20" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M10 12L4 12" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M14 12L20 12" stroke="currentColor" strokeWidth="1.5" />
+
+    {/* Conexiones adicionales para mostrar red distribuida */}
+    <path d="M6 6L18 18" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+    <path d="M18 6L6 18" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+  </svg>
+)
+
 export default function BlockchainVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeBlock, setActiveBlock] = useState<number | null>(null)
@@ -144,9 +182,6 @@ export default function BlockchainVisualizer() {
 
       {/* Contenido principal */}
       <motion.div className="container px-4 md:px-6 mx-auto relative z-10" style={{ opacity, y }}>
-
-
-
         {/* Información sobre la blockchain */}
         <AnimatePresence>
           {showInfo && (
@@ -159,23 +194,23 @@ export default function BlockchainVisualizer() {
             >
               {[
                 {
-                  title: "Dezentralisiert",
+                  title: "Unabhängig 🌐",
                   description:
-                    "Keine zentrale Kontrolle. Die Blockchain wird von einem Netzwerk von Computern auf der ganzen Welt verwaltet.",
-                  icon: <Database className="h-10 w-10 text-purple-500" />,
+                    "Vollständige Kontrolle über deine Daten und Transaktionen. Keine Banken oder Zwischenhändler erforderlich.",
+                  icon: <DecentralizedNetworkIcon className="h-10 w-10 text-purple-500" />,
                   delay: 0,
                 },
                 {
-                  title: "Unveränderlich",
+                  title: "Einkommen 🤑",
                   description:
-                    "Einmal in der Blockchain gespeichert, können Daten nicht mehr geändert oder gelöscht werden.",
+                    "Wir sagen es gerade raus: Mit uns wirst du wahrscheinlich nicht zum Millionär. Aber ein gutes.",
                   icon: <Lock className="h-10 w-10 text-cyan-500" />,
                   delay: 0.1,
                 },
                 {
-                  title: "Transparent",
+                  title: "Vertrauen 😇",
                   description:
-                    "Alle Transaktionen sind öffentlich und können von jedem eingesehen werden, was Vertrauen schafft.",
+                    "Wir schaffen Vertrauen. Alle unsere Transaktionen sind öffentlich einsehbar. Je nach Abo-Modell hast du Zugriff auf mehr oder weniger Daten",
                   icon: <Shield className="h-10 w-10 text-teal-500" />,
                   delay: 0.2,
                 },
@@ -221,8 +256,6 @@ export default function BlockchainVisualizer() {
           />
         ))}
       </div>
-
-
     </section>
   )
 }

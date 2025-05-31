@@ -27,6 +27,7 @@ Mit freundlichen Grüßen`)
             viewport={{ once: true }}
             className="space-y-2"
           >
+            
             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">Transparente Preise</h2>
             <p className="max-w-[900px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Wählen Sie den Plan, der am besten zu Ihren Handelsbedürfnissen passt.
@@ -37,16 +38,16 @@ Mit freundlichen Grüßen`)
           {[
             {
               title: "Basis",
-              description: "Für Anfänger-Trader",
+              description: "Für Anfänger 🥺",
               price: "0 CHF",
               period: "/Monat",
-              features: ["Zugang zu Hauptmärkten", "Grundlegende Charts", "Standardgebühr", "E-Mail-Support"],
+              features: ["Erweiterter Zugriff auf Transaktionen", "Grafik Gewinn/Verlust der letzten 7 Tage"],
               buttonText: "Kostenlos starten",
               popular: false,
             },
             {
               title: "Pro",
-              description: "Für aktive Trader",
+              description: "Für aktive Trader 📊",
               price: "29 CHF",
               period: "/Monat",
               features: [
@@ -62,7 +63,7 @@ Mit freundlichen Grüßen`)
             },
             {
               title: "Unternehmen",
-              description: "Für Institutionen",
+              description: "Für Institutionen 🏦",
               price: "99 CHF",
               period: "/Monat",
               features: [
