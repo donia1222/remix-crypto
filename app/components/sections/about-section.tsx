@@ -97,7 +97,7 @@ export default function AboutSection() {
                 Über mich
               </div>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-400 mb-6">
-                🚀  Meine Trading-Reise
+                🚀 Meine Trading-Reise
               </h2>
             </motion.div>
 
@@ -182,7 +182,7 @@ export default function AboutSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative flex justify-center"
           >
-            <div className="relative max-w-xs w-full">
+            <div className="relative max-w-[280px] w-full">
               {/* Animated background glow */}
               <motion.div
                 style={{ rotate, scale }}
