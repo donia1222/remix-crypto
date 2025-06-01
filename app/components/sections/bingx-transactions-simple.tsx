@@ -376,40 +376,49 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
           </p>
         </motion.div>
 
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => fetchAllData()}
-              className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 md:px-4 md:py-2 rounded text-sm transition-colors"
-            >
-              <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              Aktualisieren
-            </button>
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => fetchAllData()}
+                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 md:px-4 md:py-2 rounded text-sm transition-colors"
+              >
+                <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                Aktualisieren
+              </button>
 
-            {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 bg-red-900 hover:bg-red-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">Abmelden</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowLoginForm(true)}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-all shadow-lg hover:shadow-purple-700/20"
-              >
-                <Lock className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">Mitgliederbereich</span>
-              </button>
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 bg-red-900 hover:bg-red-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Abmelden</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowLoginForm(true)}
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-all shadow-lg hover:shadow-purple-700/20"
+                >
+                  <Lock className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">Mitgliederbereich</span>
+                </button>
+              )}
+            </div>
+
+            {apiUnavailable && (
+              <div className="flex items-center gap-2 text-amber-400 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                <span>API nicht verfügbar, zeige zwischengespeicherte Daten</span>
+              </div>
             )}
           </div>
 
-          {apiUnavailable && (
-            <div className="flex items-center gap-2 text-amber-400 text-sm">
-              <AlertCircle className="w-4 h-4" />
-              <span>API nicht verfügbar, zeige zwischengespeicherte Daten</span>
-            </div>
+          {lastUpdated && (
+            <p className="text-xs text-gray-500">
+              Zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
+              {apiUnavailable && " (aus Cache)"}
+            </p>
           )}
         </div>
 
@@ -730,6 +739,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="text-sm text-gray-400 mb-1">Unrealisierter Gewinn/Verlust</div>
+
                       <div
                         className={`text-xl font-bold ${Number.parseFloat(balanceData.unrealizedProfit) >= 0 ? "text-green-400" : "text-red-400"}`}
                       >
@@ -903,13 +913,6 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
                 Mitglied werden
               </button>
             </div>
-
-            {lastUpdated && (
-              <p className="text-xs text-gray-500 mt-4">
-                Zuletzt aktualisiert: {lastUpdated.toLocaleTimeString("de-CH")}
-                {apiUnavailable && " (aus Cache)"}
-              </p>
-            )}
           </>
         )}
       </div>
