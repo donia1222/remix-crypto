@@ -250,8 +250,15 @@ export default function Index() {
       {/* Background video - fixed to viewport height */}
       <div className="fixed inset-0 z-0 h-screen">
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10"></div>
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover object-center">
+     <video autoPlay loop muted playsInline className="w-full h-full object-cover object-center">
+          <source src="/videos/crypto-background copia-optimized.webm" type="video/webm" />
           <source src="/videos/crypto-background.mp4" type="video/mp4" />
+          {/* Imagen de fallback si el video no carga */}
+          <img
+            src="/fallback-background.jpg"
+            alt="Crypto background"
+            className="w-full h-full object-cover object-center"
+          />
         </video>
       </div>
 
