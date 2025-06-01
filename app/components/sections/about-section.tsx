@@ -146,7 +146,7 @@ export default function AboutSection() {
               </motion.p>
             </div>
 
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="flex flex-wrap gap-4 pt-4 justify-center">
               {[
                 { icon: TrendingUp, text: "5+ Jahre Erfahrung" },
                 { icon: Zap, text: "Algorithmisches Trading" },
