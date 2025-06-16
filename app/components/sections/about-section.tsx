@@ -97,7 +97,7 @@ export default function AboutSection() {
                 Über mich
               </div>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-400 mb-6">
-                🚀 Meine Trading-Reise
+                🚀 Über Nextrade
               </h2>
             </motion.div>
 
@@ -111,9 +111,9 @@ export default function AboutSection() {
                 className="relative"
               >
                 <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  Ich bin ein Kryptowährungs-Trader mit über 5 Jahren Erfahrung in digitalen Märkten. Meine Leidenschaft
-                  für Blockchain-Technologie und technische Analyse hat mich dazu gebracht, innovative Strategien zu
-                  entwickeln, die Marktintuition mit fortschrittlichen technologischen Tools kombinieren.
+                  🚀 Mein Name ist Jathu und ich bin der Gründer von Nextrade – einer Plattform, mit welcher ich das
+                  Trading-Erlebnis auf ein neues Level bringen möchte. Mit meiner Leidenschaft für den Kryptomarkt 💎
+                  und einem klaren Ziel vor Augen setze ich auf Transparenz, Effizienz und Innovation.
                 </motion.span>
               </motion.p>
 
@@ -125,9 +125,10 @@ export default function AboutSection() {
                 variants={textVariants}
               >
                 <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  📈 Im Laufe meiner Karriere habe ich mehrere Marktzyklen durchlaufen, von den aufregendsten
-                  Bullenmärkten bis zu den herausforderndsten Bärenmärkten. Diese Erfahrung hat mir die Bedeutung von
-                  Risikomanagement und Disziplin im Trading gelehrt.
+                  📊 Mit Nextrade stelle ich euch nicht nur meine aktuellen Einschätzungen zur aktuellen Marktlage zur
+                  Verfügung, sondern gewähre auch Einblicke in meine laufenden und vergangenen Trades – ganz gleich, ob
+                  diese im Plus oder Minus sind. Je nach Mitgliedschaft stehen dir mehr oder weniger Informationen zur
+                  Verfügung.
                 </motion.span>
               </motion.p>
 
@@ -139,18 +140,17 @@ export default function AboutSection() {
                 variants={textVariants}
               >
                 <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  Mein Ansatz basiert auf tiefgreifender technischer Analyse, emotionalem Management und dem Einsatz
-                  automatisierter Technologien zur Optimierung von Operationen. Ich glaube fest daran, dass Erfolg im
-                  Trading aus der perfekten Kombination von Wissen, Erfahrung und Technologie entsteht.
+                  Wichtiger Hinweis: Alle Informationen stellen keine Finanz- oder Anlageberatung im rechtlichen Sinne
+                  dar. Jede Investitionsentscheidung liegt in der Eigenverantwortung der Nutzer.
                 </motion.span>
               </motion.p>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4 justify-center">
               {[
-                { icon: TrendingUp, text: "5+ Jahre Erfahrung" },
-                { icon: Zap, text: "Algorithmisches Trading" },
-                { icon: Brain, text: "Erweiterte technische Analyse" },
+                { icon: TrendingUp, text: "Crypto" },
+                { icon: Zap, text: "Trading" },
+                { icon: Brain, text: "IT" },
               ].map((skill, i) => (
                 <motion.div
                   key={i}
@@ -227,9 +227,7 @@ export default function AboutSection() {
                   transition={{ delay: 0.5 }}
                   className="absolute bottom-4 left-4 right-4"
                 >
-                  <p className="text-white font-medium text-sm">
-                    💡 "Erfolgreiches Trading ist 20% Technik und 80% Psychologie"
-                  </p>
+                  <p className="text-white font-medium text-sm">💡 "Transparenz und Ehrlichkeit im Trading 📈"</p>
                 </motion.div>
               </motion.div>
             </div>
