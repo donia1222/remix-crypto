@@ -19,7 +19,6 @@ import ImpressumModal from "../components/modal/impressum-modal"
 import HeroSection from "../components/sections/hero-section"
 import MarketsSection from "../components/sections/markets-section"
 import NewsSection from "../components/sections/news-section"
-import FaqSection from "../components/sections/pricing-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
@@ -175,7 +174,7 @@ export default function Index() {
               className="text-sm font-medium text-gray-300 hover:text-white transition-colors flex items-center group"
             >
               <motion.div
-                className="mr-2 text-cyan-400 group-hover:text-cyan-300"
+                className="mr-2 text-[#25D366] group-hover:text-[#20c55a]"
                 animate={{
                   rotate: hoveredItem === item.id ? [0, -10, 10, -10, 0] : 0,
                   scale: hoveredItem === item.id ? 1.2 : 1,
@@ -235,7 +234,7 @@ export default function Index() {
               whileHover={{ x: 5 }}
             >
               <motion.div
-                className="mr-2 text-cyan-400"
+                className="mr-2 text-[#25D366]"
                 whileHover={{ scale: 1.2, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
@@ -250,7 +249,7 @@ export default function Index() {
       {/* Background video - fixed to viewport height */}
       <div className="fixed inset-0 z-0 h-screen">
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10"></div>
-     <video autoPlay loop muted playsInline className="w-full h-full object-cover object-center">
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover object-center">
           <source src="/videos/crypto-background copia-optimized.webm" type="video/webm" />
           <source src="/videos/crypto-background.mp4" type="video/mp4" />
           {/* Imagen de fallback si el video no carga */}
@@ -295,9 +294,7 @@ export default function Index() {
           </section>
 
           {/* FAQ Section */}
-          <section id="faq" className="mt-32">
-            <FaqSection />
-          </section>
+          <section id="faq" className="mt-32"></section>
 
           {/* Final CTA Section with solid background */}
           <section

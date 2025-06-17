@@ -28,14 +28,14 @@ export default function AnimatedTextReveal() {
   const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [10, 0, -10])
   const y = useTransform(scrollYProgress, [0, 0.5, 1], [100, 0, -100])
 
-  // Palabras que flotarán en el fondo con propiedades de animación
+  // Palabras que flotarán en el fondo con propiedades de animación - colores actualizados
   const floatingWords = [
     {
       text: "BITCOIN",
       x: -25,
       y: -20,
       size: "text-6xl",
-      color: "text-purple-500/10",
+      color: "text-green-500/10", // WhatsApp green
       floatDuration: 8,
       floatDelay: 0,
       floatDistance: 15,
@@ -45,7 +45,7 @@ export default function AnimatedTextReveal() {
       x: 25,
       y: 20,
       size: "text-5xl",
-      color: "text-cyan-500/10",
+      color: "text-red-500/10", // Red
       floatDuration: 10,
       floatDelay: 1,
       floatDistance: 20,
@@ -55,7 +55,7 @@ export default function AnimatedTextReveal() {
       x: -15,
       y: 15,
       size: "text-7xl",
-      color: "text-blue-500/10",
+      color: "text-emerald-500/10", // Emerald green variant
       floatDuration: 12,
       floatDelay: 2,
       floatDistance: 18,
@@ -65,7 +65,7 @@ export default function AnimatedTextReveal() {
       x: 20,
       y: -25,
       size: "text-8xl",
-      color: "text-pink-500/10",
+      color: "text-red-600/10", // Darker red
       floatDuration: 9,
       floatDelay: 3,
       floatDistance: 25,
@@ -75,7 +75,7 @@ export default function AnimatedTextReveal() {
       x: -30,
       y: 0,
       size: "text-7xl",
-      color: "text-green-500/10",
+      color: "text-green-600/10", // Darker WhatsApp green
       floatDuration: 11,
       floatDelay: 4,
       floatDistance: 22,
@@ -85,7 +85,7 @@ export default function AnimatedTextReveal() {
       x: 0,
       y: -30,
       size: "text-9xl",
-      color: "text-yellow-500/10",
+      color: "text-lime-500/10", // Lime green variant
       floatDuration: 14,
       floatDelay: 0.5,
       floatDistance: 30,
@@ -95,7 +95,7 @@ export default function AnimatedTextReveal() {
       x: 15,
       y: 30,
       size: "text-6xl",
-      color: "text-red-500/10",
+      color: "text-red-700/10", // Darker red
       floatDuration: 9.5,
       floatDelay: 2.5,
       floatDistance: 17,
@@ -105,7 +105,7 @@ export default function AnimatedTextReveal() {
       x: -20,
       y: -10,
       size: "text-5xl",
-      color: "text-indigo-500/10",
+      color: "text-emerald-600/10", // Darker emerald
       floatDuration: 11,
       floatDelay: 1.5,
       floatDistance: 20,
@@ -115,7 +115,7 @@ export default function AnimatedTextReveal() {
       x: 30,
       y: 10,
       size: "text-7xl",
-      color: "text-orange-500/10",
+      color: "text-rose-500/10", // Rose red variant
       floatDuration: 10,
       floatDelay: 3.5,
       floatDistance: 24,
@@ -123,20 +123,20 @@ export default function AnimatedTextReveal() {
   ]
 
   // Efecto para rastrear la posición del ratón
+  const handleMouseMove = (e: MouseEvent) => {
+    const { clientX, clientY } = e
+    const { innerWidth, innerHeight } = window
+
+    // Normalizar la posición del ratón entre -1 y 1
+    const normalizedX = (clientX / innerWidth) * 2 - 1
+    const normalizedY = (clientY / innerHeight) * 2 - 1
+
+    setMousePosition({ x: normalizedX, y: normalizedY })
+    mouseX.set(normalizedX)
+    mouseY.set(normalizedY)
+  }
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e
-      const { innerWidth, innerHeight } = window
-
-      // Normalizar la posición del ratón entre -1 y 1
-      const normalizedX = (clientX / innerWidth) * 2 - 1
-      const normalizedY = (clientY / innerHeight) * 2 - 1
-
-      setMousePosition({ x: normalizedX, y: normalizedY })
-      mouseX.set(normalizedX)
-      mouseY.set(normalizedY)
-    }
-
     window.addEventListener("mousemove", handleMouseMove)
 
     return () => {
@@ -160,9 +160,6 @@ export default function AnimatedTextReveal() {
               top: `${50 + word.y}%`,
               x: "-50%",
               y: "-50%",
-              rotateX: useTransform(smoothMouseY, [-1, 1], [-5, 5]),
-              rotateY: useTransform(smoothMouseX, [-1, 1], [5, -5]),
-              z: useTransform(scrollYProgress, [0, 1], [0, word.x * 10]),
             }}
             initial={{ opacity: 0 }}
             animate={{
@@ -216,13 +213,13 @@ export default function AnimatedTextReveal() {
             y,
           }}
         >
-          {/* Título con efecto de revelación de letras */}
+          {/* Título con efecto de revelación de letras - gradiente actualizado */}
           <div className="mb-8 relative">
             <div className="flex justify-center overflow-hidden">
               {letters.map((letter, index) => (
                 <motion.span
                   key={index}
-                  className="text-5xl md:text-7xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-cyan-600"
+                  className="text-5xl md:text-7xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-red-500"
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
@@ -237,9 +234,9 @@ export default function AnimatedTextReveal() {
             </div>
           </div>
 
-          {/* Línea decorativa */}
+          {/* Línea decorativa - gradiente actualizado */}
           <motion.div
-            className="w-24 h-1 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-full mb-8"
+            className="w-24 h-1 bg-gradient-to-r from-green-500 to-red-500 rounded-full mb-8"
             initial={{ width: 0 }}
             animate={{ width: "6rem" }}
             transition={{ duration: 1, delay: 1.5 }}
@@ -252,19 +249,20 @@ export default function AnimatedTextReveal() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.7 }}
           >
-       Wir verbinden modernste Technologie mit benutzerfreundlichem Design, um dir beste Krypto-Erfahrung zu bieten.
+            Wir verbinden modernste Technologie mit benutzerfreundlichem Design, um dir beste Krypto- und
+            Trading-Erfahrungen zu bieten.
           </motion.p>
 
-          {/* Círculos decorativos que siguen al ratón */}
+          {/* Círculos decorativos que siguen al ratón - colores actualizados */}
           <motion.div
-            className="absolute w-64 h-64 rounded-full bg-purple-600/10 blur-3xl"
+            className="absolute w-64 h-64 rounded-full bg-green-500/10 blur-3xl"
             style={{
               x: useTransform(smoothMouseX, [-1, 1], [-100, 100]),
               y: useTransform(smoothMouseY, [-1, 1], [-100, 100]),
             }}
           />
           <motion.div
-            className="absolute w-96 h-96 rounded-full bg-cyan-600/10 blur-3xl"
+            className="absolute w-96 h-96 rounded-full bg-red-500/10 blur-3xl"
             style={{
               x: useTransform(smoothMouseX, [-1, 1], [100, -100]),
               y: useTransform(smoothMouseY, [-1, 1], [100, -100]),
@@ -273,12 +271,12 @@ export default function AnimatedTextReveal() {
         </motion.div>
       </div>
 
-      {/* Líneas que cruzan la pantalla con el scroll */}
+      {/* Líneas que cruzan la pantalla con el scroll - colores actualizados */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(5)].map((_, index) => (
           <motion.div
             key={index}
-            className="absolute h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent w-full"
+            className="absolute h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent w-full"
             style={{
               top: `${index * 25}%`,
               x: useTransform(
@@ -293,7 +291,7 @@ export default function AnimatedTextReveal() {
         {[...Array(5)].map((_, index) => (
           <motion.div
             key={index}
-            className="absolute w-px h-full bg-gradient-to-b from-transparent via-purple-500/30 to-transparent"
+            className="absolute w-px h-full bg-gradient-to-b from-transparent via-green-500/30 to-transparent"
             style={{
               left: `${index * 25}%`,
               y: useTransform(

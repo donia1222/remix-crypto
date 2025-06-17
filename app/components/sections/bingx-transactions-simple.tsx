@@ -895,7 +895,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
               </p>
               <button
                 onClick={() => {
-                  const pricesSection = document.getElementById("faq")
+                  const pricesSection = document.getElementById("kontakt")
                   if (pricesSection) {
                     const headerHeight = 64 // Account for fixed header
                     const additionalOffset = 100 // Additional offset to scroll down more
@@ -908,7 +908,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
                     })
                   }
                 }}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r  from-green-600 to-green-600  hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Mitglied werden
               </button>

@@ -23,18 +23,17 @@ export default function HeroSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/20 backdrop-blur-sm"
+              className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-green-500/10 to-green-500/10 border border-purple-500/20 backdrop-blur-sm"
             >
-              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-500">
            next level trading services 
-              </span> 🚀
+              </span> 
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400 p-4">
-              Die Zukunft der Kryptowährungen beginnt hier
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-green-500 p-4">
+              Die Zukunft der Kryptowährungen -beginnt hier !
             </h1>
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">
-              Kaufen, verkaufen und tauschen Sie Kryptowährungen mit Leichtigkeit. Sichere und moderne Plattform für
-              alle Ihre digitalen Vermögenswerte.
+            🇨🇭 Nextrade Swiss unterstützt dich dabei, die Chancen im Kryptomarkt zu nutzen und gleichzeitig Risiken zu minimieren.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

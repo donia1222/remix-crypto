@@ -196,22 +196,22 @@ export default function BlockchainVisualizer() {
                 {
                   title: "Unabhängig 😊",
                   description:
-                    "Vollständige Kontrolle über deine Daten und Transaktionen. Keine Banken oder Zwischenhändler erforderlich.",
+                    "Vollständige Kontrolle über deine Finanzen und Transaktionen. Du entscheidest selbst über deine Investitionen und kannst deine Plattform dazu frei auswählen.",
                   icon: <DecentralizedNetworkIcon className="h-10 w-10 text-purple-500" />,
                   delay: 0,
                 },
                 {
                   title: "Einkommen 🤑",
                   description:
-                    "Wir sagen es gerade raus: Mit uns wirst du wahrscheinlich nicht zum Millionär. Aber ein gutes.",
-                  icon: <Lock className="h-10 w-10 text-cyan-500" />,
+                    "Die wenigsten Menschen werden durch Krypto und Trading zum Millionär und verlieren durch zu hohe Erwartungen ihr Geld. Lerne deine Risiken zu minimieren und sichere lieber auch mal kleinere Gewinne ab.",
+                  icon: <Lock className="h-10 w-10 text-green-500" />,
                   delay: 0.1,
                 },
                 {
                   title: "Vertrauen 😇",
                   description:
-                    "Wir schaffen Vertrauen. Alle unsere Transaktionen sind öffentlich einsehbar. Je nach Abo-Modell hast du Zugriff auf mehr oder weniger Daten",
-                  icon: <Shield className="h-10 w-10 text-teal-500" />,
+                    "Wir schaffen Vertrauen. Alle unsere Transaktionen sind öffentlich einsehbar. Je nach Abo-Modell hast du Zugriff auf mehr oder weniger Daten.",
+                  icon: <Shield className="h-10 w-10 text-red-500" />,
                   delay: 0.2,
                 },
               ].map((item, index) => (

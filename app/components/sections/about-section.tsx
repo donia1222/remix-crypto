@@ -93,12 +93,10 @@ export default function AboutSection() {
               custom={0}
               variants={textVariants}
             >
-              <div className="inline-block rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 px-3 py-1 text-sm text-cyan-400 mb-4 border border-gray-700">
-                Über mich
+              <div className="inline-block rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 px-3 py-1 text-sm text-green-400 border border-gray-700">
+                Über uns
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-cyan-400 mb-6">
-                🚀 Über Nextrade
-              </h2>
+      
             </motion.div>
 
             <div className="space-y-4 text-gray-300 leading-relaxed">
@@ -111,8 +109,8 @@ export default function AboutSection() {
                 className="relative"
               >
                 <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  🚀 Mein Name ist Jathu und ich bin der Gründer von Nextrade – einer Plattform, mit welcher ich das
-                  Trading-Erlebnis auf ein neues Level bringen möchte. Mit meiner Leidenschaft für den Kryptomarkt 💎
+                  🚀 Mein Name ist Jathu und ich bin der Gründer von Nextrade Swiss.
+Ich möchte das Trading-Erlebnis auf ein neues Level bringen.  Mit meiner Leidenschaft für den Kryptomarkt 💎
                   und einem klaren Ziel vor Augen setze ich auf Transparenz, Effizienz und Innovation.
                 </motion.span>
               </motion.p>
@@ -139,10 +137,14 @@ export default function AboutSection() {
                 custom={3}
                 variants={textVariants}
               >
-                <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  Wichtiger Hinweis: Alle Informationen stellen keine Finanz- oder Anlageberatung im rechtlichen Sinne
-                  dar. Jede Investitionsentscheidung liegt in der Eigenverantwortung der Nutzer.
-                </motion.span>
+       <motion.span
+      whileHover={{ scale: 1.02 }}
+      className="inline-block font-bold"
+    >
+      Wichtiger Hinweis: Alle Informationen stellen keine Finanz- oder Anlageberatung
+      im rechtlichen Sinne dar. Jede Investitionsentscheidung liegt in der
+      Eigenverantwortung der Nutzer.
+    </motion.span>
               </motion.p>
             </div>
 
@@ -161,10 +163,10 @@ export default function AboutSection() {
                   variants={skillVariants}
                   whileHover={{
                     scale: 1.05,
-                    backgroundColor: "rgba(59, 130, 246, 0.1)",
+                    backgroundColor: "rgba(246, 59, 59, 0.1)",
                     transition: { duration: 0.2 },
                   }}
-                  className="flex items-center gap-2 text-blue-400 bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50 backdrop-blur-sm"
+                  className="flex items-center gap-2 text-red-400 bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50 backdrop-blur-sm"
                 >
                   <skill.icon className="w-4 h-4" />
                   <span className="text-sm font-medium">{skill.text}</span>
@@ -204,8 +206,8 @@ export default function AboutSection() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
               >
-                <div className="absolute top-0 left-1/2 w-2 h-2 bg-cyan-400 rounded-full transform -translate-x-1/2" />
-                <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-blue-400 rounded-full" />
+                <div className="absolute top-0 left-1/2 w-2 h-2 bg-green-400 rounded-full transform -translate-x-1/2" />
+                <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-red-400 rounded-full" />
                 <div className="absolute top-1/2 left-0 w-1 h-1 bg-purple-400 rounded-full transform -translate-y-1/2" />
               </motion.div>
 
