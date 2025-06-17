@@ -25,11 +25,11 @@ export default function HeroSection() {
               transition={{ duration: 0.5 }}
               className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-green-500/10 to-green-500/10 border border-purple-500/20 backdrop-blur-sm"
             >
-              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-green-500">
+              <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-green-500">
            next level trading services 
               </span> 
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-green-500 p-4">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
               Die Zukunft der Kryptowährungen -beginnt hier !
             </h1>
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">

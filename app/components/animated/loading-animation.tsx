@@ -89,7 +89,7 @@ export default function LoadingAnimation() {
                 animate={{ width: "80px" }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="h-1 bg-gradient-to-r from-red-600 to-green-600 mt-3 rounded-full sm:mt-4 sm:w-[100px] md:w-[120px]"
+                className="h-1 bg-gradient-to-r from-green-600 to-green-600 mt-3 rounded-full sm:mt-4 sm:w-[100px] md:w-[120px]"
               />
             ) : (
               <motion.div
