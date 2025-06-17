@@ -89,7 +89,7 @@ export default function LoadingAnimation() {
                 animate={{ width: "80px" }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="h-1 bg-gradient-to-r from-purple-600 to-cyan-600 mt-3 rounded-full sm:mt-4 sm:w-[100px] md:w-[120px]"
+                className="h-1 bg-gradient-to-r from-red-600 to-green-600 mt-3 rounded-full sm:mt-4 sm:w-[100px] md:w-[120px]"
               />
             ) : (
               <motion.div
@@ -97,7 +97,7 @@ export default function LoadingAnimation() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.5 }}
-                className="text-cyan-400 text-sm mt-3 font-light tracking-wider"
+                className="text-green-500 text-sm mt-3 font-light tracking-wider"
               >
                 KRYPTO
               </motion.div>
