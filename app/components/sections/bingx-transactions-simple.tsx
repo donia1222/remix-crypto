@@ -802,22 +802,22 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                 </table>
               </div>
 
-              {filteredPnL.length > ITEMS_TO_SHOW && (
-                <button
-                  onClick={() => setShowAllPnL(!showAllPnL)}
-                  className="mt-3 flex items-center gap-1 text-sm text-green-400 hover:text-green-300 transition-colors mx-auto"
-                >
-                  {showAllPnL ? (
-                    <>
-                      Weniger anzeigen <ChevronUp className="w-4 h-4" />
-                    </>
-                  ) : (
-                    <>
-                      Mehr anzeigen <ChevronDown className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              )}
+{filteredPnL.length > ITEMS_TO_SHOW && (
+  <button
+    onClick={() => setShowAllPnL(!showAllPnL)}
+    className="mt-4 flex items-center gap-1 text-sm border-2 border-gray-700  p-2 rounded-sm text-white hover:bg-gray-800 transition-all duration-300 transition-colors mx-auto"
+  >
+    {showAllPnL ? (
+      <>
+        Weniger anzeigen <ChevronUp className="w-4 h-4" />
+      </>
+    ) : (
+      <>
+        Mehr anzeigen <ChevronDown className="w-4 h-4" />
+      </>
+    )}
+  </button>
+)}
             </div>
 
             {/* Chart */}

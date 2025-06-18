@@ -968,7 +968,7 @@ export default function MarketsSection() {
             <Button
               variant="outline"
               onClick={showMoreItems}
-              className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+              className="text-green-500 hover:bg-gray-800 transition-all duration-300"
             >
               Mehr anzeigen <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
@@ -984,7 +984,7 @@ export default function MarketsSection() {
               <Button
                 variant="outline"
                 onClick={showFewerItems}
-                className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+                className="text-green-500 hover:bg-gray-800 transition-all duration-300"
               >
                 Weniger anzeigen <ChevronUp className="ml-2 h-4 w-4" />
               </Button>
