@@ -7,7 +7,7 @@
 
 html,
 body {
-  background-color: theme('colors.white');
+  background-color: theme('colors.black');
   @media (prefers-color-scheme: dark) {
     background-color: theme('colors.gray.950');
     color-scheme: dark;
