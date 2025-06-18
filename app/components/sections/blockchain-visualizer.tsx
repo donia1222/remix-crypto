@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button"
 export default function BlockchainVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeBlock, setActiveBlock] = useState<number | null>(null)
-  const [autoAnimate, setAutoAnimate] = useState(true)
+  const [autoAnimate, setAutoAnimate] = useState(false)
   const [showInfo, setShowInfo] = useState(false)
 
   // Scroll animations
