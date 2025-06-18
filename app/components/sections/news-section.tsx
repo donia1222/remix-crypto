@@ -233,7 +233,7 @@ export default function NewsSection() {
                   <p className="text-gray-300 mb-4 flex-grow">{posts[0].excerpt}</p>
 
                   <div className="mt-auto">
-                    <div className="flex items-center text-cyan-400 text-sm font-medium">
+                    <div className="flex items-center text-green-500 text-sm font-medium">
                       <span>Zum vollständigen Artikel</span>
                       <span className="ml-1">→</span>
                     </div>
@@ -287,7 +287,7 @@ export default function NewsSection() {
                     <p className="text-gray-300 text-sm line-clamp-3 mb-2">{post.excerpt}</p>
 
                     <div className="mt-auto">
-                      <div className="flex items-center text-cyan-400 text-xs font-medium">
+                      <div className="flex items-center text-green-600 text-xs font-medium">
                         <span>Zum vollständigen Artikel</span>
                         <span className="ml-1">→</span>
                       </div>
@@ -343,7 +343,7 @@ export default function NewsSection() {
                       </span>
                     </div>
                     <p className="text-gray-300 mb-4 text-sm line-clamp-3">{post.excerpt}</p>
-                    <div className="flex items-center text-cyan-400 text-sm font-medium">
+                    <div className="flex items-center text-green-500 text-sm font-medium">
                       <span>Zum vollständigen Artikel</span>
                       <span className="ml-1">→</span>
                     </div>
@@ -379,7 +379,7 @@ export default function NewsSection() {
                   <button
                     key={index}
                     className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentSlide ? "bg-cyan-400" : "bg-gray-600"
+                      index === currentSlide ? "bg-gray-400" : "bg-gray-600"
                     }`}
                     onClick={() => setCurrentSlide(index)}
                   />

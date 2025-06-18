@@ -192,7 +192,7 @@ export default function BlockchainVisualizer() {
                   whileHover={{ scale: 1.05 }}
                   animate={{
                     y: activeBlock === index ? [-5, 5, -5] : 0,
-                    boxShadow: activeBlock === index ? "0 0 20px rgba(124, 58, 237, 0.5)" : "0 0 0px rgba(0, 0, 0, 0)",
+                    boxShadow: activeBlock === index ? "0 0 20px rgba(255, 31, 31, 0.5)" : "0 0 0px rgba(0, 0, 0, 0)",
                     scale: activeBlock === index ? 1.1 : 1,
                   }}
                   transition={{
