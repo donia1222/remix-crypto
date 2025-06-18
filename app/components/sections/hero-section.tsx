@@ -6,12 +6,11 @@ import { Button } from "~/components/ui/button"
 // Swiss Flag SVG Component
 const SwissFlag = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 32 32" className={className} xmlns="http://www.w3.org/2000/svg">
-    <rect width="32" height="32" fill="#FF0000" />
+    <rect width="32" height="32" fill="#FF0000" rx="20" ry="20" />
     <rect x="13" y="6" width="6" height="20" fill="white" />
     <rect x="6" y="13" width="20" height="6" fill="white" />
   </svg>
 )
-
 export default function HeroSection() {
   return (
     <section className="relative w-full h-screen overflow-hidden text-white">
@@ -38,8 +37,8 @@ export default function HeroSection() {
               </span>
               <span className="ml-2">🚀</span>
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
-              Die Zukunft der Kryptowährungen - beginnt hier!
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 ">
+              Die Zukunft der Kryptowährungen beginnt hier!
             </h1>
                           <SwissFlag className="w-6 h-6 inline-block" />
             <p className="text-gray-300 md:text-xl max-w-2xl mx-auto flex items-center justify-center gap-2">
