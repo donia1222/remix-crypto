@@ -1,8 +1,16 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
 import { Button } from "~/components/ui/button"
+
+// Swiss Flag SVG Component
+const SwissFlag = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 32 32" className={className} xmlns="http://www.w3.org/2000/svg">
+    <rect width="32" height="32" fill="#FF0000" />
+    <rect x="13" y="6" width="6" height="20" fill="white" />
+    <rect x="6" y="13" width="20" height="6" fill="white" />
+  </svg>
+)
 
 export default function HeroSection() {
   return (
@@ -19,26 +27,29 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="space-y-6"
           >
-                       <motion.div
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-block px-4 py-1.5  rounded-full bg-gradient-to-r from-green-500/10 to-green-500/10 border border-purple-500/20 backdrop-blur-sm"
+              className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-green-500/10 to-green-500/10 border border-purple-500/20 backdrop-blur-sm"
             >
               <span className="text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-green-500">
-           next level trading services 
-              </span> 
+                next level trading
+              </span>
+              <span className="ml-2">🚀</span>
             </motion.div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
-              Die Zukunft der Kryptowährungen -beginnt hier !
+              Die Zukunft der Kryptowährungen - beginnt hier!
             </h1>
-            <p className="text-gray-300 md:text-xl max-w-2xl mx-auto">
-            🇨🇭 Nextrade Swiss unterstützt dich dabei, die Chancen im Kryptomarkt zu nutzen und gleichzeitig Risiken zu minimieren.
+                          <SwissFlag className="w-6 h-6 inline-block" />
+            <p className="text-gray-300 md:text-xl max-w-2xl mx-auto flex items-center justify-center gap-2">
+
+              Nextrade Swiss unterstützt dich dabei, die Chancen im Kryptomarkt zu nutzen und gleichzeitig Risiken zu
+              minimieren.
+              
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-
-              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"

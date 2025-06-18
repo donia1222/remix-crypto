@@ -3,10 +3,10 @@
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp, LogIn, LogOut } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -22,7 +22,7 @@ import NewsSection from "../components/sections/news-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
-import BingXTransactionsSimple from "../components/sections/bingx-transactions-simple"
+import BingXTransactionsSimple, { type BingXOverviewRef } from "../components/sections/bingx-transactions-simple"
 import AboutSection from "../components/sections/about-section"
 
 export const meta: MetaFunction = () => {
@@ -75,6 +75,12 @@ export default function Index() {
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
   const [impressumModalOpen, setImpressumModalOpen] = useState(false)
 
+  // State for authentication status
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  // Ref for BingX component
+  const bingXRef = useRef<BingXOverviewRef>(null)
+
   // Scroll effects
   const { scrollY } = useScroll()
   const headerOpacity = useTransform(scrollY, [0, 300], [1, 0.8])
@@ -103,7 +109,47 @@ export default function Index() {
     }, 100)
   }
 
-  // Menú sin "Sobre mí" en la navegación
+  // Function to handle login button click
+  const handleLoginClick = () => {
+    // Close mobile menu first
+    setMobileMenuOpen(false)
+
+    // Scroll to BingX section
+    scrollToSection("bingx")
+
+    // Open login modal after a short delay
+    setTimeout(() => {
+      if (bingXRef.current) {
+        bingXRef.current.openLoginModal()
+      }
+    }, 500) // Wait for scroll to complete
+  }
+
+  // Function to handle logout
+  const handleLogoutClick = () => {
+    setMobileMenuOpen(false)
+    if (bingXRef.current) {
+      bingXRef.current.handleLogout()
+    }
+  }
+
+  // Check authentication status periodically
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const savedAuth = localStorage.getItem("bingx-auth")
+      setIsAuthenticated(savedAuth === "true")
+    }
+
+    // Check initially
+    checkAuthStatus()
+
+    // Check every second to sync with component state
+    const interval = setInterval(checkAuthStatus, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Menú con el botón de login/logout dinámico
   const menuItems = [
     { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
@@ -190,6 +236,55 @@ export default function Index() {
               {item.text}
             </button>
           ))}
+
+          {/* Login/Logout Button */}
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogoutClick}
+              onMouseEnter={() => setHoveredItem("logout")}
+              onMouseLeave={() => setHoveredItem(null)}
+              className="text-sm font-medium text-gray-300 hover:text-red-400 transition-colors flex items-center group"
+            >
+              <motion.div
+                className="mr-2 text-red-500 group-hover:text-red-400"
+                animate={{
+                  rotate: hoveredItem === "logout" ? [0, -10, 10, -10, 0] : 0,
+                  scale: hoveredItem === "logout" ? 1.2 : 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  times: [0, 0.2, 0.5, 0.8, 1],
+                }}
+              >
+                <LogOut className="h-4 w-4" />
+              </motion.div>
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={handleLoginClick}
+              onMouseEnter={() => setHoveredItem("login")}
+              onMouseLeave={() => setHoveredItem(null)}
+              className="text-sm font-medium text-gray-300 hover:text-blue-400 transition-colors flex items-center group"
+            >
+              <motion.div
+                className="mr-2 text-green-500 group-hover:text-rot-400"
+                animate={{
+                  rotate: hoveredItem === "login" ? [0, -10, 10, -10, 0] : 0,
+                  scale: hoveredItem === "login" ? 1.2 : 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  times: [0, 0.2, 0.5, 0.8, 1],
+                }}
+              >
+                <LogIn className="h-4 w-4" />
+              </motion.div>
+              Mitgliederbereich
+            </button>
+          )}
         </nav>
 
         {/* Mobile Menu Button - Positioned at far right */}
@@ -243,6 +338,45 @@ export default function Index() {
               {item.text}
             </motion.button>
           ))}
+
+          {/* Mobile Login/Logout Button */}
+          {isAuthenticated ? (
+            <motion.button
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
+              transition={{ delay: 0.1 + menuItems.length * 0.05 }}
+              onClick={handleLogoutClick}
+              className="text-sm font-medium text-gray-300 hover:text-red-400 transition-colors py-2 flex items-center"
+              whileHover={{ x: 5 }}
+            >
+              <motion.div
+                className="mr-2 text-red-500"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <LogOut className="h-4 w-4" />
+              </motion.div>
+              Logout
+            </motion.button>
+          ) : (
+            <motion.button
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
+              transition={{ delay: 0.1 + menuItems.length * 0.05 }}
+              onClick={handleLoginClick}
+              className="text-sm font-medium text-gray-300 hover:text-blue-400 transition-colors py-2 flex items-center"
+              whileHover={{ x: 5 }}
+            >
+              <motion.div
+                className="mr-2 text-green-500"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <LogIn className="h-4 w-4" />
+              </motion.div>
+           Mitgliederbereich
+            </motion.button>
+          )}
         </nav>
       </motion.div>
 
@@ -271,8 +405,12 @@ export default function Index() {
         {/* BingX Section */}
         <section id="bingx">
           <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
-            {/* BingX Transactions Section - Now with password prop */}
-            {password !== null ? <BingXTransactionsSimple password={password} /> : <BingXTransactionsSimple />}
+            {/* BingX Transactions Section - Now with ref and password prop */}
+            {password !== null ? (
+              <BingXTransactionsSimple ref={bingXRef} password={password} />
+            ) : (
+              <BingXTransactionsSimple ref={bingXRef} />
+            )}
           </div>
         </section>
 

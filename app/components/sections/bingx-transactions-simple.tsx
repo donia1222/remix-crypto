@@ -1,21 +1,9 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Cell } from "recharts"
 import { motion } from "framer-motion"
-import {
-  Clock,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-  AlertCircle,
-  Lock,
-  LogIn,
-  LogOut,
-  X,
-  TrendingUp,
-  TrendingDown,
-} from "lucide-react"
+import { Clock, RefreshCw, ChevronDown, ChevronUp, AlertCircle, Lock, LogIn, LogOut, X, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
 
 interface FeeEntry {
   symbol: string
@@ -84,7 +72,14 @@ interface BingXOverviewProps {
   password?: string
 }
 
-export default function BingXOverview({ password }: BingXOverviewProps = {}) {
+// Add ref interface for exposing methods
+export interface BingXOverviewRef {
+  openLoginModal: () => void
+  handleLogout: () => void
+  isAuthenticated: boolean
+}
+
+const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ password }, ref) => {
   const PNL_API = "https://web.lweb.ch/api.php"
   const FEES_API = "https://web.lweb.ch/api_fees.php"
   const POSITIONS_API = "https://web.lweb.ch/api-3.php"
@@ -110,6 +105,13 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
 
   // Usa la contraseña que viene del loader de Remix
   const PASSWORD = password
+
+  // Expose methods through ref
+  useImperativeHandle(ref, () => ({
+    openLoginModal: () => setShowLoginForm(true),
+    handleLogout,
+    isAuthenticated
+  }))
 
   // Función para guardar datos en localStorage
   const saveDataToCache = (
@@ -361,7 +363,9 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
           className="mb-4 md:mb-6"
         >
           <div className="flex items-center justify-center gap-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white">Trading Übersicht</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
+              Trading Übersicht
+            </h2>
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -381,29 +385,13 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchAllData()}
-                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-1.5 md:px-4 md:py-2 rounded text-sm transition-colors"
+                className="flex items-center gap-2 bg-gradient-to-r  from-green-600 to-green-600  hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Aktualisieren
               </button>
 
-              {isAuthenticated ? (
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 bg-red-900 hover:bg-red-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-colors"
-                >
-                  <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                  <span className="hidden sm:inline">Abmelden</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => setShowLoginForm(true)}
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-sm transition-all shadow-lg hover:shadow-purple-700/20"
-                >
-                  <Lock className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                  <span className="hidden sm:inline">Mitgliederbereich</span>
-                </button>
-              )}
+
             </div>
 
             {apiUnavailable && (
@@ -756,7 +744,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
 
             {/* Realized PnL */}
             <div className="mb-8">
-              <h3 className="text-lg md:text-xl font-semibold mb-2 text-blue-400">
+              <h3 className="text-lg md:text-xl font-semibold mb-2 text-green-500">
                 {isAuthenticated ? "Realisiertes PnL" : "Realisierte Gewinne und Verluste"}
               </h3>
 
@@ -816,7 +804,7 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
               {filteredPnL.length > ITEMS_TO_SHOW && (
                 <button
                   onClick={() => setShowAllPnL(!showAllPnL)}
-                  className="mt-3 flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300 transition-colors mx-auto"
+                  className="mt-3 flex items-center gap-1 text-sm text-green-400 hover:text-green-300 transition-colors mx-auto"
                 >
                   {showAllPnL ? (
                     <>
@@ -890,27 +878,18 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
 
             {/* Membership Call-to-Action */}
             <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
-              <p className="text-sm text-gray-300 mb-4">
-                Möchtest du mehr Informationen zu unseren Trades sehen? Werde Mitglied bereits ab O CHF.
+              <p className="text-sm text-gray-300 mb-4 text-center">
+                Möchtest du mehr Informationen sehen? Wir bieten dir im Nextrade-Abo exklusive Einblicke in unsere Käufe
+                und Verkäufe. Zusätzlich teilen wir dort unsere Einschätzungen zur aktuellen Marktlage.
               </p>
               <button
                 onClick={() => {
-                  const pricesSection = document.getElementById("kontakt")
-                  if (pricesSection) {
-                    const headerHeight = 64 // Account for fixed header
-                    const additionalOffset = 100 // Additional offset to scroll down more
-                    const elementPosition = pricesSection.getBoundingClientRect().top + window.pageYOffset
-                    const offsetPosition = elementPosition - headerHeight - additionalOffset
-
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: "smooth",
-                    })
-                  }
+                  window.open("https://steady.page/de/nextrade-abo/about", "_blank", "noopener,noreferrer")
                 }}
-                className="bg-gradient-to-r  from-green-600 to-green-600  hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-green-600 to-green-600 hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center gap-2 mx-auto"
               >
-                Mitglied werden
+                Zum Nextrade-Abo
+                <ExternalLink className="w-4 h-4" />
               </button>
             </div>
           </>
@@ -918,4 +897,8 @@ export default function BingXOverview({ password }: BingXOverviewProps = {}) {
       </div>
     </section>
   )
-}
+})
+
+BingXOverview.displayName = "BingXOverview"
+
+export default BingXOverview

@@ -219,7 +219,7 @@ export default function AnimatedTextReveal() {
               {letters.map((letter, index) => (
                 <motion.span
                   key={index}
-                  className="text-5xl md:text-7xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-red-500"
+                  className="text-5xl md:text-7xl lg:text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-green-500"
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
@@ -236,7 +236,7 @@ export default function AnimatedTextReveal() {
 
           {/* Línea decorativa - gradiente actualizado */}
           <motion.div
-            className="w-24 h-1 bg-gradient-to-r from-green-500 to-red-500 rounded-full mb-8"
+            className="w-24 h-1 bg-gradient-to-r from-red-500 to-red-500 rounded-full mb-8"
             initial={{ width: 0 }}
             animate={{ width: "6rem" }}
             transition={{ duration: 1, delay: 1.5 }}

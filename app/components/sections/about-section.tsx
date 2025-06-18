@@ -166,7 +166,7 @@ Ich möchte das Trading-Erlebnis auf ein neues Level bringen.  Mit meiner Leiden
                     backgroundColor: "rgba(246, 59, 59, 0.1)",
                     transition: { duration: 0.2 },
                   }}
-                  className="flex items-center gap-2 text-red-400 bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50 backdrop-blur-sm"
+                  className="flex items-center gap-2 text-green-500 bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50 backdrop-blur-sm"
                 >
                   <skill.icon className="w-4 h-4" />
                   <span className="text-sm font-medium">{skill.text}</span>
