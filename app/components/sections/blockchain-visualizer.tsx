@@ -154,7 +154,7 @@ export default function BlockchainVisualizer() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4"
+            className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-500 p-4"
           >
             Blockchain Technologie
           </motion.h2>
