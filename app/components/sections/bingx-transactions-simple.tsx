@@ -374,6 +374,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             >
               <TrendingUp className="w-6 h-6 md:w-7 md:h-7" />
             </motion.div>
+            
           </div>
           <p className="text-sm md:text-base text-gray-400 text-center">
             Hier findest du eine Übersicht unserer vergangenen Trades.
