@@ -800,19 +800,19 @@ export default function MarketsSection() {
             className="space-y-2"
           >
             <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-green-400">Märkte</div>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white">Echtzeit-Preise</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400">Echtzeit-Preise</h2>
 
-            <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+            <div className="flex items-center justify-center gap-2 text-gray-100 text-sm">
               {!isConnected && (
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={reconnectWebSocket}>
                   <RefreshCw className="h-4 w-4 text-gray-400" />
                 </Button>
               )}
             </div>
-            <p className="text-sm text-gray-400">Kryptowährungen und Preise in Echtzeit.</p>
+            <p className="text-sm text-gray-200">Kryptowährungen und Preise in Echtzeit.</p>
           </motion.div>
 
-          <span className="text-sm text-gray-400">Letzte Aktualisierung: {formatLastUpdated(lastUpdated)}</span>
+          <span className="text-sm text-gray-200">Letzte Aktualisierung: {formatLastUpdated(lastUpdated)}</span>
         </div>
 
         {/* Search Field - Positioned differently for mobile and desktop */}

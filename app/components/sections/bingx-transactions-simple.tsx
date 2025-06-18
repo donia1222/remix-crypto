@@ -362,8 +362,8 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <div className="flex items-center justify-center gap-3  mt-20">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
+          <div className="flex items-center justify-center gap-3  mt-10">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none text-gray-400 p-4">
               Trading Übersicht
             </h2>
             <motion.div
@@ -374,9 +374,9 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             >
               <TrendingUp className="w-6 h-6 md:w-7 md:h-7" />
             </motion.div>
-            
+
           </div>
-          <p className="text-sm md:text-base text-gray-400 text-center">
+          <p className="text-sm md:text-base text-gray-100 text-center">
             Hier findest du eine Übersicht unserer vergangenen Trades.
           </p>
         </motion.div>
