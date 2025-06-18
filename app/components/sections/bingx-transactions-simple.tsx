@@ -362,7 +362,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3  mt-20">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 p-4">
               Trading Übersicht
             </h2>
