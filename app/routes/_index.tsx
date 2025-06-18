@@ -154,7 +154,7 @@ export default function Index() {
     { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "nachrichten", text: "Neueste Updates", icon: <Newspaper className="h-4 w-4" /> },
-    { id: "faq", text: "Preise", icon: <Database className="h-4 w-4" /> },
+    { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
 

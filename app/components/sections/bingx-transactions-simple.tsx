@@ -426,7 +426,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
               <div className="relative z-10">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-500">
+                  <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-green-500">
                     Mitgliederbereich
                   </h3>
                   <button
@@ -474,7 +474,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
                 <button
                   onClick={handleLogin}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-purple-500 hover:to-pink-500 px-4 py-3 rounded-lg text-white transition-all font-medium shadow-lg hover:shadow-purple-700/20"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-600 hover:from-purple-500 hover:to-pink-500 px-4 py-3 rounded-lg text-white transition-all font-medium shadow-lg hover:shadow-purple-700/20"
                 >
                   <LogIn className="w-4 h-4" />
                   Zugang freischalten
