@@ -6,7 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp, LogIn, LogOut } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp, LogIn, LogOut, Star } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -155,6 +155,7 @@ export default function Index() {
     { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
+     { id: "premiumfunktionen", text: "Premium Funktionen", icon: <Star className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
 
@@ -445,7 +446,10 @@ export default function Index() {
             </div>
           </section>
 
+
+  <section id="premiumfunktionen">
         <Feactures />
+          </section>
 
 
           {/* About Section - MOVIDA AQUÍ, justo antes del contacto */}
