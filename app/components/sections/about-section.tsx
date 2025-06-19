@@ -53,6 +53,7 @@ export default function AboutSection() {
       id="about"
       className="w-full py-12 md:py-24 lg:py-32 bg-gray-950 relative overflow-hidden"
     >
+      
       {/* Animated background elements */}
       <motion.div
         style={{ y, opacity: useTransform(smoothProgress, [0, 1], [0.3, 0]) }}
