@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, useAnimation, useInView, AnimatePresence } from "framer-motion"
-import { TrendingUp, Shield, Users, RefreshCw, ChevronRight } from "lucide-react"
+import { TrendingUp, Shield, Users, RefreshCw } from "lucide-react"
 
 export default function FeaturesSection() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
@@ -12,35 +12,35 @@ export default function FeaturesSection() {
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 })
   const controls = useAnimation()
 
-  // Datos de características
+  // Datos de características - TODOS VERDES
   const features = [
     {
       icon: <TrendingUp className="h-6 w-6" />,
       title: "Automatisierter Handel",
       description: "Richten Sie automatisierte Handelsstrategien mit unseren fortschrittlichen Tools ein.",
-      color: "from-green-500 to-emerald-500",
-      bgGlow: "radial-gradient(circle at center, rgba(16, 185, 129, 0.15), transparent 70%)",
+      color: "from-green-600 to-green-500",
+      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
     {
       icon: <Shield className="h-6 w-6" />,
       title: "Integrierte Versicherungen",
       description: "Ihre Vermögenswerte sind durch unser Versicherungsprogramm gegen Vorfälle geschützt.",
-      color: "from-emerald-500 to-cyan-500",
-      bgGlow: "radial-gradient(circle at center, rgba(6, 182, 212, 0.15), transparent 70%)",
+      color: "from-green-600 to-green-500",
+      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
     {
       icon: <Users className="h-6 w-6" />,
       title: "Aktive Gemeinschaft",
       description: "Treten Sie einer globalen Gemeinschaft von Tradern bei, um Strategien und Wissen auszutauschen.",
-      color: "from-cyan-500 to-blue-500",
-      bgGlow: "radial-gradient(circle at center, rgba(37, 99, 235, 0.15), transparent 70%)",
+      color: "from-green-600 to-green-500",
+      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
     {
       icon: <RefreshCw className="h-6 w-6" />,
       title: "Ständige Updates",
       description: "Wir verbessern unsere Plattform kontinuierlich mit neuen Funktionen und Tools.",
-      color: "from-blue-500 to-purple-500",
-      bgGlow: "radial-gradient(circle at center, rgba(124, 58, 237, 0.15), transparent 70%)",
+      color: "from-green-600 to-green-500",
+      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
   ]
 
@@ -126,9 +126,9 @@ export default function FeaturesSection() {
     <section
       id="funktionen"
       ref={sectionRef}
-      className="w-full py-16 md:py-28 lg:py-36 bg-gradient-to-b from-gray-950 to-gray-950 relative overflow-hidden"
+      className="w-full py-16 md:py-28  bg-gradient-to-b from-gray-950 to-gray-950 relative overflow-hidden"
     >
-      {/* Efecto de luz que sigue al cursor */}
+      {/* Efecto de luz que sigue al cursor - VERDE */}
       <motion.div
         className="absolute opacity-30 pointer-events-none"
         animate={{
@@ -139,7 +139,7 @@ export default function FeaturesSection() {
         style={{
           width: 400,
           height: 400,
-          background: "radial-gradient(circle at center, rgba(6, 182, 212, 0.2), transparent 70%)",
+          background: "radial-gradient(circle at center, rgba(34, 197, 94, 0.2), transparent 70%)",
           borderRadius: "50%",
         }}
       />
@@ -202,26 +202,25 @@ export default function FeaturesSection() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-block rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 p-px"
+              className="inline-block rounded-full bg-gradient-to-r from-green-600 to-green-500 p-px"
             >
-              <div className="rounded-full bg-gray-900 px-4 py-1.5 text-sm font-medium text-cyan-400">
+              <div className="rounded-full bg-gray-900 px-4 py-1.5 text-sm font-medium text-green-400">
                 Premium Funktionen
               </div>
             </motion.div>
 
-            <h2 className="text-3xl font-bold tracking-tighter sm:text4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-white p-4">
+            <h2 className="text-2xl font-bold tracking-tighter sm:text4xl md:text-4xl text-gray-400  p-4">
               Alles, was Sie für den Handel benötigen
             </h2>
-
-            <motion.p
-              className="max-w-[800px] mx-auto text-gray-300 md:text-xl/relaxed lg:text-xl/relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-            >
-              Unsere Plattform bietet fortschrittliche Tools und eine intuitive Benutzeroberfläche für Trader aller
-              Erfahrungsstufen.
-            </motion.p>
+<motion.p
+  className="max-w-[800px] mx-auto text-gray-300 md:text-base/relaxed lg:text-base/relaxed"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.7, delay: 0.4 }}
+>
+  Unsere Plattform bietet fortschrittliche Tools und eine intuitive Benutzeroberfläche für Trader aller
+  Erfahrungsstufen.
+</motion.p>
           </div>
         </motion.div>
 
@@ -303,15 +302,7 @@ export default function FeaturesSection() {
                       transition={{ duration: 0.3 }}
                       className="absolute inset-0 rounded-2xl"
                       style={{
-                        background: `linear-gradient(145deg, transparent, transparent, transparent, ${
-                          feature.color.includes("green")
-                            ? "rgba(16, 185, 129, 0.2)"
-                            : feature.color.includes("cyan")
-                              ? "rgba(6, 182, 212, 0.2)"
-                              : feature.color.includes("blue")
-                                ? "rgba(37, 99, 235, 0.2)"
-                                : "rgba(124, 58, 237, 0.2)"
-                        })`,
+                        background: `linear-gradient(145deg, transparent, transparent, transparent, rgba(34, 197, 94, 0.2))`,
                         mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                         maskComposite: "exclude",
                         padding: "1px",
@@ -369,7 +360,7 @@ export default function FeaturesSection() {
                   animate={{
                     color:
                       hoveredFeature === index || selectedFeature === index
-                        ? ["#ffffff", "#a5f3fc", "#ffffff"]
+                        ? ["#ffffff", "#a7f3d0", "#ffffff"]
                         : "#ffffff",
                   }}
                   transition={{
@@ -393,7 +384,6 @@ export default function FeaturesSection() {
                   {feature.description}
                 </motion.p>
 
-     
                 {/* Línea decorativa que aparece al hacer hover */}
                 <motion.div
                   className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${feature.color}`}
@@ -407,9 +397,6 @@ export default function FeaturesSection() {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Indicadores de características seleccionadas */}
-       
       </div>
     </section>
   )

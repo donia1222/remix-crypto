@@ -24,6 +24,7 @@ import AnimatedTextReveal from "../components/animated/animated-text-reveal"
 import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import BingXTransactionsSimple, { type BingXOverviewRef } from "../components/sections/bingx-transactions-simple"
 import AboutSection from "../components/sections/about-section"
+import Feactures from "../components/sections/features-section"
 
 export const meta: MetaFunction = () => {
   return [
@@ -154,7 +155,6 @@ export default function Index() {
     { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
     { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
     { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
-    { id: "blockchain", text: "Blockchain", icon: <Database className="h-4 w-4" /> },
     { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
   ]
 
@@ -427,7 +427,7 @@ export default function Index() {
           </section>
 
           {/* Blockchain Visualizer */}
-          <section id="blockchain">
+          <section id="blockchain"  className="mb-28">
             <BlockchainVisualizer />
           </section>
 
@@ -444,6 +444,9 @@ export default function Index() {
               <div className="flex flex-col items-center justify-end space-y-2 text-center"></div>
             </div>
           </section>
+
+        <Feactures />
+
 
           {/* About Section - MOVIDA AQUÍ, justo antes del contacto */}
           <AboutSection />

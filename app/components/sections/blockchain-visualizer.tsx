@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
-import { Shield, BadgeDollarSign, Database, LinkIcon, Check, PartyPopper,ArrowRight, Lock } from 'lucide-react'
-import { Button } from "~/components/ui/button"
+import { Shield, BadgeDollarSign, Database, LinkIcon, Check, PartyPopper } from 'lucide-react'
 
 export default function BlockchainVisualizer() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -51,7 +50,7 @@ export default function BlockchainVisualizer() {
       title: "Block #4",
       hash: "0x9d4e2f1c...",
       data: "NFT Minting",
-      icon: <Lock className="h-6 w-6" />,
+      icon: <BadgeDollarSign className="h-6 w-6" />,
       color: "from-teal-600 to-green-600",
     },
     {
@@ -103,7 +102,7 @@ export default function BlockchainVisualizer() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className="mt-20 bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
+        className="bg-gray-900/90 backdrop-blur-sm border border-gray-800 rounded-lg p-6 shadow-xl max-w-md mx-auto"
       >
         <div className="flex items-center gap-4 mb-4">
           <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${block.color} flex items-center justify-center`}>
@@ -139,102 +138,12 @@ export default function BlockchainVisualizer() {
   }
 
   return (
-    <section
-      ref={containerRef}
-      id="blockchain"
-      className="relative w-full py-10 md:py-32 overflow-hidden bg-gray-950"
-    >
+    <section ref={containerRef} id="blockchain" className="">
       {/* Fondo con efecto de cuadrícula */}
-      <div className="absolute inset-0 bg-grid-pattern "></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
       {/* Contenido principal */}
-      <motion.div className="container px-4 md:px-6 mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none bg-clip-text text-gray-400 p-4"
-          >
-            Blockchain Technologie
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-2xl mx-auto text-gray-300 text-lg"
-          >
-            Entdecken Sie, wie die Blockchain-Technologie Transaktionen sicher, transparent und unveränderlich macht.
-          </motion.p>
-        </div>
-
-        {/* Visualización de la blockchain */}
-        <div className="relative">
-          {/* Línea conectora */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.5, delay: 0.5 }}
-            className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 to-cyan-600 transform -translate-y-1/2 origin-left"
-          />
-
-          {/* Bloques */}
-          <div className="flex justify-between items-center relative">
-            {blocks.map((block, index) => (
-              <motion.div
-                key={block.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                className="relative z-10"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  animate={{
-                    y: activeBlock === index ? [-5, 5, -5] : 0,
-                    boxShadow: activeBlock === index ? "0 0 20px rgba(255, 31, 31, 0.5)" : "0 0 0px rgba(0, 0, 0, 0)",
-                    scale: activeBlock === index ? 1.1 : 1,
-                  }}
-                  transition={{
-                    y: {
-                      repeat: Number.POSITIVE_INFINITY,
-                      duration: 2,
-                      ease: "easeInOut",
-                    },
-                    boxShadow: {
-                      duration: 0.2,
-                    },
-                    scale: {
-                      duration: 0.3,
-                    },
-                  }}
-                  onClick={() => {
-                    setActiveBlock(index)
-                    setAutoAnimate(false)
-                  }}
-                  className={`w-16 h-16 md:w-20 md:h-20 rounded-xl bg-gradient-to-br ${block.color} flex items-center justify-center cursor-pointer shadow-lg transform transition-all duration-300`}
-                >
-                  <motion.div
-                    animate={{ rotate: activeBlock === index ? 360 : 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="text-white"
-                  >
-                    {block.icon}
-                  </motion.div>
-                </motion.div>
-
-                {/* Número de bloque */}
-                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-bold text-gray-400">
-                  #{block.id}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Información del bloque seleccionado */}
-        <AnimatePresence mode="wait">{activeBlock !== null && renderBlockInfo()}</AnimatePresence>
-
+      <motion.div className="container px-4 md:px-6 mx-auto relative z-10" style={{ opacity, y }}>
         {/* Información sobre la blockchain */}
         <AnimatePresence>
           {showInfo && (
@@ -246,7 +155,7 @@ export default function BlockchainVisualizer() {
               className="mt-20 grid md:grid-cols-3 gap-6"
             >
               {[
-                           {
+                {
                   title: "Unabhängig 💪",
                   description:
                     "Vollständige Kontrolle über deine Finanzen und Transaktionen. Du entscheidest selbst über deine Investitionen und kannst deine Plattform dazu frei auswählen.",
@@ -276,58 +185,39 @@ export default function BlockchainVisualizer() {
                   className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6"
                 >
                   <div className="mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-gray-400 mb-2">{item.title}</h3>
+                  <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
                   <p className="text-gray-400">{item.description}</p>
                 </motion.div>
               ))}
             </motion.div>
           )}
         </AnimatePresence>
-
       </motion.div>
 
-      {/* Partículas flotantes */}
+      {/* Partículas flotantes - MODIFICADO para evitar problemas con los botones */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-cyan-500/30"
+            className="absolute w-2 h-2 rounded-full bg-cyan-500/30 pointer-events-none"
             initial={{
               x: Math.random() * 100 + "%",
               y: Math.random() * 100 + "%",
               scale: Math.random() * 0.5 + 0.5,
             }}
             animate={{
-              y: [
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-              ],
-              x: [
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-                Math.random() * 100 + "%",
-              ],
-              opacity: [0.2, 0.5, 0.2, 0.5],
+              y: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              x: [Math.random() * 100 + "%", Math.random() * 100 + "%", Math.random() * 100 + "%"],
+              opacity: [0.2, 0.5, 0.2],
             }}
             transition={{
-              duration: 20 + i * 5,
+              duration: 15 + i * 3,
               repeat: Number.POSITIVE_INFINITY,
               ease: "linear",
             }}
           />
         ))}
       </div>
-
-      {/* CSS para el patrón de cuadrícula */}
-      <style>{`
-        .bg-grid-pattern {
-          background-image: radial-gradient(circle, rgba(124, 58, 237, 0.1) 1px, transparent 1px);
-          background-size: 30px 30px;
-        }
-      `}</style>
     </section>
   )
 }
