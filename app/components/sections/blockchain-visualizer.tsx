@@ -185,8 +185,8 @@ export default function BlockchainVisualizer() {
                   className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6"
                 >
                   <div className="mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-gray-400">{item.description}</p>
+                  <h3 className="text-xl font-bold text-gray-400 mb-2">{item.title}</h3>
+                  <p className="text-gray-300">{item.description}</p>
                 </motion.div>
               ))}
             </motion.div>

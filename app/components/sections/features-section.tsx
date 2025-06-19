@@ -139,7 +139,7 @@ export default function FeaturesSection() {
         style={{
           width: 400,
           height: 400,
-          background: "radial-gradient(circle at center, rgba(34, 197, 94, 0.2), transparent 70%)",
+          background: "radial-gradient(circle at center, rgba(26, 183, 84, 0.44), transparent 70%)",
           borderRadius: "50%",
         }}
       />
@@ -212,15 +212,15 @@ export default function FeaturesSection() {
             <h2 className="text-2xl font-bold tracking-tighter sm:text4xl md:text-4xl text-gray-400  p-4">
               Alles, was Sie für den Handel benötigen
             </h2>
-<motion.p
-  className="max-w-[800px] mx-auto text-gray-300 md:text-base/relaxed lg:text-base/relaxed"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.7, delay: 0.4 }}
->
-  Unsere Plattform bietet fortschrittliche Tools und eine intuitive Benutzeroberfläche für Trader aller
-  Erfahrungsstufen.
-</motion.p>
+            <motion.p
+              className="max-w-[800px] mx-auto text-gray-300 md:text-base/relaxed lg:text-base/relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+            >
+              Unsere Plattform bietet fortschrittliche Tools und eine intuitive Benutzeroberfläche für Trader aller
+              Erfahrungsstufen.
+            </motion.p>
           </div>
         </motion.div>
 
@@ -253,16 +253,17 @@ export default function FeaturesSection() {
                   scale: selectedFeature === index ? 1.02 : 1,
                   boxShadow:
                     selectedFeature === index
-                      ? "0 15px 30px -10px rgba(0, 0, 0, 0.3)"
-                      : "0 10px 20px -10px rgba(0, 0, 0, 0.2)",
+                      ? "inset 0 1px 0 rgba(255, 255, 255, 0.26), 0 20px 40px -8px rgba(0, 0, 0, 0.4)"
+                      : "inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 15px 35px -5px rgba(0, 0, 0, 0.4)",
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="flex h-full flex-col items-center space-y-4 rounded-2xl border border-gray-800/50 p-6 bg-gray-900/40 backdrop-blur-xl transition-all duration-300 relative overflow-hidden"
+                className="flex h-full flex-col items-center space-y-4 rounded-2xl border border-gray-700/80 p-6 bg-gray-900/70 backdrop-blur-xl transition-all duration-300 relative overflow-hidden shadow-lg"
                 style={{
                   background:
                     selectedFeature === index || hoveredFeature === index
-                      ? "linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.95))"
-                      : "rgba(17, 24, 39, 0.7)",
+                      ? "linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.9))"
+                      : "linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(31, 41, 55, 0.8))",
+                  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px -8px rgba(0, 0, 0, 0.3)",
                 }}
               >
                 {/* Fondo de resplandor */}
