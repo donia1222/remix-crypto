@@ -361,8 +361,8 @@ export default function FeaturesSection() {
                   animate={{
                     color:
                       hoveredFeature === index || selectedFeature === index
-                        ? ["#ffffff", "#a7f3d0", "#ffffff"]
-                        : "#ffffff",
+                        ? ["gray", "#a7f3d0", "gray"]
+                        : "gray",
                   }}
                   transition={{
                     duration: 3,
@@ -375,7 +375,7 @@ export default function FeaturesSection() {
 
                 {/* Descripción con animación de aparición */}
                 <motion.p
-                  className="text-gray-300 text-center text-sm flex-grow"
+                  className="text-gray-200 text-center text-sm flex-grow"
                   initial={{ opacity: 0.7 }}
                   animate={{
                     opacity: hoveredFeature === index || selectedFeature === index ? 1 : 0.7,
