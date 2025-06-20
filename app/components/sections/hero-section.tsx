@@ -49,9 +49,10 @@ export default function HeroSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
+             <Button
                   variant="outline"
-                  className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+                  size="sm"
+                  className="w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black"
                   onClick={() => {
                     const element = document.getElementById("bingx")
                     if (element) {
@@ -71,7 +72,8 @@ export default function HeroSection() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
-                  className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+                  size="sm"
+                  className="w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black"
                   onClick={() => {
                     const element = document.getElementById("nachrichten")
                     if (element) {
