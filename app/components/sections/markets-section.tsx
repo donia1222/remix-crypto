@@ -634,9 +634,7 @@ export default function MarketsSection() {
           <div>
             <div className="font-medium text-white text-sm">
               {crypto.name}
-              {crypto.isSearchResult && (
-                <span className="ml-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">Neu</span>
-              )}
+       
             </div>
             <div className="text-xs text-gray-400">{crypto.shortSymbol}</div>
           </div>
@@ -724,7 +722,7 @@ export default function MarketsSection() {
           <div>
             <div className="font-medium text-white text-xs md:text-base flex items-center gap-2">
               {crypto.name}
-              {crypto.isSearchResult && <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded">Neu</span>}
+              
             </div>
             <div className="text-xs text-gray-400">{crypto.shortSymbol}</div>
           </div>

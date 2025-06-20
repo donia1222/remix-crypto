@@ -52,7 +52,7 @@ export default function HeroSection() {
              <Button
                   variant="outline"
                   size="sm"
-                  className="w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black"
+                  className="w-[60%] sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black rounded-md"
                   onClick={() => {
                     const element = document.getElementById("bingx")
                     if (element) {
@@ -73,7 +73,7 @@ export default function HeroSection() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black"
+                  className="w-[60%] sm:w-auto text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 border-gray-700 text-white hover:bg-gray-800 transition-all duration-300 bg-black  rounded-md"
                   onClick={() => {
                     const element = document.getElementById("nachrichten")
                     if (element) {
@@ -86,7 +86,6 @@ export default function HeroSection() {
                       })
                     }
                   }}
-                  
                 >
                   Wichtige Informationen
                 </Button>

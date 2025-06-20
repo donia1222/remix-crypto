@@ -6,7 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Star } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Star, Home } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -157,10 +157,10 @@ export default function Index() {
         { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
       ]
     : [
-        { id: "premiumfunktionen", text: "Premium Funktionen", icon: <Star className="h-4 w-4" /> },
+        { id: "home", text: "Home", icon: <Home className="h-4 w-4" /> },
         { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
-        { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
-        { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
+        { id: "maerkte", text: "Preise", icon: <BarChart2 className="h-4 w-4" /> },
+        { id: "nachrichten", text: "Wichtige Infos", icon: <Newspaper className="h-4 w-4" /> },
         { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
       ]
 
@@ -403,8 +403,9 @@ export default function Index() {
 
       <main className="flex-1 pt-16 relative z-10">
         {/* Hero Section - Only show when not authenticated */}
+          <section id="home">
         {!isAuthenticated && <HeroSection />}
-
+</section>
         {/* Animated Text Reveal Section - Only show when not authenticated */}
         {!isAuthenticated && <AnimatedTextReveal />}
     {/* Premium Features Section - Only show when not authenticated */}
