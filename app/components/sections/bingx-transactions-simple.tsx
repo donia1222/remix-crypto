@@ -426,7 +426,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchAllData()}
-                className="flex items-center gap-2 bg-gray-800 border border-blue-500 text-blue-500 font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-gray-900 hover:border-blue-700 hover:text-blue-700 shadow-lg hover:shadow-xl"
+                className="flex items-center gap-2 bg-gray-800 mt-10 border border-blue-500 text-blue-500 font-medium px-6 py-1 rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-gray-900 hover:border-blue-700 hover:text-blue-700 shadow-lg hover:shadow-xl"
               >
                 <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Aktualisieren
@@ -434,7 +434,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             </div>
 
             {apiUnavailable && (
-              <div className="flex items-center gap-2 text-amber-400 text-sm">
+              <div className="flex items-center gap-2 text-amber-400 text-sm p-10">
                 <AlertCircle className="w-4 h-4" />
                 <span>API nicht verfügbar, zeige zwischengespeicherte Daten</span>
               </div>
