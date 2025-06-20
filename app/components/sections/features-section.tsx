@@ -185,38 +185,6 @@ export default function FeaturesSection() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808024_1px,transparent_1px),linear-gradient(to_bottom,#80808024_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
       <div className="container px-4 md:px-6 mx-auto relative z-10">
-        <motion.div
-          variants={titleVariants}
-          initial="hidden"
-          animate={controls}
-          className="flex flex-col items-center justify-center space-y-6 text-center mb-12"
-        >
-          <div className="space-y-4 max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="inline-block rounded-full bg-gradient-to-r from-green-600 to-green-500 p-px"
-            >
-              <div className="rounded-full bg-gray-900 px-4 py-1.5 text-sm font-medium text-green-400">
-                Premium Funktionen
-              </div>
-            </motion.div>
-
-            <h2 className="text-2xl font-bold tracking-tighter sm:text4xl md:text-4xl text-gray-400  p-4">
-              Alles, was Sie für den Handel benötigen
-            </h2>
-            <motion.p
-              className="max-w-[800px] mx-auto text-gray-300 md:text-base/relaxed lg:text-base/relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-            >
-              Unsere Plattform bietet fortschrittliche Tools und eine intuitive Benutzeroberfläche für Trader aller
-              Erfahrungsstufen.
-            </motion.p>
-          </div>
-        </motion.div>
 
         <motion.div
           variants={containerVariants}

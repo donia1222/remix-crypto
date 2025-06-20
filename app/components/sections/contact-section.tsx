@@ -191,7 +191,8 @@ export default function ContactSection() {
               </motion.p>
             </div>
        <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-md">
-                schreibe uns...
+                Schreibe uns eine E-Mail oder melde dich via Kontaktformular.
+Wir melden uns so schnell wie möglich bei dir.
               </motion.p>
             <motion.div variants={itemVariants} className="space-y-6">
               <motion.a

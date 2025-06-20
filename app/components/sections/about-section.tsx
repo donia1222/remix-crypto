@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 import { TrendingUp, Brain, Zap } from "lucide-react"
 import { useRef } from "react"
+import { SwissFlag } from "./swiss-flag"
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -53,7 +54,6 @@ export default function AboutSection() {
       id="about"
       className="w-full py-12 md:py-24 lg:py-32 bg-gray-950 relative overflow-hidden"
     >
-      
       {/* Animated background elements */}
       <motion.div
         style={{ y, opacity: useTransform(smoothProgress, [0, 1], [0.3, 0]) }}
@@ -84,6 +84,12 @@ export default function AboutSection() {
       </div>
 
       <div className="container px-4 md:px-6 mx-auto relative z-10">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400 flex items-center gap-3 justify-center">
+            Nextrade Swiss
+            <SwissFlag className="w-8 h-8 shadow-lg" />
+          </h2>
+        </div>
         <motion.div style={{ opacity }} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Texto */}
           <div className="space-y-6">
@@ -97,21 +103,15 @@ export default function AboutSection() {
               <div className="inline-block rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 px-3 py-1 text-sm text-green-400 border border-gray-700">
                 Über uns
               </div>
-      
             </motion.div>
 
-           <motion.div
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               custom={0}
               variants={textVariants}
-            >
-              <div className="inline-block rounded-lg  text-sm text-gray-400 ">
-               Nextrade Swiss🇨🇭
-              </div>
-      
-            </motion.div>
+            ></motion.div>
 
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <motion.p
@@ -123,9 +123,9 @@ export default function AboutSection() {
                 className="relative"
               >
                 <motion.span whileHover={{ scale: 1.02 }} className="inline-block">
-                  🚀 Mein Name ist Jathu und ich bin der Gründer von Nextrade Swiss.
-Ich möchte das Trading-Erlebnis auf ein neues Level bringen.  Mit meiner Leidenschaft für den Kryptomarkt 💎
-                  und einem klaren Ziel vor Augen setze ich auf Transparenz, Effizienz und Innovation.
+                  🚀 Mein Name ist Jathu und ich bin der Gründer von Nextrade Swiss. Ich möchte das Trading-Erlebnis auf
+                  ein neues Level bringen. Mit meiner Leidenschaft für den Kryptomarkt 💎 und einem klaren Ziel vor
+                  Augen setze ich auf Transparenz, Effizienz und Innovation.
                 </motion.span>
               </motion.p>
 
@@ -151,14 +151,10 @@ Ich möchte das Trading-Erlebnis auf ein neues Level bringen.  Mit meiner Leiden
                 custom={3}
                 variants={textVariants}
               >
-       <motion.span
-      whileHover={{ scale: 1.02 }}
-      className="inline-block font-bold"
-    >
-      Wichtiger Hinweis: Alle Informationen stellen keine Finanz- oder Anlageberatung
-      im rechtlichen Sinne dar. Jede Investitionsentscheidung liegt in der
-      Eigenverantwortung der Nutzer.
-    </motion.span>
+                <motion.span whileHover={{ scale: 1.02 }} className="inline-block font-bold">
+                  Wichtiger Hinweis: Alle Informationen stellen keine Finanz- oder Anlageberatung im rechtlichen Sinne
+                  dar. Jede Investitionsentscheidung liegt in der Eigenverantwortung der Nutzer.
+                </motion.span>
               </motion.p>
             </div>
 
