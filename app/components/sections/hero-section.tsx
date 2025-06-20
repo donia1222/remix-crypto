@@ -86,6 +86,7 @@ export default function HeroSection() {
                       })
                     }
                   }}
+                  
                 >
                   Wichtige Informationen
                 </Button>
