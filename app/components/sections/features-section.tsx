@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, useAnimation, useInView, AnimatePresence } from "framer-motion"
-import { TrendingUp, Shield, Users, RefreshCw } from "lucide-react"
+import { PartyPopper, BadgeDollarSign, Shield, RefreshCw } from 'lucide-react'
 
 export default function FeaturesSection() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null)
@@ -15,33 +15,27 @@ export default function FeaturesSection() {
   // Datos de características - TODOS VERDES
   const features = [
     {
-      icon: <TrendingUp className="h-6 w-6" />,
-      title: "Automatisierter Handel",
-      description: "Richten Sie automatisierte Handelsstrategien mit unseren fortschrittlichen Tools ein.",
+      icon: <PartyPopper className="h-6 w-6" />,
+      title: "Unabhängig 💪",
+      description: "Vollständige Kontrolle über deine Finanzen und Transaktionen. Du entscheidest selbst über deine Investitionen und kannst deine Plattform dazu frei auswählen.",
+      color: "from-green-600 to-green-500",
+      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
+    },
+    {
+      icon: <BadgeDollarSign className="h-6 w-6" />,
+      title: "Gewinne 🤑",
+      description: "Die wenigsten Menschen werden durch Krypto und Trading zum Millionär und verlieren durch zu hohe Erwartungen ihr Geld. Lerne deine Risiken zu minimieren und sichere lieber auch mal kleinere Gewinne ab.",
       color: "from-green-600 to-green-500",
       bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
     {
       icon: <Shield className="h-6 w-6" />,
-      title: "Integrierte Versicherungen",
-      description: "Ihre Vermögenswerte sind durch unser Versicherungsprogramm gegen Vorfälle geschützt.",
+      title: "Vertrauen 😇",
+      description: "Wir schaffen Vertrauen. Unsere Transaktionen sind öffentlich einsehbar. Im Nextrade-Abo hast du zusätzlichen Einblick zu exklusive Informationen.",
       color: "from-green-600 to-green-500",
       bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
     },
-    {
-      icon: <Users className="h-6 w-6" />,
-      title: "Aktive Gemeinschaft",
-      description: "Treten Sie einer globalen Gemeinschaft von Tradern bei, um Strategien und Wissen auszutauschen.",
-      color: "from-green-600 to-green-500",
-      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
-    },
-    {
-      icon: <RefreshCw className="h-6 w-6" />,
-      title: "Ständige Updates",
-      description: "Wir verbessern unsere Plattform kontinuierlich mit neuen Funktionen und Tools.",
-      color: "from-green-600 to-green-500",
-      bgGlow: "radial-gradient(circle at center, rgba(34, 197, 94, 0.15), transparent 70%)",
-    },
+
   ]
 
   // Seguimiento de la posición del mouse para efectos de iluminación
@@ -228,7 +222,7 @@ export default function FeaturesSection() {
           variants={containerVariants}
           initial="hidden"
           animate={controls}
-          className="mx-auto grid max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+          className="mx-auto grid max-w-6xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {features.map((feature, index) => (
             <motion.div

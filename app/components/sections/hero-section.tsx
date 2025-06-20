@@ -11,6 +11,7 @@ const SwissFlag = ({ className }: { className?: string }) => (
     <rect x="6" y="13" width="20" height="6" fill="white" />
   </svg>
 )
+
 export default function HeroSection() {
   return (
     <section className="relative w-full h-screen overflow-hidden text-white">
@@ -37,7 +38,7 @@ export default function HeroSection() {
               </span>
               <span className="ml-2">🚀</span>
             </motion.div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-green-500 ">
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-500 ">
               Die Zukunft der Kryptowährungen beginnt hier!
             </h1>
                           <SwissFlag className="w-6 h-6 inline-block" />
@@ -45,16 +46,14 @@ export default function HeroSection() {
 
               Nextrade Swiss unterstützt dich dabei, die Chancen im Kryptomarkt zu nutzen und gleichzeitig Risiken zu
               minimieren.
-              
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}></motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button
                   variant="outline"
                   className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
                   onClick={() => {
-                    const element = document.getElementById("maerkte")
+                    const element = document.getElementById("bingx")
                     if (element) {
                       const headerHeight = 64
                       const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
@@ -66,7 +65,27 @@ export default function HeroSection() {
                     }
                   }}
                 >
-                  Märkte ansehen
+                  Trading Übersicht
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="outline"
+                  className="border-gray-700 text-white hover:bg-gray-800 transition-all duration-300"
+                  onClick={() => {
+                    const element = document.getElementById("nachrichten")
+                    if (element) {
+                      const headerHeight = 64
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                      const offsetPosition = elementPosition - headerHeight
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth",
+                      })
+                    }
+                  }}
+                >
+                  Wichtige Informationen
                 </Button>
               </motion.div>
             </div>

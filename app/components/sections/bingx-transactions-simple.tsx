@@ -3,7 +3,19 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, Cell } from "recharts"
 import { motion } from "framer-motion"
-import { Clock, RefreshCw, ChevronDown, ChevronUp, AlertCircle, Lock, LogIn, LogOut, X, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
+import {
+  Clock,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
+  Lock,
+  LogIn,
+  X,
+  TrendingUp,
+  TrendingDown,
+  ExternalLink,
+} from "lucide-react"
 
 interface FeeEntry {
   symbol: string
@@ -110,7 +122,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
   useImperativeHandle(ref, () => ({
     openLoginModal: () => setShowLoginForm(true),
     handleLogout,
-    isAuthenticated
+    isAuthenticated,
   }))
 
   // Función para guardar datos en localStorage
@@ -246,6 +258,35 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
     return entries.reduce((sum, item) => sum + Number.parseFloat(item.realisedProfit), 0)
   }
 
+  const generateChartDataLast7Days = (pnlData: FeeEntry[]) => {
+    const format = (timestamp: number) =>
+      new Intl.DateTimeFormat("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
+        new Date(timestamp),
+      )
+
+    // Generate last 7 days
+    const last7Days = []
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      last7Days.push(format(date.getTime()))
+    }
+
+    // Group PnL data by date
+    const grouped: Record<string, { pnl: number }> = {}
+    pnlData.forEach((item) => {
+      const date = format(item.time)
+      grouped[date] = grouped[date] || { pnl: 0 }
+      grouped[date].pnl += Number.parseFloat(item.income)
+    })
+
+    // Map last 7 days to data, showing 0 if no data for that day
+    return last7Days.map((date) => ({
+      date,
+      pnl: grouped[date] ? Number.parseFloat(grouped[date].pnl.toFixed(2)) : 0,
+    }))
+  }
+
   const generateChartData = (pnlData: FeeEntry[]) => {
     const format = (timestamp: number) =>
       new Intl.DateTimeFormat("de-CH", { day: "2-digit", month: "2-digit", year: "numeric" }).format(
@@ -374,7 +415,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             >
               <TrendingUp className="w-6 h-6 md:w-7 md:h-7" />
             </motion.div>
-
           </div>
           <p className="text-sm md:text-base text-gray-100 text-center">
             Hier findest du eine Übersicht unserer vergangenen Trades.
@@ -386,13 +426,11 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchAllData()}
-                className="flex items-center gap-2 bg-gradient-to-r  from-green-600 to-green-600  hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="flex items-center gap-2 bg-gray-800 border border-blue-500 text-blue-500 font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-gray-900 hover:border-blue-700 hover:text-blue-700 shadow-lg hover:shadow-xl"
               >
                 <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Aktualisieren
               </button>
-
-
             </div>
 
             {apiUnavailable && (
@@ -489,6 +527,39 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
           </motion.div>
         )}
 
+        {/* Balance Data - Only shown when authenticated */}
+        {isAuthenticated && balanceData && (
+          <div className="mb-8">
+            <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-400">Kontoübersicht</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="text-sm text-gray-400 mb-1">Eigenkapital</div>
+                <div className="text-xl font-bold text-white">
+                  {formatNumber(balanceData.equity)} {balanceData.asset}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">Guthaben + Unrealisierte PnL</div>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="text-sm text-gray-400 mb-1">Verfügbare Margin</div>
+                <div className="text-xl font-bold text-white">
+                  {formatNumber(balanceData.availableMargin)} {balanceData.asset}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">Für neue Positionen verfügbar</div>
+              </div>
+
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
+                <div className="text-sm text-gray-400 mb-1">Verwendete Margin</div>
+                <div className="text-xl font-bold text-amber-400">
+                  {formatNumber(balanceData.usedMargin)} {balanceData.asset}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">Für offene Positionen verwendet</div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -502,7 +573,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             {/* Positions - Only shown when authenticated */}
             {isAuthenticated && positions.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-lg md:text-xl font-semibold mb-2 text-purple-400">Aktuelle Positionen</h3>
+                <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-400">Aktuelle Positionen</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Unrealisiertes PnL</div>
@@ -665,79 +736,15 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
               </div>
             )}
 
-            {/* Balance Data - Only shown when authenticated */}
-            {isAuthenticated && balanceData && (
-              <div className="mb-8">
-                <h3 className="text-lg md:text-xl font-semibold mb-4 text-emerald-400">Kontoübersicht</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Gesamtguthaben</div>
-                    <div className="text-xl font-bold text-white">
-                      {formatNumber(balanceData.balance)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Verfügbar für Handel und Margin</div>
-                  </div>
-
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Eigenkapital</div>
-                    <div className="text-xl font-bold text-white">
-                      {formatNumber(balanceData.equity)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Guthaben + Unrealisierte PnL</div>
-                  </div>
-
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Realisierter Gewinn</div>
-                    <div
-                      className={`text-xl font-bold ${Number.parseFloat(balanceData.realisedProfit) >= 0 ? "text-green-400" : "text-red-400"}`}
-                    >
-                      {formatNumber(balanceData.realisedProfit)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Abgeschlossene Trades</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Verfügbare Margin</div>
-                    <div className="text-xl font-bold text-white">
-                      {formatNumber(balanceData.availableMargin)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Für neue Positionen verfügbar</div>
-                  </div>
-
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Verwendete Margin</div>
-                    <div className="text-xl font-bold text-amber-400">
-                      {formatNumber(balanceData.usedMargin)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Für offene Positionen verwendet</div>
-                  </div>
-
-                  <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                    <div className="text-sm text-gray-400 mb-1">Eingefrorene Margin</div>
-                    <div className="text-xl font-bold text-blue-400">
-                      {formatNumber(balanceData.freezedMargin)} {balanceData.asset}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">Für ausstehende Orders reserviert</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="text-sm text-gray-400 mb-1">Unrealisierter Gewinn/Verlust</div>
-
-                      <div
-                        className={`text-xl font-bold ${Number.parseFloat(balanceData.unrealizedProfit) >= 0 ? "text-green-400" : "text-red-400"}`}
-                      >
-                        {formatNumber(balanceData.unrealizedProfit)} {balanceData.asset}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs text-gray-500">Benutzer-ID: {balanceData.shortUid}</div>
-                    </div>
+            {/* Sum of last 7 days - Only shown when authenticated */}
+            {isAuthenticated && (
+              <div className="mb-4">
+                <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+                  <div className="text-sm text-gray-400 mb-1">Summe der letzten 7 Tage</div>
+                  <div
+                    className={`text-xl font-bold ${getTotal(filterLastWeekData(realizedPnL)) >= 0 ? "text-green-400" : "text-red-400"}`}
+                  >
+                    {formatNumber(getTotal(filterLastWeekData(realizedPnL)).toString())} USDT
                   </div>
                 </div>
               </div>
@@ -745,7 +752,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
             {/* Realized PnL */}
             <div className="mb-8">
-              <h3 className="text-lg md:text-xl font-semibold mb-2 text-green-500">
+              <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-400">
                 {isAuthenticated ? "Realisiertes PnL" : "Realisierte Gewinne und Verluste"}
               </h3>
 
@@ -802,28 +809,28 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                 </table>
               </div>
 
-{filteredPnL.length > ITEMS_TO_SHOW && (
-  <button
-    onClick={() => setShowAllPnL(!showAllPnL)}
-    className="mt-4 flex items-center gap-1 text-sm border-2 border-gray-700  p-2 rounded-sm text-white hover:bg-gray-800 transition-all duration-300 transition-colors mx-auto"
-  >
-    {showAllPnL ? (
-      <>
-        Weniger anzeigen <ChevronUp className="w-4 h-4" />
-      </>
-    ) : (
-      <>
-        Mehr anzeigen <ChevronDown className="w-4 h-4" />
-      </>
-    )}
-  </button>
-)}
+              {filteredPnL.length > ITEMS_TO_SHOW && (
+                <button
+                  onClick={() => setShowAllPnL(!showAllPnL)}
+                  className="mt-4 flex items-center gap-1 text-sm border-2 border-gray-700  p-2 rounded-sm text-white hover:bg-gray-800 transition-all duration-300 transition-colors mx-auto"
+                >
+                  {showAllPnL ? (
+                    <>
+                      Weniger anzeigen <ChevronUp className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      Mehr anzeigen <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              )}
             </div>
 
             {/* Chart */}
             {realizedPnL.length > 0 && (
               <div className="mt-8 md:mt-12">
-                <h3 className="text-lg md:text-xl font-semibold mb-4 text-green-400">
+                <h3 className="text-lg md:text-xl font-semibold mb-4 text-gray-400">
                   {isAuthenticated
                     ? "Realisierte Gewinne und Verluste in den letzten 7 Tagen"
                     : "Realisierte Gewinne und Verluste in den letzten 7 Tagen"}
@@ -833,8 +840,8 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                     <BarChart
                       data={
                         isAuthenticated
-                          ? generateChartData(realizedPnL)
-                          : generateChartData(filterLastWeekData(realizedPnL))
+                          ? generateChartDataLast7Days(realizedPnL)
+                          : generateChartDataLast7Days(filterLastWeekData(realizedPnL))
                       }
                       margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
                     >
@@ -865,8 +872,8 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                       <Legend wrapperStyle={{ paddingTop: "10px", color: "#e5e7eb" }} />
                       <Bar dataKey="pnl" name="Gewinn/Verlust">
                         {(isAuthenticated
-                          ? generateChartData(realizedPnL)
-                          : generateChartData(filterLastWeekData(realizedPnL))
+                          ? generateChartDataLast7Days(realizedPnL)
+                          : generateChartDataLast7Days(filterLastWeekData(realizedPnL))
                         ).map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.pnl >= 0 ? "#22c55e" : "#ef4444"} />
                         ))}
@@ -880,14 +887,13 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             {/* Membership Call-to-Action */}
             <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
               <p className="text-sm text-gray-300 mb-4 text-center">
-                Möchtest du mehr Informationen sehen? Wir bieten dir im Nextrade-Abo exklusive Einblicke in unsere Käufe
-                und Verkäufe. Zusätzlich teilen wir dort unsere Einschätzungen zur aktuellen Marktlage.
+                Möchtest du mehr informationen sehen? mit "Hol dir unser Nextrade-Abo.
               </p>
               <button
                 onClick={() => {
                   window.open("https://steady.page/de/nextrade-abo/about", "_blank", "noopener,noreferrer")
                 }}
-                className="bg-gradient-to-r from-green-600 to-green-600 hover:from-green-900 hover:to-green-900 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center gap-2 mx-auto"
+                className="bg-gray-800 border border-blue-500 text-blue-500 font-medium px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-gray-900 hover:border-blue-700 hover:text-blue-700 shadow-lg hover:shadow-xl inline-flex items-center gap-2 mx-auto "
               >
                 Zum Nextrade-Abo
                 <ExternalLink className="w-4 h-4" />

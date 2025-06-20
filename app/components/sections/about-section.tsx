@@ -100,6 +100,19 @@ export default function AboutSection() {
       
             </motion.div>
 
+           <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              custom={0}
+              variants={textVariants}
+            >
+              <div className="inline-block rounded-lg  text-sm text-gray-400 ">
+               Nextrade Swiss🇨🇭
+              </div>
+      
+            </motion.div>
+
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <motion.p
                 initial="hidden"

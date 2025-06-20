@@ -186,12 +186,13 @@ export default function ContactSection() {
 
               </motion.h2>
 
-              <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-md">
-                Hast du Fragen? Schreibe uns eine E-Mail oder melde dich via Kontaktformular. Wir melden uns so schnell
-                wie möglich wieder bei dir.
+              <motion.p variants={itemVariants} className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400">
+                Hast du Fragen? 
               </motion.p>
             </div>
-
+       <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-md">
+                schreibe uns...
+              </motion.p>
             <motion.div variants={itemVariants} className="space-y-6">
               <motion.a
                 href="mailto:info@nextrade.ch"

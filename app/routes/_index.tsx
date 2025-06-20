@@ -6,7 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, Database, TrendingUp, LogIn, LogOut, Star } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Star } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -21,7 +21,6 @@ import MarketsSection from "../components/sections/markets-section"
 import NewsSection from "../components/sections/news-section"
 import ContactSection from "../components/sections/contact-section"
 import AnimatedTextReveal from "../components/animated/animated-text-reveal"
-import BlockchainVisualizer from "../components/sections/blockchain-visualizer"
 import BingXTransactionsSimple, { type BingXOverviewRef } from "../components/sections/bingx-transactions-simple"
 import AboutSection from "../components/sections/about-section"
 import Feactures from "../components/sections/features-section"
@@ -150,14 +149,20 @@ export default function Index() {
     return () => clearInterval(interval)
   }, [])
 
-  // Menú con el botón de login/logout dinámico
-  const menuItems = [
-    { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
-    { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
-    { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
-     { id: "premiumfunktionen", text: "Premium Funktionen", icon: <Star className="h-4 w-4" /> },
-    { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
-  ]
+  // Menú con elementos condicionales basados en autenticación
+  const menuItems = isAuthenticated
+    ? [
+        { id: "bingx", text: "Resumen de trading", icon: <TrendingUp className="h-4 w-4" /> },
+        { id: "nachrichten", text: "Información importante", icon: <Newspaper className="h-4 w-4" /> },
+        { id: "kontakt", text: "Contacto", icon: <Mail className="h-4 w-4" /> },
+      ]
+    : [
+        { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
+        { id: "maerkte", text: "Märkte-Preise", icon: <BarChart2 className="h-4 w-4" /> },
+        { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
+        { id: "premiumfunktionen", text: "Premium Funktionen", icon: <Star className="h-4 w-4" /> },
+        { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
+      ]
 
   // Effect to handle scroll-to-top button visibility
   useEffect(() => {
@@ -375,7 +380,7 @@ export default function Index() {
               >
                 <LogIn className="h-4 w-4" />
               </motion.div>
-           Mitgliederbereich
+              Mitgliederbereich
             </motion.button>
           )}
         </nav>
@@ -397,11 +402,11 @@ export default function Index() {
       </div>
 
       <main className="flex-1 pt-16 relative z-10">
-        {/* Hero Section */}
-        <HeroSection />
+        {/* Hero Section - Only show when not authenticated */}
+        {!isAuthenticated && <HeroSection />}
 
-        {/* Animated Text Reveal Section */}
-        <AnimatedTextReveal />
+        {/* Animated Text Reveal Section - Only show when not authenticated */}
+        {!isAuthenticated && <AnimatedTextReveal />}
 
         {/* BingX Section */}
         <section id="bingx">
@@ -417,43 +422,44 @@ export default function Index() {
 
         {/* Content with solid background */}
         <div className="bg-gray-950 ">
-          {/* Markets Section */}
-          <section id="maerkte">
-            <MarketsSection />
-          </section>
+          {/* Markets Section - Only show when not authenticated */}
+          {!isAuthenticated && (
+            <section id="maerkte">
+              <MarketsSection />
+            </section>
+          )}
 
           {/* News Section */}
           <section id="nachrichten">
             <NewsSection />
           </section>
 
-          {/* Blockchain Visualizer */}
-          <section id="blockchain"  className="mb-28">
-            <BlockchainVisualizer />
-          </section>
+          {/* FAQ Section - Only show when not authenticated */}
+          {!isAuthenticated && <section id="faq"></section>}
 
-          {/* FAQ Section */}
-          <section id="faq" ></section>
+          {/* About Section - Only show when not authenticated */}
+          {!isAuthenticated && <AboutSection />}
 
-          {/* Final CTA Section with solid background */}
-          <section
-            className="w-full py-12 md:py-24 lg:py-32 relative z-20 bg-cover bg-center min-h-[400px] flex items-end overflow-hidden"
-            style={{ backgroundImage: 'url("/background-3d.png")' }}
-          >
-            <ParticleAnimation />
-            <div className="container px-4 md:px-6 mx-auto relative z-10">
-              <div className="flex flex-col items-center justify-end space-y-2 text-center"></div>
-            </div>
-          </section>
+          {/* Premium Features Section - Only show when not authenticated */}
+          {!isAuthenticated && (
+            <section id="premiumfunktionen">
+              <Feactures />
+            </section>
+          )}
 
-
-  <section id="premiumfunktionen">
-        <Feactures />
-          </section>
-
-
-          {/* About Section - MOVIDA AQUÍ, justo antes del contacto */}
-          <AboutSection />
+          {/* Final CTA Section - Only show when not authenticated */}
+          {!isAuthenticated && (
+            <section
+              className="w-full py-12 md:py-24 lg:py-32 relative z-20 bg-cover bg-center
+                         min-h-[200px] lg:min-h-[400px] flex items-end overflow-hidden"
+              style={{ backgroundImage: 'url("/background-3d.png")' }}
+            >
+              <ParticleAnimation />
+              <div className="container px-4 md:px-6 mx-auto relative z-10">
+                <div className="flex flex-col items-center justify-end space-y-2 text-center">{/* Tu contenido */}</div>
+              </div>
+            </section>
+          )}
 
           {/* Contact Section */}
           <section id="kontakt">

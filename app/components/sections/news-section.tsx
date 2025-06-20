@@ -184,9 +184,7 @@ export default function NewsSection() {
           <div className="space-y-2">
             <div className="inline-block rounded-lg bg-gray-800 px-3 py-1 text-sm text-green-400">Nachrichten</div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400">Wichtige Informationen</h2>
-            <p className="max-w-[700px] text-gray-300">
-              Bleiben Sie auf dem Laufenden mit den neuesten Nachrichten und Trends aus der Welt der Kryptowährungen.
-            </p>
+
           </div>
         </div>
 
