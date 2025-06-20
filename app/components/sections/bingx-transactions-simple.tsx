@@ -886,8 +886,11 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
             {/* Membership Call-to-Action */}
             <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
-              <p className="text-sm text-gray-300 mb-4 text-center">
-                Möchtest du mehr informationen sehen? mit "Hol dir unser Nextrade-Abo.
+              <p className="text-2xl font-bold tracking-tighter sm:text-2xl text-gray-400 text-center mb-4">
+                Möchtest du mehr informationen sehen? 
+              </p>
+                  <p className="text-1xl font-bold tracking-tighter sm:text-2200 text-center mb-10 text-center">
+               Hol dir unser Nextrade-Abo.
               </p>
               <button
                 onClick={() => {
