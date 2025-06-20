@@ -407,7 +407,12 @@ export default function Index() {
 
         {/* Animated Text Reveal Section - Only show when not authenticated */}
         {!isAuthenticated && <AnimatedTextReveal />}
-
+    {/* Premium Features Section - Only show when not authenticated */}
+          {!isAuthenticated && (
+            <section id="premiumfunktionen">
+              <Feactures />
+            </section>
+          )}
         {/* BingX Section */}
         <section id="bingx">
           <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
@@ -440,12 +445,7 @@ export default function Index() {
           {/* About Section - Only show when not authenticated */}
           {!isAuthenticated && <AboutSection />}
 
-          {/* Premium Features Section - Only show when not authenticated */}
-          {!isAuthenticated && (
-            <section id="premiumfunktionen">
-              <Feactures />
-            </section>
-          )}
+      
 
           {/* Final CTA Section - Only show when not authenticated */}
           {!isAuthenticated && (
