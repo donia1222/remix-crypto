@@ -84,16 +84,7 @@ export default function AboutSection() {
       </div>
 
       <div className="container px-4 md:px-6 mx-auto relative z-10">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400 flex items-center gap-3 justify-center">
-            Nextrade Swiss
-            <SwissFlag className="w-8 h-8 shadow-lg" />
-          </h2>
-        </div>
-        <motion.div style={{ opacity }} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Texto */}
-          <div className="space-y-6">
-            <motion.div
+              <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
@@ -103,7 +94,18 @@ export default function AboutSection() {
               <div className="inline-block rounded-lg bg-gradient-to-r from-gray-800 to-gray-700 px-3 py-1 text-sm text-green-400 border border-gray-700">
                 Über uns
               </div>
+                      <div className="flex flex-col space-y-4 mb-4">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400 flex items-center gap-3  mt-4 ">
+            Nextrade Swiss
+            <SwissFlag className="w-8 h-8 shadow-lg" />
+          </h2>
+        </div>
             </motion.div>
+
+        <motion.div style={{ opacity }} className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          {/* Texto */}
+          <div className="space-y-6">
+      
 
             <motion.div
               initial="hidden"
