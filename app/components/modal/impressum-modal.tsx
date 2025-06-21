@@ -86,8 +86,12 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Unternehmensangaben</h3>
-                  <p className="text-gray-300">nextrade Krypto Trading & IT Lösungen</p>
-                  <p className="text-gray-300">Schweiz</p>
+                  <div className="space-y-1">
+                    <p className="text-gray-300 font-medium">Nextrade Swiss GmbH</p>
+                    <p className="text-gray-300">Churerstrasse 49</p>
+                    <p className="text-gray-300">CH-9470 Buchs</p>
+                    <p className="text-gray-300">Schweiz</p>
+                  </div>
                 </div>
 
                 <div>
@@ -99,12 +103,7 @@ export default function ImpressumModal({ isOpen, onClose }: ImpressumModalProps)
                         info@nextrade.ch
                       </a>
                     </p>
-                    <p className="text-gray-300">
-                      <span className="font-medium">WhatsApp:</span>{" "}
-                      <a href="https://wa.me/41786999950" className="text-blue-400 hover:text-blue-300">
-                        +41 78 699 99 50
-                      </a>
-                    </p>
+         
                   </div>
                 </div>
 

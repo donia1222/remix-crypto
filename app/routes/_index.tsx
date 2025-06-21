@@ -419,7 +419,7 @@ export default function Index() {
           <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
             {/* BingX Transactions Section - Now with ref and password prop */}
             {password !== null ? (
-              <BingXTransactionsSimple ref={bingXRef} password={password} />
+              <BingXTransactionsSimple ref={bingXRef}  />
             ) : (
               <BingXTransactionsSimple ref={bingXRef} />
             )}

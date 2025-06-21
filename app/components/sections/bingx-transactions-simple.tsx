@@ -80,23 +80,21 @@ interface CachedData {
   timestamp: number
 }
 
-interface BingXOverviewProps {
-  password?: string
-}
+type BingXOverviewProps = {}
 
-// Add ref interface for exposing methods
 export interface BingXOverviewRef {
   openLoginModal: () => void
   handleLogout: () => void
   isAuthenticated: boolean
 }
 
-const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ password }, ref) => {
+const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>((props, ref) => {
   const PNL_API = "https://web.lweb.ch/api.php"
   const FEES_API = "https://web.lweb.ch/api_fees.php"
   const POSITIONS_API = "https://web.lweb.ch/api-3.php"
   const BALANCE_API = "https://web.lweb.ch/crypto/balance.php"
-  const RETRY_INTERVAL = 5 * 60 * 1000 // 5 minutos en milisegundos
+  const PASSWORD_API = "https://web.lweb.ch/crypto/get-password.php" // Nueva API para obtener contraseña
+  const RETRY_INTERVAL = 5 * 60 * 1000
 
   const [realizedPnL, setRealizedPnL] = useState<FeeEntry[]>([])
   const [fees, setFees] = useState<FeeEntry[]>([])
@@ -110,13 +108,12 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showLoginForm, setShowLoginForm] = useState(false)
   const [loginError, setLoginError] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState<string>("")
+  const [passwordLoading, setPasswordLoading] = useState(false)
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [inputPassword, setInputPassword] = useState<string>("")
 
   const ITEMS_TO_SHOW = 5
-
-  // Usa la contraseña que viene del loader de Remix
-  const PASSWORD = password
 
   // Expose methods through ref
   useImperativeHandle(ref, () => ({
@@ -124,6 +121,30 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
     handleLogout,
     isAuthenticated,
   }))
+
+  // Función para obtener la contraseña desde la API
+  const fetchPassword = async () => {
+    setPasswordLoading(true)
+    try {
+      const response = await fetch(PASSWORD_API)
+      const data = await response.json()
+
+      if (data.success) {
+        setCurrentPassword(data.password)
+        return data.password
+      } else {
+        console.error("Error fetching password:", data.message)
+        setError("Error al obtener la contraseña del servidor")
+        return null
+      }
+    } catch (err) {
+      console.error("Error fetching password:", err)
+      setError("Error de conexión al obtener la contraseña")
+      return null
+    } finally {
+      setPasswordLoading(false)
+    }
+  }
 
   // Función para guardar datos en localStorage
   const saveDataToCache = (
@@ -189,7 +210,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
       setLastUpdated(new Date())
       setApiUnavailable(false)
 
-      // Guardar datos en caché
       saveDataToCache(
         pnlData as FeeEntry[],
         feesData as FeeEntry[],
@@ -197,7 +217,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
         balanceData as BalanceData,
       )
 
-      // Limpiar cualquier timeout de reintento existente
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current)
         retryTimeoutRef.current = null
@@ -205,7 +224,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
     } catch (err) {
       console.error("Error al obtener datos:", err)
 
-      // Cargar datos desde caché si la API falla
       const cachedData = loadDataFromCache()
       if (cachedData && !apiUnavailable) {
         setRealizedPnL(cachedData.realizedPnL)
@@ -215,12 +233,10 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
         setLastUpdated(new Date(cachedData.timestamp))
         setApiUnavailable(true)
 
-        // Programar un reintento después del intervalo
         retryTimeoutRef.current = setTimeout(() => {
-          fetchAllData(false) // Intentar de nuevo sin mostrar el estado de carga
+          fetchAllData(false)
         }, RETRY_INTERVAL)
       } else if (!cachedData) {
-        // Solo mostrar error si no hay datos en caché
         setError(err instanceof Error ? err.message : "Fehler beim Abrufen")
       }
     } finally {
@@ -241,8 +257,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
   const formatNumber = (numStr: string, decimals = 2) => {
     const num = Number.parseFloat(numStr)
     if (isNaN(num)) return "0.00"
-
-    // Force exactly 2 decimal places
     return num.toFixed(decimals)
   }
 
@@ -264,7 +278,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
         new Date(timestamp),
       )
 
-    // Generate last 7 days
     const last7Days = []
     for (let i = 6; i >= 0; i--) {
       const date = new Date()
@@ -272,7 +285,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
       last7Days.push(format(date.getTime()))
     }
 
-    // Group PnL data by date
     const grouped: Record<string, { pnl: number }> = {}
     pnlData.forEach((item) => {
       const date = format(item.time)
@@ -280,7 +292,6 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
       grouped[date].pnl += Number.parseFloat(item.income)
     })
 
-    // Map last 7 days to data, showing 0 if no data for that day
     return last7Days.map((date) => ({
       date,
       pnl: grouped[date] ? Number.parseFloat(grouped[date].pnl.toFixed(2)) : 0,
@@ -315,27 +326,21 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
     return data.filter((item) => item.time >= oneWeekAgoTimestamp)
   }
 
-  const handleLogin = () => {
-    // Debug: mostrar los valores para comparación
-    console.log("PASSWORD from prop:", PASSWORD)
-    console.log("inputPassword:", inputPassword)
-    console.log("PASSWORD length:", PASSWORD?.length)
-    console.log("inputPassword length:", inputPassword.length)
-    console.log("Are they equal?", inputPassword === PASSWORD)
+  const handleLogin = async () => {
+    if (passwordLoading) return
 
-    if (!PASSWORD) {
-      setLoginError(true)
-      console.error("Password not provided from environment variables")
-      return
+    // Si no tenemos la contraseña actual, la obtenemos
+    let passwordToCheck = currentPassword
+    if (!passwordToCheck) {
+      passwordToCheck = await fetchPassword()
+      if (!passwordToCheck) {
+        setLoginError(true)
+        return
+      }
     }
 
-    // Limpiar espacios en blanco y comparar
-    const cleanPassword = PASSWORD.trim()
+    const cleanPassword = passwordToCheck.trim()
     const cleanInputPassword = inputPassword.trim()
-
-    console.log("Clean PASSWORD:", cleanPassword)
-    console.log("Clean inputPassword:", cleanInputPassword)
-    console.log("Clean comparison:", cleanInputPassword === cleanPassword)
 
     if (cleanInputPassword === cleanPassword) {
       setIsAuthenticated(true)
@@ -350,19 +355,19 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
   const handleLogout = () => {
     setIsAuthenticated(false)
-    // Eliminar autenticación de localStorage
     localStorage.removeItem("bingx-auth")
   }
 
-  // Cargar datos al inicio y configurar el intervalo de reintento
+  // Cargar datos al inicio
   useEffect(() => {
-    // Verificar si existe una autenticación guardada
     const savedAuth = localStorage.getItem("bingx-auth")
     if (savedAuth === "true") {
       setIsAuthenticated(true)
     }
 
-    // Mostrar datos del caché mientras esperamos la respuesta de la API
+    // Obtener la contraseña actual del servidor
+    fetchPassword()
+
     const cachedData = loadDataFromCache()
     if (cachedData) {
       setRealizedPnL(cachedData.realizedPnL)
@@ -370,25 +375,16 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
       setPositions(cachedData.positions || [])
       setBalanceData(cachedData.balance)
       setLastUpdated(new Date(cachedData.timestamp))
-      // No desactivamos el estado de carga para que se vea que estamos actualizando
     }
 
-    // Siempre hacer una llamada a la API al cargar la página
     fetchAllData(true)
 
-    // Limpiar el timeout al desmontar
     return () => {
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current)
       }
     }
   }, [])
-
-  // Agregar este useEffect después del useEffect existente
-  useEffect(() => {
-    console.log("Component mounted with password:", password)
-    console.log("PASSWORD constant:", PASSWORD)
-  }, [password])
 
   const filteredPnL = isAuthenticated ? realizedPnL : filterLastWeekData(realizedPnL)
   const visiblePnL = showAllPnL ? filteredPnL.slice(0, 10) : filteredPnL.slice(0, ITEMS_TO_SHOW)
@@ -403,7 +399,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
           transition={{ duration: 0.4 }}
           className="mb-4 md:mb-6"
         >
-          <div className="flex items-center justify-center gap-3  mt-10">
+          <div className="flex items-center justify-center gap-3 mt-10">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-4xl/none text-gray-400 p-4">
               Trading Übersicht
             </h2>
@@ -431,6 +427,8 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                 <RefreshCw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Aktualisieren
               </button>
+
+      
             </div>
 
             {apiUnavailable && (
@@ -481,6 +479,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
                 <div className="mb-6 text-gray-400 text-sm">
                   Bitte geben Sie Ihr Passwort ein, um auf den exklusiven Mitgliederbereich zuzugreifen.
+                  {passwordLoading && <div className="mt-2 text-yellow-400">Cargando contraseña del servidor...</div>}
                 </div>
 
                 {loginError && (
@@ -504,7 +503,8 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
                       onKeyDown={(e) => {
                         if (e.key === "Enter") handleLogin()
                       }}
-                      className="w-full p-3 pl-10 bg-gray-800/50 border border-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                      disabled={passwordLoading}
+                      className="w-full p-3 pl-10 bg-gray-800/50 border border-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all disabled:opacity-50"
                       placeholder="••••••••"
                     />
                     <Lock className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
@@ -513,10 +513,11 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
                 <button
                   onClick={handleLogin}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-600 hover:from-purple-500 hover:to-pink-500 px-4 py-3 rounded-lg text-white transition-all font-medium shadow-lg hover:shadow-purple-700/20"
+                  disabled={passwordLoading}
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-green-600 hover:from-purple-500 hover:to-pink-500 px-4 py-3 rounded-lg text-white transition-all font-medium shadow-lg hover:shadow-purple-700/20 disabled:opacity-50"
                 >
                   <LogIn className="w-4 h-4" />
-                  Zugang freischalten
+                  {passwordLoading ? "Cargando..." : "Zugang freischalten"}
                 </button>
 
                 <div className="mt-4 text-center text-xs text-gray-500">
@@ -527,6 +528,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
           </motion.div>
         )}
 
+        {/* Rest of the component remains the same... */}
         {/* Balance Data - Only shown when authenticated */}
         {isAuthenticated && balanceData && (
           <div className="mb-8">
@@ -551,7 +553,7 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
 
               <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 shadow-sm">
                 <div className="text-sm text-gray-400 mb-1">Verwendete Margin</div>
-                <div className="text-xl font-bold text-amber-400">
+                <div className="text-xl font-bold text-gray-200">
                   {formatNumber(balanceData.usedMargin)} {balanceData.asset}
                 </div>
                 <div className="text-xs text-gray-500 mt-2">Für offene Positionen verwendet</div>
@@ -887,10 +889,10 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>(({ passwo
             {/* Membership Call-to-Action */}
             <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
               <p className="text-2xl font-bold tracking-tighter sm:text-2xl text-gray-400 text-center mb-4">
-                Möchtest du mehr informationen sehen? 
+                Möchtest du mehr informationen sehen?
               </p>
-                  <p className="text-1xl font-bold tracking-tighter sm:text-2200 text-center mb-10 text-center">
-               Hol dir unser Nextrade-Abo.
+              <p className="text-1xl font-bold tracking-tighter sm:text-2200 text-center mb-10 text-center">
+                Hol dir unser Nextrade-Abo.
               </p>
               <button
                 onClick={() => {
