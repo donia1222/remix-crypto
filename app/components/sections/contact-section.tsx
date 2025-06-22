@@ -33,6 +33,17 @@ export default function ContactSection() {
       return
     }
 
+    // Create mailto link with form data
+    const subject = encodeURIComponent(`Kontakt von ${contactForm.name}`)
+    const body = encodeURIComponent(
+      `Name: ${contactForm.name}\n` + `E-Mail: ${contactForm.email}\n\n` + `Nachricht:\n${contactForm.message}`,
+    )
+
+    const mailtoLink = `mailto:info@nextrade.ch?subject=${subject}&body=${body}`
+
+    // Open email client
+    window.location.href = mailtoLink
+
     console.log("Form submitted:", contactForm)
     setFormSubmitted(true)
 
@@ -152,11 +163,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section
-      id="kontakt"
-      className="relative w-full py-16 md:py-24 overflow-hidden"
-    >
-
+    <section id="kontakt" className="relative w-full py-16 md:py-24 overflow-hidden">
       <div className="container px-4 md:px-6 mx-auto relative z-10">
         <motion.div
           variants={containerVariants}
@@ -182,18 +189,19 @@ export default function ContactSection() {
               <motion.h2
                 variants={itemVariants}
                 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent leading-tight"
+              ></motion.h2>
+
+              <motion.p
+                variants={itemVariants}
+                className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400"
               >
-
-              </motion.h2>
-
-              <motion.p variants={itemVariants} className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-400">
-                Hast du Fragen? 
+                Hast du Fragen?
               </motion.p>
             </div>
-       <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-md">
-                Schreibe uns eine E-Mail oder melde dich via Kontaktformular.
-Wir melden uns so schnell wie möglich bei dir.
-              </motion.p>
+            <motion.p variants={itemVariants} className="text-lg text-gray-300 leading-relaxed max-w-md">
+              Schreibe uns eine E-Mail oder melde dich via Kontaktformular. Wir melden uns so schnell wie möglich bei
+              dir.
+            </motion.p>
             <motion.div variants={itemVariants} className="space-y-6">
               <motion.a
                 href="mailto:info@nextrade.ch"
@@ -243,7 +251,7 @@ Wir melden uns so schnell wie möglich bei dir.
                     transition={{ delay: 0.3 }}
                     className="text-2xl font-bold text-white mb-3"
                   >
-                    Nachricht gesendet!
+                    E-Mail wird geöffnet!
                   </motion.h3>
                   <motion.p
                     initial={{ opacity: 0, y: 10 }}
@@ -251,7 +259,7 @@ Wir melden uns so schnell wie möglich bei dir.
                     transition={{ delay: 0.4 }}
                     className="text-gray-300 text-lg"
                   >
-                    Wir werden uns so schnell wie möglich bei Ihnen melden.
+                    Ihr E-Mail-Client sollte sich mit der vorausgefüllten Nachricht öffnen.
                   </motion.p>
                 </motion.div>
               ) : (
@@ -370,7 +378,7 @@ Wir melden uns so schnell wie möglich bei dir.
                       type="submit"
                       className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-green-500/25 transition-all duration-300 border border-green-500/20"
                     >
-                      <span>Nachricht senden</span>
+                      <span>E-Mail öffnen</span>
                       <Send className="ml-2 h-4 w-4" />
                     </Button>
                   </motion.div>
