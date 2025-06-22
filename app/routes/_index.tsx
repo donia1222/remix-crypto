@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
@@ -167,6 +169,14 @@ export default function Index() {
     setLoginDropdownOpen(false)
     if (bingXRef.current) {
       bingXRef.current.handleLogout()
+    }
+  }
+
+  // Function to close mobile dropdown when clicking outside
+  const handleMobileMenuClick = (e: React.MouseEvent) => {
+    // Close dropdown when clicking on the mobile menu background
+    if (loginDropdownOpen) {
+      setLoginDropdownOpen(false)
     }
   }
 
@@ -421,6 +431,7 @@ export default function Index() {
           ease: "easeInOut",
         }}
         className="bg-black/70 backdrop-blur-md border-b border-gray-800/50 md:hidden overflow-hidden fixed top-16 left-0 right-0 z-40"
+        onClick={handleMobileMenuClick}
       >
         <nav className="flex flex-col p-4 space-y-3 items-center text-center max-w-xs mx-auto">
           {menuItems.map((item, index) => (
@@ -444,15 +455,19 @@ export default function Index() {
             </motion.button>
           ))}
 
-          {/* Mobile Login Options */}
+          {/* Mobile Login Dropdown */}
           {!isAuthenticated ? (
-            <>
+            <div className="w-full">
               <motion.button
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
                 transition={{ delay: 0.1 + menuItems.length * 0.05 }}
-                onClick={handleAdminClick}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setLoginDropdownOpen(!loginDropdownOpen)
+                }}
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center justify-center w-full"
                 whileHover={{ x: 5 }}
               >
                 <motion.div
@@ -460,28 +475,77 @@ export default function Index() {
                   whileHover={{ scale: 1.2, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <Settings className="h-4 w-4" />
+                  <User className="h-4 w-4" />
                 </motion.div>
-                Adminbereich
-              </motion.button>
-              <motion.button
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-                transition={{ delay: 0.1 + (menuItems.length + 1) * 0.05 }}
-                onClick={handleMemberClick}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
-                whileHover={{ x: 5 }}
-              >
+                LOGIN
                 <motion.div
-                  className="mr-2 text-[#25D366]"
-                  whileHover={{ scale: 1.2, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  className="ml-1"
+                  animate={{ rotate: loginDropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <LogIn className="h-4 w-4" />
+                  <ChevronDown className="h-3 w-3" />
                 </motion.div>
-                Mitgliederbereich
               </motion.button>
-            </>
+
+              {/* Mobile Dropdown Content */}
+              <AnimatePresence>
+                {loginDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden bg-gray-800/50 rounded-lg mt-2 border border-gray-700"
+                  >
+                    <motion.button
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setLoginDropdownOpen(false)
+                        handleAdminClick()
+                      }}
+                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 flex items-center justify-center hover:bg-gray-700/50"
+                      whileHover={{ x: 5 }}
+                    >
+                      <motion.div
+                        className="mr-2 text-[#25D366]"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </motion.div>
+                      Adminbereich
+                    </motion.button>
+                    <div className="border-t border-gray-600"></div>
+                    <motion.button
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setLoginDropdownOpen(false)
+                        handleMemberClick()
+                      }}
+                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 flex items-center justify-center hover:bg-gray-700/50"
+                      whileHover={{ x: 5 }}
+                    >
+                      <motion.div
+                        className="mr-2 text-[#25D366]"
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                      >
+                        <LogIn className="h-4 w-4" />
+                      </motion.div>
+                      Mitgliederbereich
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : (
             // Mobile Logout Button
             <motion.button
