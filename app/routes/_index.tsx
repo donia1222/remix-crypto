@@ -476,13 +476,9 @@ export default function Index() {
                 >
                   <User className="h-4 w-4" />
                 </motion.div>
-                Login
-                <motion.div
-                  className="ml-1"
-                  animate={{ rotate: loginDropdownOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ChevronDown className="h-3 w-3" />
+                LOGIN
+                <motion.div className="ml-1" animate={{ rotate: 0 }} transition={{ duration: 0.2 }}>
+                  {loginDropdownOpen ? <X className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </motion.div>
               </motion.button>
 
@@ -496,18 +492,6 @@ export default function Index() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden bg-gray-800/50 rounded-lg mt-2 border border-gray-700 relative z-20"
                   >
-                    {/* Close button for mobile dropdown */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        console.log("Close button clicked")
-                        setLoginDropdownOpen(false)
-                      }}
-                      className="absolute top-2 right-2 p-1 text-gray-400 hover:text-white transition-colors z-10"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-
                     <motion.button
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
