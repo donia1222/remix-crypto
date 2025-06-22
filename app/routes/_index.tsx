@@ -6,7 +6,7 @@ import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Star, Home } from "lucide-react"
+import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Home, Settings } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -109,6 +109,15 @@ export default function Index() {
     }, 100)
   }
 
+  // Function to handle external navigation
+  const handleExternalNavigation = (url: string) => {
+    // Close mobile menu first
+    setMobileMenuOpen(false)
+
+    // Navigate to external URL
+    window.open(url, "_blank", "noopener,noreferrer")
+  }
+
   // Function to handle login button click
   const handleLoginClick = () => {
     // Close mobile menu first
@@ -152,17 +161,45 @@ export default function Index() {
   // Menú con elementos condicionales basados en autenticación
   const menuItems = isAuthenticated
     ? [
-        { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
-        { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" /> },
-        { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
+        { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" />, type: "scroll" },
+        { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" />, type: "scroll" },
+        { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" />, type: "scroll" },
+        {
+          id: "admin",
+          text: "Adminbereich",
+          icon: <Settings className="h-4 w-4" />,
+          type: "external",
+          url: "https://web.lweb.ch/crypto/blogchanges.html",
+        },
       ]
     : [
-        { id: "home", text: "Home", icon: <Home className="h-4 w-4" /> },
-        { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" /> },
-        { id: "maerkte", text: "Preise", icon: <BarChart2 className="h-4 w-4" /> },
-        { id: "nachrichten", text: "Wichtige Infos", icon: <Newspaper className="h-4 w-4" /> },
-        { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" /> },
+        { id: "home", text: "Home", icon: <Home className="h-4 w-4" />, type: "scroll" },
+        { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" />, type: "scroll" },
+        { id: "maerkte", text: "Preise", icon: <BarChart2 className="h-4 w-4" />, type: "scroll" },
+        { id: "nachrichten", text: "Wichtige Infos", icon: <Newspaper className="h-4 w-4" />, type: "scroll" },
+        { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" />, type: "scroll" },
+        // Agregar también en modo no autenticado para testing
+        {
+          id: "admin",
+          text: "Adminbereich",
+          icon: <Settings className="h-4 w-4" />,
+          type: "external",
+          url: "https://web.lweb.ch/crypto/blogchanges.html",
+        },
       ]
+
+  // Debug log para verificar los elementos del menú
+  console.log("Menu items:", menuItems)
+  console.log("Is authenticated:", isAuthenticated)
+
+  // Function to handle menu item click
+  const handleMenuItemClick = (item: any) => {
+    if (item.type === "external" && item.url) {
+      handleExternalNavigation(item.url)
+    } else {
+      scrollToSection(item.id)
+    }
+  }
 
   // Effect to handle scroll-to-top button visibility
   useEffect(() => {
@@ -220,7 +257,7 @@ export default function Index() {
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => scrollToSection(item.id)}
+              onClick={() => handleMenuItemClick(item)}
               onMouseEnter={() => setHoveredItem(item.id)}
               onMouseLeave={() => setHoveredItem(null)}
               className="text-sm font-medium text-gray-300 hover:text-white transition-colors flex items-center group"
@@ -330,7 +367,7 @@ export default function Index() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
               transition={{ delay: 0.1 + index * 0.05 }}
-              onClick={() => scrollToSection(item.id)}
+              onClick={() => handleMenuItemClick(item)}
               className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
               whileHover={{ x: 5 }}
             >
@@ -403,23 +440,21 @@ export default function Index() {
 
       <main className="flex-1 pt-16 relative z-10">
         {/* Hero Section - Only show when not authenticated */}
-          <section id="home">
-        {!isAuthenticated && <HeroSection />}
-</section>
+        <section id="home">{!isAuthenticated && <HeroSection />}</section>
         {/* Animated Text Reveal Section - Only show when not authenticated */}
         {!isAuthenticated && <AnimatedTextReveal />}
-    {/* Premium Features Section - Only show when not authenticated */}
-          {!isAuthenticated && (
-            <section id="premiumfunktionen">
-              <Feactures />
-            </section>
-          )}
+        {/* Premium Features Section - Only show when not authenticated */}
+        {!isAuthenticated && (
+          <section id="premiumfunktionen">
+            <Feactures />
+          </section>
+        )}
         {/* BingX Section */}
         <section id="bingx">
           <div className="inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40 z-10">
             {/* BingX Transactions Section - Now with ref and password prop */}
             {password !== null ? (
-              <BingXTransactionsSimple ref={bingXRef}  />
+              <BingXTransactionsSimple ref={bingXRef} />
             ) : (
               <BingXTransactionsSimple ref={bingXRef} />
             )}
@@ -445,8 +480,6 @@ export default function Index() {
 
           {/* About Section - Only show when not authenticated */}
           {!isAuthenticated && <AboutSection />}
-
-      
 
           {/* Final CTA Section - Only show when not authenticated */}
           {!isAuthenticated && (

@@ -889,10 +889,10 @@ const BingXOverview = forwardRef<BingXOverviewRef, BingXOverviewProps>((props, r
             {/* Membership Call-to-Action */}
             <div className="mt-8 p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-lg text-center">
               <p className="text-2xl font-bold tracking-tighter sm:text-2xl text-gray-400 text-center mb-4">
-                Möchtest du mehr informationen sehen?
+                Möchtest du mehr informationen?
               </p>
-              <p className="text-1xl font-bold tracking-tighter sm:text-2200 text-center mb-10 text-center">
-                Hol dir unser Nextrade-Abo.
+              <p className="text-1xl tracking-tighter sm:text-2200 text-center mb-10 text-center">
+               Wie bieten dir im Nextrade-Abo exklusive Einblicke in unsere Käufe und Verkäufe. Zusätzlich teilen wir dir jeweils unsere Einschätzungen zur aktuellen Marktlage mit.
               </p>
               <button
                 onClick={() => {
