@@ -5,8 +5,21 @@ import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { useState, useEffect, useRef } from "react"
 import { Link } from "@remix-run/react"
-import { motion, useScroll, useTransform } from "framer-motion"
-import { X, ChevronUp, BarChart2, Newspaper, Mail, TrendingUp, LogIn, LogOut, Home, Settings } from "lucide-react"
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import {
+  X,
+  ChevronUp,
+  BarChart2,
+  Newspaper,
+  Mail,
+  TrendingUp,
+  LogIn,
+  LogOut,
+  Home,
+  Settings,
+  ChevronDown,
+  User,
+} from "lucide-react"
 import { Button } from "~/components/ui/button"
 import type { MetaFunction } from "@remix-run/node"
 import LoadingAnimation from "../components/animated/loading-animation"
@@ -64,6 +77,9 @@ export default function Index() {
   // State for mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  // State for login dropdown menu
+  const [loginDropdownOpen, setLoginDropdownOpen] = useState(false)
+
   // Estado para rastrear el hover en los elementos del menú
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
@@ -81,6 +97,9 @@ export default function Index() {
   // Ref for BingX component
   const bingXRef = useRef<BingXOverviewRef>(null)
 
+  // Ref for dropdown menu
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
   // Scroll effects
   const { scrollY } = useScroll()
   const headerOpacity = useTransform(scrollY, [0, 300], [1, 0.8])
@@ -90,6 +109,7 @@ export default function Index() {
   const scrollToSection = (id: string) => {
     // Close menus first
     setMobileMenuOpen(false)
+    setLoginDropdownOpen(false)
 
     // Small delay to ensure menu closing animation completes
     setTimeout(() => {
@@ -111,16 +131,23 @@ export default function Index() {
 
   // Function to handle external navigation
   const handleExternalNavigation = (url: string) => {
-    // Close mobile menu first
+    // Close menus first
     setMobileMenuOpen(false)
+    setLoginDropdownOpen(false)
 
     // Navigate to external URL
     window.open(url, "_blank", "noopener,noreferrer")
   }
 
-  // Function to handle login button click
-  const handleLoginClick = () => {
-    // Close mobile menu first
+  // Function to handle admin click
+  const handleAdminClick = () => {
+    handleExternalNavigation("https://web.lweb.ch/crypto/blogchanges.html")
+  }
+
+  // Function to handle member area click
+  const handleMemberClick = () => {
+    // Close dropdown first
+    setLoginDropdownOpen(false)
     setMobileMenuOpen(false)
 
     // Scroll to BingX section
@@ -131,12 +158,13 @@ export default function Index() {
       if (bingXRef.current) {
         bingXRef.current.openLoginModal()
       }
-    }, 500) // Wait for scroll to complete
+    }, 500)
   }
 
   // Function to handle logout
   const handleLogoutClick = () => {
     setMobileMenuOpen(false)
+    setLoginDropdownOpen(false)
     if (bingXRef.current) {
       bingXRef.current.handleLogout()
     }
@@ -158,19 +186,26 @@ export default function Index() {
     return () => clearInterval(interval)
   }, [])
 
-  // Menú con elementos condicionales basados en autenticación
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setLoginDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
+
+  // Regular menu items (without login options)
   const menuItems = isAuthenticated
     ? [
         { id: "bingx", text: "Trading Übersicht", icon: <TrendingUp className="h-4 w-4" />, type: "scroll" },
         { id: "nachrichten", text: "Wichtige Informationen", icon: <Newspaper className="h-4 w-4" />, type: "scroll" },
         { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" />, type: "scroll" },
-        {
-          id: "admin",
-          text: "Adminbereich",
-          icon: <Settings className="h-4 w-4" />,
-          type: "external",
-          url: "https://web.lweb.ch/crypto/blogchanges.html",
-        },
       ]
     : [
         { id: "home", text: "Home", icon: <Home className="h-4 w-4" />, type: "scroll" },
@@ -178,19 +213,7 @@ export default function Index() {
         { id: "maerkte", text: "Preise", icon: <BarChart2 className="h-4 w-4" />, type: "scroll" },
         { id: "nachrichten", text: "Wichtige Infos", icon: <Newspaper className="h-4 w-4" />, type: "scroll" },
         { id: "kontakt", text: "Kontakt", icon: <Mail className="h-4 w-4" />, type: "scroll" },
-        // Agregar también en modo no autenticado para testing
-        {
-          id: "admin",
-          text: "Adminbereich",
-          icon: <Settings className="h-4 w-4" />,
-          type: "external",
-          url: "https://web.lweb.ch/crypto/blogchanges.html",
-        },
       ]
-
-  // Debug log para verificar los elementos del menú
-  console.log("Menu items:", menuItems)
-  console.log("Is authenticated:", isAuthenticated)
 
   // Function to handle menu item click
   const handleMenuItemClick = (item: any) => {
@@ -253,7 +276,7 @@ export default function Index() {
         </div>
 
         {/* Desktop Menu */}
-        <nav className="ml-auto hidden md:flex gap-4 sm:gap-6">
+        <nav className="ml-auto hidden md:flex gap-4 sm:gap-6 items-center">
           {menuItems.map((item) => (
             <button
               key={item.id}
@@ -280,8 +303,70 @@ export default function Index() {
             </button>
           ))}
 
-          {/* Login/Logout Button */}
-          {isAuthenticated ? (
+          {/* Login Dropdown Menu */}
+          {!isAuthenticated ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setLoginDropdownOpen(!loginDropdownOpen)}
+                onMouseEnter={() => setHoveredItem("login")}
+                onMouseLeave={() => setHoveredItem(null)}
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors flex items-center group"
+              >
+                <motion.div
+                  className="mr-2 text-[#25D366] group-hover:text-[#20c55a]"
+                  animate={{
+                    rotate: hoveredItem === "login" ? [0, -10, 10, -10, 0] : 0,
+                    scale: hoveredItem === "login" ? 1.2 : 1,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    ease: "easeInOut",
+                    times: [0, 0.2, 0.5, 0.8, 1],
+                  }}
+                >
+                  <User className="h-4 w-4" />
+                </motion.div>
+                LOGIN
+                <motion.div
+                  className="ml-1"
+                  animate={{ rotate: loginDropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="h-3 w-3" />
+                </motion.div>
+              </button>
+
+              {/* Dropdown Menu */}
+              <AnimatePresence>
+                {loginDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full right-0 mt-2 w-48 bg-black/90 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg overflow-hidden z-50"
+                  >
+                    <button
+                      onClick={handleAdminClick}
+                      className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors flex items-center group"
+                    >
+                      <Settings className="h-4 w-4 mr-3 text-[#25D366] group-hover:text-[#20c55a]" />
+                      Adminbereich
+                    </button>
+                    <div className="border-t border-gray-700"></div>
+                    <button
+                      onClick={handleMemberClick}
+                      className="w-full px-4 py-3 text-left text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 transition-colors flex items-center group"
+                    >
+                      <LogIn className="h-4 w-4 mr-3 text-[#25D366] group-hover:text-[#20c55a]" />
+                      Mitgliederbereich
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            // Logout button when authenticated
             <button
               onClick={handleLogoutClick}
               onMouseEnter={() => setHoveredItem("logout")}
@@ -303,29 +388,6 @@ export default function Index() {
                 <LogOut className="h-4 w-4" />
               </motion.div>
               Logout
-            </button>
-          ) : (
-            <button
-              onClick={handleLoginClick}
-              onMouseEnter={() => setHoveredItem("login")}
-              onMouseLeave={() => setHoveredItem(null)}
-              className="text-sm font-medium text-gray-300 hover:text-blue-400 transition-colors flex items-center group"
-            >
-              <motion.div
-                className="mr-2 text-green-500 group-hover:text-rot-400"
-                animate={{
-                  rotate: hoveredItem === "login" ? [0, -10, 10, -10, 0] : 0,
-                  scale: hoveredItem === "login" ? 1.2 : 1,
-                }}
-                transition={{
-                  duration: 0.5,
-                  ease: "easeInOut",
-                  times: [0, 0.2, 0.5, 0.8, 1],
-                }}
-              >
-                <LogIn className="h-4 w-4" />
-              </motion.div>
-              Mitgliederbereich
             </button>
           )}
         </nav>
@@ -382,8 +444,46 @@ export default function Index() {
             </motion.button>
           ))}
 
-          {/* Mobile Login/Logout Button */}
-          {isAuthenticated ? (
+          {/* Mobile Login Options */}
+          {!isAuthenticated ? (
+            <>
+              <motion.button
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
+                transition={{ delay: 0.1 + menuItems.length * 0.05 }}
+                onClick={handleAdminClick}
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
+                whileHover={{ x: 5 }}
+              >
+                <motion.div
+                  className="mr-2 text-[#25D366]"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Settings className="h-4 w-4" />
+                </motion.div>
+                Adminbereich
+              </motion.button>
+              <motion.button
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
+                transition={{ delay: 0.1 + (menuItems.length + 1) * 0.05 }}
+                onClick={handleMemberClick}
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center"
+                whileHover={{ x: 5 }}
+              >
+                <motion.div
+                  className="mr-2 text-[#25D366]"
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <LogIn className="h-4 w-4" />
+                </motion.div>
+                Mitgliederbereich
+              </motion.button>
+            </>
+          ) : (
+            // Mobile Logout Button
             <motion.button
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
@@ -400,24 +500,6 @@ export default function Index() {
                 <LogOut className="h-4 w-4" />
               </motion.div>
               Logout
-            </motion.button>
-          ) : (
-            <motion.button
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: mobileMenuOpen ? 1 : 0, x: mobileMenuOpen ? 0 : -10 }}
-              transition={{ delay: 0.1 + menuItems.length * 0.05 }}
-              onClick={handleLoginClick}
-              className="text-sm font-medium text-gray-300 hover:text-blue-400 transition-colors py-2 flex items-center"
-              whileHover={{ x: 5 }}
-            >
-              <motion.div
-                className="mr-2 text-green-500"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              >
-                <LogIn className="h-4 w-4" />
-              </motion.div>
-              Mitgliederbereich
             </motion.button>
           )}
         </nav>
