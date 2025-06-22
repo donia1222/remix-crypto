@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import type { LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
@@ -173,12 +171,12 @@ export default function Index() {
   }
 
   // Function to close mobile dropdown when clicking outside
-  const handleMobileMenuClick = (e: React.MouseEvent) => {
-    // Close dropdown when clicking on the mobile menu background
-    if (loginDropdownOpen) {
-      setLoginDropdownOpen(false)
-    }
-  }
+  // const handleMobileMenuClick = (e: React.MouseEvent) => {
+  //   // Close dropdown when clicking on the mobile menu background
+  //   if (loginDropdownOpen) {
+  //     setLoginDropdownOpen(false)
+  //   }
+  // }
 
   // Check authentication status periodically
   useEffect(() => {
@@ -431,7 +429,6 @@ export default function Index() {
           ease: "easeInOut",
         }}
         className="bg-black/70 backdrop-blur-md border-b border-gray-800/50 md:hidden overflow-hidden fixed top-16 left-0 right-0 z-40"
-        onClick={handleMobileMenuClick}
       >
         <nav className="flex flex-col p-4 space-y-3 items-center text-center max-w-xs mx-auto">
           {menuItems.map((item, index) => (
@@ -465,10 +462,12 @@ export default function Index() {
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  setLoginDropdownOpen(!loginDropdownOpen)
+                  console.log("LOGIN clicked, current state:", loginDropdownOpen)
+                  setLoginDropdownOpen((prev) => !prev)
                 }}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center justify-center w-full"
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 flex items-center justify-center w-full relative z-10 cursor-pointer"
                 whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
               >
                 <motion.div
                   className="mr-2 text-[#25D366]"
@@ -477,7 +476,7 @@ export default function Index() {
                 >
                   <User className="h-4 w-4" />
                 </motion.div>
-                LOGIN
+                Login
                 <motion.div
                   className="ml-1"
                   animate={{ rotate: loginDropdownOpen ? 180 : 0 }}
@@ -495,19 +494,30 @@ export default function Index() {
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="overflow-hidden bg-gray-800/50 rounded-lg mt-2 border border-gray-700"
+                    className="overflow-hidden bg-gray-800/50 rounded-lg mt-2 border border-gray-700 relative z-20"
                   >
+                    {/* Close button for mobile dropdown */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        console.log("Close button clicked")
+                        setLoginDropdownOpen(false)
+                      }}
+                      className="absolute top-2 right-2 p-1 text-gray-400 hover:text-white transition-colors z-10"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+
                     <motion.button
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 }}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
+                      onClick={() => {
+                        console.log("Admin clicked")
                         setLoginDropdownOpen(false)
                         handleAdminClick()
                       }}
-                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 flex items-center justify-center hover:bg-gray-700/50"
+                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 pr-8 flex items-center justify-center hover:bg-gray-700/50"
                       whileHover={{ x: 5 }}
                     >
                       <motion.div
@@ -524,13 +534,12 @@ export default function Index() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 }}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
+                      onClick={() => {
+                        console.log("Member clicked")
                         setLoginDropdownOpen(false)
                         handleMemberClick()
                       }}
-                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 flex items-center justify-center hover:bg-gray-700/50"
+                      className="w-full text-sm font-medium text-gray-300 hover:text-white transition-colors py-3 pr-8 flex items-center justify-center hover:bg-gray-700/50"
                       whileHover={{ x: 5 }}
                     >
                       <motion.div
